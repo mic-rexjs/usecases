@@ -1,13 +1,11 @@
 import * as path from 'path';
 import { Configuration } from 'webpack';
-import tsconfig from '../tsconfig.json';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
 
 const initConfig = (): Configuration => {
-  const { compilerOptions } = tsconfig;
-  const projectDir = path.resolve(__dirname, '..');
-  const srcDir = path.resolve(projectDir, compilerOptions.baseUrl);
-  const outDir = path.resolve(projectDir, compilerOptions.outDir);
+  const projectDir = __dirname;
+  const srcDir = path.resolve(projectDir, 'src');
+  const outDir = path.resolve(projectDir, 'build');
   const distPath = path.resolve(outDir, 'dist');
 
   return {
@@ -19,30 +17,17 @@ const initConfig = (): Configuration => {
     },
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx'],
+      alias: {
+        '@': srcDir,
+      },
     },
     module: {
       rules: [
         {
-          test: /\.ts$/,
+          test: /\.tsx?$/,
           loader: 'babel-loader',
           options: {
-            presets: [
-              [
-                '@babel/preset-env',
-                {
-                  useBuiltIns: 'usage',
-                  corejs: 3,
-                },
-              ],
-              [
-                '@babel/preset-typescript',
-                {
-                  transpileOnly: true,
-                  configFile: path.resolve(__dirname, 'tsconfig.dist.json'),
-                },
-              ],
-            ],
-            plugins: ['@babel/plugin-transform-runtime'],
+            extends: path.resolve(projectDir, '.babelrc'),
           },
           exclude: /node_modules/,
         },

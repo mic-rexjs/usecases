@@ -16,7 +16,6 @@
     "strictPropertyInitialization": true,
     "lib": ["ESNext"],
     "baseUrl": "./src",
-    "outDir": "./build",
     "paths": {
       "@/*": ["./*"]
     }

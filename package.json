@@ -1,31 +1,31 @@
 {
   "name": "@rex-js/usecases",
-  "version": "1.3.35",
-  "description": "Core of Clean Architecture",
+  "version": "1.3.36",
+  "description": "Usecases of Clean Architecture",
   "private": true,
   "keywords": [
+    "clean architecture",
     "usecase",
-    "Clean Architecture",
-    "core",
-    "mic",
+    "entity",
+    "mic-usecases",
     "rexjs"
   ],
   "scripts": {
-    "dist": "webpack --config ./configs/webpack.config.ts",
-    "es": "tsc --project ./configs/tsconfig.es.json --module ESNext --outDir build/es --target ESNext",
+    "build:dist": "webpack --config ./webpack.config.ts",
+    "build:lib": "tsc --project ./tsconfig.prod.json",
     "prebuild": "yarn run test && rm -rf ./build",
-    "build": "yarn run dist && yarn run es",
+    "build": "yarn run build:dist && yarn run build:lib",
     "pub:build": "yarn run build && npm publish ./build",
     "lint-all": "eslint src/* --ext .tsx,.ts",
-    "test": "jest --config=./jest.config.js",
-    "test-staged": "jest --config=./jest.config.js --findRelatedTests $(git diff --name-only --cached) --passWithNoTests"
+    "test": "jest --config=./jest.config.ts",
+    "test-staged": "jest --config=./jest.config.ts --findRelatedTests $(git diff --name-only --cached) --passWithNoTests"
   },
   "main": "dist/index.min.js",
   "unpkg": "dist/index.min.js",
-  "module": "es/index.js",
-  "typings": "es/index.d.ts",
+  "module": "lib/index.js",
+  "typings": "lib/index.d.ts",
   "files": [
-    "es",
+    "lib",
     "dist",
     "package.json",
     "README.md"

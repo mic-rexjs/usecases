@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "target": "ESNext",
+    "rootDir": "./src",
+    "outDir": "./build/lib",
+    "declaration": true,
+    "declarationDir": "./build/lib"
+  },
+  "include": ["./src"],
+  "exclude": ["**/*.test.ts"]
+}

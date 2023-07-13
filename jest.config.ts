@@ -1,9 +1,10 @@
-const { pathsToModuleNameMapper } = require('ts-jest');
-const { compilerOptions } = require('./tsconfig');
+import { Config } from 'jest';
+import { pathsToModuleNameMapper } from 'ts-jest';
+import { compilerOptions } from './tsconfig.json';
+
 const { baseUrl, paths } = compilerOptions;
 
-/** @type {import('ts-jest').JestConfigWithTsJest} */
-module.exports = {
+const config: Config = {
   testEnvironment: 'node',
   rootDir: baseUrl,
   displayName: 'test',
@@ -18,15 +19,16 @@ module.exports = {
   },
   moduleNameMapper: pathsToModuleNameMapper(
     Object.fromEntries(
-      Object.getOwnPropertyNames(paths).map((name) => {
+      Object.getOwnPropertyNames(paths).map((name: string): [string, string[]] => {
         return [
           name,
-          paths[name].map((path) => {
+          paths[name as keyof typeof paths].map((path: string): string => {
             return path.replace(/^\.\//g, '<rootDir>/');
           }),
         ];
       })
     )
   ),
-  modulePathIgnorePatterns: ['/node_modules/', '<rootDir>/common/Common/assets'],
 };
+
+export default config;

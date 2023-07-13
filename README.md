@@ -1,15 +1,15 @@
-# @mic/core
-Core of Clean Architecture.
+## 📚 Description
+UseCases of Clean Architecture.
 
 ## 📦 Install
 
 ```bash
-$ npm install --save @mic-core
+$ npm install --save @rex-js/usecases
 # -
-$ yarn add --dev @mic-core
+$ yarn add --dev @rex-js/usecases
 ```
 
-## Links
+## 🔗 Links
 - [Useage - Entity Mode](#useage-entity-mode)
 - [Useage - Non-Entity Mode](#useage-non-entity-mode)
 - [Usage - with React](#usage-with-react)
@@ -126,11 +126,11 @@ subtraction(5, 3); // 2
 ```
 
 ## 🔨 Usage - with React {#usage-with-react}
-See more about [@mic-core/react](https://github.com/china-liji/mic-core-react)
+See more about [@rex-js/usecase-react](https://github.com/china-liji/mic-usecase-react)
 
 ## ❓ Test Demos {#test-demos}
-- [entityUseCase](https://github.com/china-liji/mic-core/blob/main/src/entityUseCase/index.test.ts)
-- [arrayUseCase](https://github.com/china-liji/mic-core/blob/main/src/arrayUseCase/index.test.ts)
-- [objectUseCase](https://github.com/china-liji/mic-core/blob/main/src/objectUseCase/index.test.ts)
-- [entityReducerUseCase](https://github.com/china-liji/mic-core/blob/main/src/entityReducerUseCase/index.test.ts)
-- [entityGeneratorUseCase](https://github.com/china-liji/mic-core/blob/main/src/entityGeneratorUseCase/index.test.ts)
+- [entityUseCase](https://github.com/china-liji/mic-usecases/blob/main/src/entityUseCase/index.test.ts)
+- [arrayUseCase](https://github.com/china-liji/mic-usecases/blob/main/src/arrayUseCase/index.test.ts)
+- [objectUseCase](https://github.com/china-liji/mic-usecases/blob/main/src/objectUseCase/index.test.ts)
+- [entityReducerUseCase](https://github.com/china-liji/mic-usecases/blob/main/src/entityReducerUseCase/index.test.ts)
+- [entityGeneratorUseCase](https://github.com/china-liji/mic-usecases/blob/main/src/entityGeneratorUseCase/index.test.ts)
