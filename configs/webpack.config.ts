@@ -3,14 +3,14 @@ import { Configuration } from 'webpack';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
 
 const initConfig = (): Configuration => {
-  const projectDir = __dirname;
-  const srcDir = path.resolve(projectDir, 'src');
+  const projectDir = path.resolve(__dirname, '../');
   const outDir = path.resolve(projectDir, 'build');
   const distPath = path.resolve(outDir, 'dist');
+  const configsDir = path.resolve(projectDir, 'configs');
 
   return {
     mode: 'production',
-    entry: path.resolve(srcDir, 'index.ts'),
+    entry: path.resolve(outDir, 'es/index.js'),
     output: {
       filename: 'index.min.js',
       path: distPath,
@@ -18,18 +18,15 @@ const initConfig = (): Configuration => {
       globalObject: 'this',
     },
     resolve: {
-      extensions: ['.js', '.jsx', '.ts', '.tsx'],
-      alias: {
-        '@': srcDir,
-      },
+      extensions: ['.js'],
     },
     module: {
       rules: [
         {
-          test: /\.tsx?$/,
+          test: /\.js$/,
           loader: 'babel-loader',
           options: {
-            extends: path.resolve(projectDir, '.babelrc'),
+            extends: path.resolve(configsDir, '.babelrc'),
           },
           exclude: /node_modules/,
         },
