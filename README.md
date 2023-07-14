@@ -126,7 +126,7 @@ subtraction(5, 3); // 2
 ```
 
 ## Usage with React
-See more about [@rex-js/usecase-react](https://github.com/china-liji/mic-usecase-react)
+See more about [@rex-js/usecase-react](https://www.npmjs.com/package/@rex-js/usecase-react)
 
 ## Test Demos
 - [entityUseCase](https://github.com/china-liji/mic-usecases/blob/main/src/entityUseCase/index.test.ts)
