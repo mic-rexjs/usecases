@@ -1,7 +1,7 @@
-## 📚 Description
+## Description
 UseCases of Clean Architecture.
 
-## 📦 Install
+## Install
 
 ```bash
 $ npm install --save @rex-js/usecases
@@ -9,13 +9,13 @@ $ npm install --save @rex-js/usecases
 $ yarn add --dev @rex-js/usecases
 ```
 
-## 🔗 Links
-- [Useage - Entity Mode](#useage-entity-mode)
-- [Useage - Non-Entity Mode](#useage-non-entity-mode)
-- [Usage - with React](#usage-with-react)
+## Links
+- [Useage of Entity Mode](#useage-of-entity-mode)
+- [Useage of Non-Entity Mode](#useage-of-non-entity-mode)
+- [Usage with React](#usage-with-react)
 - [Test Demos](#test-demos)
 
-## 🔨 Useage - Entity Mode {#useage-entity-mode}
+## Useage of Entity Mode
 ```ts
 // a.ts
 import { objectUseCase, EntityReducers, EntityGenerator } from '@mic/core';
@@ -95,7 +95,7 @@ isTxt(); // true
 console.log(entity2); // { path: 'my.txt', content: 'hello world' }
 ```
 
-## 🔨 Useage - Non-Entity Mode {#useage-non-entity-mode}
+## Useage of Non-Entity Mode
 ```ts
 // a.ts
 import { Reducers } from '@mic/core';
@@ -125,10 +125,10 @@ add(1, 2); // 3
 subtraction(5, 3); // 2
 ```
 
-## 🔨 Usage - with React {#usage-with-react}
+## Usage with React
 See more about [@rex-js/usecase-react](https://github.com/china-liji/mic-usecase-react)
 
-## ❓ Test Demos {#test-demos}
+## Test Demos
 - [entityUseCase](https://github.com/china-liji/mic-usecases/blob/main/src/entityUseCase/index.test.ts)
 - [arrayUseCase](https://github.com/china-liji/mic-usecases/blob/main/src/arrayUseCase/index.test.ts)
 - [objectUseCase](https://github.com/china-liji/mic-usecases/blob/main/src/objectUseCase/index.test.ts)
