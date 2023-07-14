@@ -14,6 +14,8 @@ const initConfig = (): Configuration => {
     output: {
       filename: 'index.min.js',
       path: distPath,
+      libraryTarget: 'umd',
+      globalObject: 'this',
     },
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx'],
