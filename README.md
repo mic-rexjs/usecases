@@ -9,12 +9,12 @@ $ yarn add --dev @rex-js/usecases
 ```
 
 ## Links
-- [Useage with Entity Mode](#useage-of-entity-mode)
-- [Useage with Non-Entity Mode](#useage-of-non-entity-mode)
+- [Useage with Entity Mode](#useage-with-entity-mode)
+- [Useage with Non-Entity Mode](#useage-with-non-entity-mode)
 - [Usage with React](#usage-with-react)
 - [Test Demos](#test-demos)
 
-## Useage of Entity Mode
+## Useage with Entity Mode
 ```ts
 // a.ts
 import { objectUseCase, EntityReducers, EntityGenerator } from '@mic/core';
@@ -94,7 +94,7 @@ isTxt(); // true
 console.log(entity2); // { path: 'my.txt', content: 'hello world' }
 ```
 
-## Useage of Non-Entity Mode
+## Useage with Non-Entity Mode
 ```ts
 // a.ts
 import { Reducers } from '@mic/core';
