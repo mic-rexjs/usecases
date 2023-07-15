@@ -9,12 +9,12 @@ $ yarn add --dev @rex-js/usecases
 ```
 
 ## Links
-- [Useage with Non-Entity Mode](#useage-with-non-entity-mode)
-- [Useage with Entity Mode](#useage-with-entity-mode)
+- [Usage with Non-Entity Mode](#usage-with-non-entity-mode)
+- [Usage with Entity Mode](#usage-with-entity-mode)
 - [Usage with React](#usage-with-react)
 - [Test Demos](#test-demos)
 
-## Useage with Non-Entity Mode
+## Usage with Non-Entity Mode
 ```ts
 // a.ts
 import { Reducers } from '@rex-js/usecases';
@@ -44,7 +44,7 @@ add(1, 2); // 3
 subtraction(5, 3); // 2
 ```
 
-## Useage with Entity Mode
+## Usage with Entity Mode
 ```ts
 // a.ts
 import { objectUseCase } from '@rex-js/usecases';
