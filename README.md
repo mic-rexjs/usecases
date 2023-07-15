@@ -9,16 +9,47 @@ $ yarn add --dev @rex-js/usecases
 ```
 
 ## Links
-- [Useage with Entity Mode](#useage-with-entity-mode)
 - [Useage with Non-Entity Mode](#useage-with-non-entity-mode)
+- [Useage with Entity Mode](#useage-with-entity-mode)
 - [Usage with React](#usage-with-react)
 - [Test Demos](#test-demos)
+
+## Useage with Non-Entity Mode
+```ts
+// a.ts
+import { Reducers } from '@rex-js/usecases';
+
+type MathReducers = Reducers<{
+  add(value1: number, value2: number): number;
+
+  subtraction(value1: number, value2: number): number;
+}>;
+
+const mathUseCase = (): MathReducers => {
+  const add = (value1: number, value2: number): number => {
+    return value1 + value2;
+  };
+
+  const subtraction = (value1: number, value2: number): number => {
+    return value1 - value2;
+  };
+
+  return { add, subtraction };
+};
+
+// b.ts
+const { add, subtraction } = mathUseCase();
+
+add(1, 2); // 3
+subtraction(5, 3); // 2
+```
 
 ## Useage with Entity Mode
 ```ts
 // a.ts
-import { objectUseCase, entityReducerUseCase, EntityReducers, EntityGenerator } from '@rex-js/usecases';
+import { objectUseCase } from '@rex-js/usecases';
 import { ObjectReducers } from '@rex-js/usecases/es/objectUseCase/types';
+import { EntityGenerator, EntityReducers } from '@rex-js/usecases/es/types';
 
 interface File {
   path: string;
@@ -91,36 +122,6 @@ const [entity2] = setEntity({ path: 'my.txt' });
 isTxt(); // true
 
 console.log(entity2); // { path: 'my.txt', content: 'hello world' }
-```
-
-## Useage with Non-Entity Mode
-```ts
-// a.ts
-import { Reducers } from '@rex-js/usecases';
-
-type MathReducers = Reducers<{
-  add(value1: number, value2: number): number;
-
-  subtraction(value1: number, value2: number): number;
-}>;
-
-const mathUseCase = (): MathReducers => {
-  const add = (value1: number, value2: number): number => {
-    return value1 + value2;
-  };
-
-  const subtraction = (value1: number, value2: number): number => {
-    return value1 - value2;
-  };
-
-  return { add, subtraction };
-};
-
-// b.ts
-const { add, subtraction } = mathUseCase();
-
-add(1, 2); // 3
-subtraction(5, 3); // 2
 ```
 
 ## Usage with React
