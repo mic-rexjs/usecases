@@ -17,9 +17,8 @@ $ yarn add --dev @rex-js/usecases
 ## Useage with Entity Mode
 ```ts
 // a.ts
-import { objectUseCase, EntityReducers, EntityGenerator } from '@mic/core';
-import { entityReducerUseCase } from '@mic/core/entityReducerUseCase';
-import { ObjectReducers } from '@mic/core/objectUseCase/types';
+import { objectUseCase, entityReducerUseCase, EntityReducers, EntityGenerator } from '@rex-js/usecases';
+import { ObjectReducers } from '@rex-js/usecases/es/objectUseCase/types';
 
 interface File {
   path: string;
@@ -97,7 +96,7 @@ console.log(entity2); // { path: 'my.txt', content: 'hello world' }
 ## Useage with Non-Entity Mode
 ```ts
 // a.ts
-import { Reducers } from '@mic/core';
+import { Reducers } from '@rex-js/usecases';
 
 type MathReducers = Reducers<{
   add(value1: number, value2: number): number;
