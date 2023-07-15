@@ -1,6 +1,6 @@
 {
   "name": "@rex-js/usecases",
-  "version": "1.3.45",
+  "version": "1.3.46",
   "description": "Usecases of Clean Architecture",
   "private": true,
   "keywords": [

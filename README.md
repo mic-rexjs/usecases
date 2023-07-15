@@ -2,7 +2,6 @@
 UseCases of Clean Architecture.
 
 ## Install
-
 ```bash
 $ npm install --save @rex-js/usecases
 # -
@@ -10,8 +9,8 @@ $ yarn add --dev @rex-js/usecases
 ```
 
 ## Links
-- [Useage of Entity Mode](#useage-of-entity-mode)
-- [Useage of Non-Entity Mode](#useage-of-non-entity-mode)
+- [Useage with Entity Mode](#useage-of-entity-mode)
+- [Useage with Non-Entity Mode](#useage-of-non-entity-mode)
 - [Usage with React](#usage-with-react)
 - [Test Demos](#test-demos)
 
