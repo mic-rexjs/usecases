@@ -7,6 +7,8 @@ export interface ArrayEntityFilter<T> {
 export type ArrayReducers<T> = EntityReducers<
   T[],
   {
+    extractEntity(entity: T[], filter: ArrayEntityFilter<T>): T[];
+
     fillEntity(entity: T[], value: T, start?: number, end?: number): EntityGenerator<T[], T[]>;
 
     filterEntity(entity: T[], filter: ArrayEntityFilter<T>): EntityGenerator<T[], T[]>;

@@ -5,6 +5,10 @@ import { ArrayEntityFilter, ArrayReducers } from './types';
 export const arrayUseCase = <T>(): ArrayReducers<T> => {
   const entityReducers = entityUseCase<T[]>();
 
+  const extractEntity = (entity: T[], filter: ArrayEntityFilter<T>): T[] => {
+    return entity.filter(filter);
+  };
+
   const fillEntity = function* (entity: T[], value: T, start?: number, end?: number): EntityGenerator<T[], T[]> {
     const newEntity = entity.slice();
 
@@ -61,6 +65,7 @@ export const arrayUseCase = <T>(): ArrayReducers<T> => {
 
   return {
     ...entityReducers,
+    extractEntity,
     fillEntity,
     filterEntity,
     popEntity,

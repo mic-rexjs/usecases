@@ -8,6 +8,26 @@ const { createEntityReducers } = entityReducerUseCase();
 const numbersUseCase = arrayUseCase as EntityUseCase<number[], ArrayReducers<number>>;
 
 describe('arrayUseCase', (): void => {
+  describe('extractEntity', (): void => {
+    test('`extractEntity` should filter elements based on the condition', (): void => {
+      const array = [1, 2, 3, 4, 5, 6, 7];
+      const result = array.filter((item): boolean => {
+        return item > 5;
+      });
+
+      expect(result).toEqual([6, 7]);
+    });
+
+    test('`extractEntity` should return an empty array when no elements satisfy the condition', (): void => {
+      const array = [1, 2, 3, 4, 5, 6, 7];
+      const result = array.filter((item): boolean => {
+        return item < 0;
+      });
+
+      expect(result).toEqual([]);
+    });
+  });
+
   describe('fillEntity', (): void => {
     test('`fillEntity` should work with 1 argument', (): void => {
       const { fillEntity } = createEntityReducers([1, 2, 3], numbersUseCase);
