@@ -1,4 +1,4 @@
-import { EntityGenerator, EntityReducers, SetEntityCallback } from '../types';
+import { EntityGenerator, EntityReducers, SetEntityCallback } from '@/types';
 
 export type SettableObjectEntity<T extends object> = Partial<T> | SetEntityCallback<T>;
 

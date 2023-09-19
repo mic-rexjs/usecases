@@ -1,4 +1,4 @@
-import { EntityGenerator, EntityReducers, SetEntityCallback, SettableEntity } from '../types';
+import { EntityGenerator, EntityReducers, SetEntityCallback, SettableEntity } from '@/types';
 
 export const entityUseCase = <T>(): EntityReducers<T, Record<never, never>> => {
   const setEntity = function* (entity: T, settableEntity: SettableEntity<T>): EntityGenerator<T, T> {

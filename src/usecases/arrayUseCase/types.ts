@@ -1,4 +1,4 @@
-import { EntityGenerator, EntityReducers } from '../types';
+import { EntityGenerator, EntityReducers } from '@/types';
 
 export interface ArrayEntityFilter<T> {
   (item: T): boolean;

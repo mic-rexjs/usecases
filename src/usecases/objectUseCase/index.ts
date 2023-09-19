@@ -1,4 +1,4 @@
-import { EntityGenerator } from '../types';
+import { EntityGenerator } from '@/types';
 import { entityUseCase } from '../entityUseCase';
 import { ObjectReducers, SettableObjectEntity } from './types';
 

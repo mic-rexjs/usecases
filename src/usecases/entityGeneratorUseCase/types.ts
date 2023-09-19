@@ -4,7 +4,7 @@ import {
   EntityGenerator,
   EntityGeneratorValues,
   TypedEntityGenerator,
-} from '../types';
+} from '@/types';
 
 export type ExtractEntityGeneratorValues<
   T,

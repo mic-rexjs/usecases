@@ -1,6 +1,6 @@
 import './types';
-export * from './arrayUseCase';
-export * from './entityGeneratorUseCase';
-export * from './entityReducerUseCase';
-export * from './entityUseCase';
-export * from './objectUseCase';
+export * from './usecases/arrayUseCase';
+export * from './usecases/entityGeneratorUseCase';
+export * from './usecases/entityReducerUseCase';
+export * from './usecases/entityUseCase';
+export * from './usecases/objectUseCase';

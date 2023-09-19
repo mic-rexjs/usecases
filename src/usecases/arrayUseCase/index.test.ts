@@ -1,6 +1,6 @@
 import { arrayUseCase } from '.';
 import { describe, expect, test } from '@jest/globals';
-import { EntityUseCase } from '../types';
+import { EntityUseCase } from '@/types';
 import { ArrayReducers } from './types';
 import { entityReducerUseCase } from '../entityReducerUseCase';
 

@@ -1,4 +1,4 @@
-import { EntityGeneratorValues, TypedEntityGenerator, YieldEntityCallback } from '../types';
+import { EntityGeneratorValues, TypedEntityGenerator, YieldEntityCallback } from '@/types';
 import { EntityGeneratorReducers, EntityGeneratorDoneOptions, ExtractEntityGeneratorValues } from './types';
 
 export const entityGeneratorUseCase = (): EntityGeneratorReducers => {

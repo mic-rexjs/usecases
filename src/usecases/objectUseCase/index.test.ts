@@ -1,7 +1,7 @@
 import { describe, expect, test } from '@jest/globals';
 import { entityReducerUseCase } from '../entityReducerUseCase';
 import { objectUseCase } from '.';
-import { EntityUseCase } from '../types';
+import { EntityUseCase } from '@/types';
 import { ObjectReducers } from './types';
 
 interface Data {
