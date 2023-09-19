@@ -1,6 +1,6 @@
 {
   "name": "@rex-js/usecases",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Usecases of Clean Architecture",
   "private": true,
   "keywords": [
@@ -12,7 +12,7 @@
   ],
   "scripts": {
     "build:dist": "rm -rf ./build/dist && webpack --config ./configs/webpack.config.ts",
-    "build:es": "rm -rf ./build/es && tsc --project ./configs/tsconfig.es.json",
+    "build:es": "rm -rf ./build/es && tsc --project ./configs/tsconfig.es.json && tsc-alias -p ./configs/tsconfig.es.json",
     "build:lib": "rm -rf ./build/lib && babel ./build/es --config-file ./configs/.babelrc  --out-dir build/lib",
     "prebuild": "yarn run test && rm -rf ./build",
     "build": "yarn run build:es && yarn run build:lib && yarn run build:dist",
@@ -65,6 +65,7 @@
     "prettier": "^2.7.1",
     "ts-jest": "^29.1.0",
     "ts-node": "^10.9.1",
+    "tsc-alias": "^1.8.7",
     "typescript": "^5.1.5",
     "webpack": "^5.74.0",
     "webpack-cli": "^4.10.0"
