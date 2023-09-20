@@ -1,6 +1,6 @@
 {
   "name": "@mic-rexjs/usecases",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "Usecases of Clean Architecture",
   "private": true,
   "keywords": [
