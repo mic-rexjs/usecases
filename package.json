@@ -1,14 +1,13 @@
 {
-  "name": "@rex-js/usecases",
-  "version": "1.4.1",
+  "name": "@mic-rexjs/usecases",
+  "version": "1.4.2",
   "description": "Usecases of Clean Architecture",
   "private": true,
   "keywords": [
     "clean architecture",
     "usecase",
     "entity",
-    "mic-usecases",
-    "rexjs"
+    "mic-usecases"
   ],
   "scripts": {
     "build:dist": "webpack --config ./configs/webpack.config.ts",

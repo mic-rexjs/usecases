@@ -3,9 +3,9 @@ UseCases of Clean Architecture.
 
 ## Install
 ```bash
-$ npm install --save @rex-js/usecases
+$ npm install --save @mic-rexjs/usecases
 # -
-$ yarn add --dev @rex-js/usecases
+$ yarn add --dev @mic-rexjs/usecases
 ```
 
 ## Links
@@ -17,7 +17,7 @@ $ yarn add --dev @rex-js/usecases
 ## Usage with Non-Entity Mode
 ```ts
 // a.ts
-import { Reducers } from '@rex-js/usecases';
+import { Reducers } from '@mic-rexjs/usecases';
 
 type MathReducers = Reducers<{
   add(value1: number, value2: number): number;
@@ -47,9 +47,12 @@ subtraction(5, 3); // 2
 ## Usage with Entity Mode
 ```ts
 // a.ts
-import { objectUseCase } from '@rex-js/usecases';
-import { ObjectReducers } from '@rex-js/usecases/es/objectUseCase/types';
-import { EntityGenerator, EntityReducers } from '@rex-js/usecases/es/types';
+import {
+	objectUseCase,
+	ObjectReducers,
+	EntityGenerator,
+	EntityReducers
+} from '@mic-rexjs/usecases';
 
 interface File {
   path: string;
@@ -125,7 +128,7 @@ console.log(entity2); // { path: 'my.txt', content: 'hello world' }
 ```
 
 ## Usage with React
-See more about [@rex-js/usecase-react](https://www.npmjs.com/package/@rex-js/usecase-react)
+See more about [@mic-rexjs/usecase-react](https://www.npmjs.com/package/@mic-rexjs/usecase-react)
 
 ## Test Demos
 - [entityUseCase](https://github.com/china-liji/mic-usecases/blob/main/src/entityUseCase/index.test.ts)
