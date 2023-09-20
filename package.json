@@ -11,12 +11,14 @@
     "rexjs"
   ],
   "scripts": {
-    "build:dist": "rm -rf ./build/dist && webpack --config ./configs/webpack.config.ts",
-    "build:es": "rm -rf ./build/es && tsc --project ./configs/tsconfig.es.json && tsc-alias -p ./configs/tsconfig.es.json",
-    "build:lib": "rm -rf ./build/lib && babel ./build/es --config-file ./configs/.babelrc  --out-dir build/lib",
-    "prebuild": "yarn run test && rm -rf ./build",
+    "build:dist": "webpack --config ./configs/webpack.config.ts",
+    "build:es": "tsc --project ./configs/tsconfig.es.json",
+    "postbuild:es": "tsc-alias -p ./configs/tsconfig.es.json",
+    "build:lib": "babel ./build/es --config-file ./configs/.babelrc  --out-dir build/lib",
+    "prebuild": "yarn run test && rimraf ./build",
     "build": "yarn run build:es && yarn run build:lib && yarn run build:dist",
     "pub:build": "yarn run build && npm publish ./build",
+    "postinstall": "hushy install",
     "lint-all": "eslint src/* --ext .tsx,.ts",
     "test": "jest --config=./configs/jest.config.ts",
     "test-staged": "jest --config=./configs/jest.config.ts --findRelatedTests $(git diff --name-only --cached) --passWithNoTests"
@@ -63,6 +65,7 @@
     "jest": "^29.5.0",
     "lint-staged": "^13.0.3",
     "prettier": "^2.7.1",
+    "rimraf": "^5.0.1",
     "ts-jest": "^29.1.0",
     "ts-node": "^10.9.1",
     "tsc-alias": "^1.8.7",
