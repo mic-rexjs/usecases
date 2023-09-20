@@ -6,6 +6,16 @@ export { entityReducerUseCase } from './usecases/entityReducerUseCase';
 export { arrayUseCase } from './usecases/arrayUseCase';
 export { objectUseCase } from './usecases/objectUseCase';
 
-export type { Reducer, Reducers, UseCase, EntityReducer, EntityReducers, EntityUseCase } from './types';
+export type {
+  Reducer,
+  Reducers,
+  UseCase,
+  EntityReducer,
+  EntityReducers,
+  EntityUseCase,
+  EntityGenerator,
+  AsyncEntityGenerator,
+} from './types';
+
 export type { ArrayReducers } from './usecases/arrayUseCase/types';
 export type { ObjectReducers } from './usecases/objectUseCase/types';
