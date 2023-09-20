@@ -16,8 +16,8 @@
     "build:lib": "babel ./build/es --config-file ./configs/.babelrc  --out-dir build/lib",
     "prebuild": "yarn run test && rimraf ./build",
     "build": "yarn run build:es && yarn run build:lib && yarn run build:dist",
-    "pub:build": "yarn run build && npm publish ./build",
-    "postinstall": "hushy install",
+    "pub:build": "yarn run build && npm publish ./build --access public",
+    "postinstall": "husky install",
     "lint-all": "eslint src/* --ext .tsx,.ts",
     "test": "jest --config=./configs/jest.config.ts",
     "test-staged": "jest --config=./configs/jest.config.ts --findRelatedTests $(git diff --name-only --cached) --passWithNoTests"

@@ -41,6 +41,7 @@ const initConfig = (): Configuration => {
             transform(content): string {
               const json = JSON.parse(content.toString());
 
+              json.scripts = {};
               json.private = false;
               return JSON.stringify(json, null, 2);
             },
