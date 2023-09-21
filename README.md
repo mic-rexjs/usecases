@@ -128,7 +128,7 @@ console.log(entity2); // { path: 'my.txt', content: 'hello world' }
 ```
 
 ## Usage with React
-See more about [@mic-rexjs/usecase-react](https://www.npmjs.com/package/@mic-rexjs/usecase-react)
+See more about [@mic-rexjs/usecases-react](https://www.npmjs.com/package/@mic-rexjs/usecases-react)
 
 ## Test Demos
 - [entityUseCase](https://github.com/mic-rexjs/usecases/blob/main/src/usecases/entityUseCase/index.test.ts)
