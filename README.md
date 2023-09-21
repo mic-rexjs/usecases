@@ -131,8 +131,8 @@ console.log(entity2); // { path: 'my.txt', content: 'hello world' }
 See more about [@mic-rexjs/usecase-react](https://www.npmjs.com/package/@mic-rexjs/usecase-react)
 
 ## Test Demos
-- [entityUseCase](https://github.com/china-liji/mic-usecases/blob/main/src/entityUseCase/index.test.ts)
-- [arrayUseCase](https://github.com/china-liji/mic-usecases/blob/main/src/arrayUseCase/index.test.ts)
-- [objectUseCase](https://github.com/china-liji/mic-usecases/blob/main/src/objectUseCase/index.test.ts)
-- [entityReducerUseCase](https://github.com/china-liji/mic-usecases/blob/main/src/entityReducerUseCase/index.test.ts)
-- [entityGeneratorUseCase](https://github.com/china-liji/mic-usecases/blob/main/src/entityGeneratorUseCase/index.test.ts)
+- [entityUseCase](https://github.com/mic-rexjs/usecases/blob/main/src/entityUseCase/index.test.ts)
+- [arrayUseCase](https://github.com/mic-rexjs/usecases/blob/main/src/arrayUseCase/index.test.ts)
+- [objectUseCase](https://github.com/mic-rexjs/usecases/blob/main/src/objectUseCase/index.test.ts)
+- [entityReducerUseCase](https://github.com/mic-rexjs/usecases/blob/main/src/entityReducerUseCase/index.test.ts)
+- [entityGeneratorUseCase](https://github.com/mic-rexjs/usecases/blob/main/src/entityGeneratorUseCase/index.test.ts)
