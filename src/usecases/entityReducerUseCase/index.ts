@@ -6,6 +6,7 @@ import {
   CreateEntityReducersOptions,
   SmoothedEntityReducers,
   EntityReducersCreator,
+  ArrayifyEntityReducers,
 } from './types';
 import { initOptions } from './methods/initOptions';
 import { createRef } from '@/methods/createRef';
@@ -19,18 +20,18 @@ export const entityReducerUseCase = (): EntityReducerReducers => {
     TReducers extends EntityReducers<T>,
     TUseCaseOptions extends object,
     TUseCase extends EntityUseCase<T, TReducers, TUseCaseOptions>,
-    TReturnedReducers extends SmoothedEntityReducers<T, TReducers> | ScopedEntityReducers<T, TReducers>
+    TResultReducers extends SmoothedEntityReducers<T, TReducers> | ScopedEntityReducers<T, TReducers>
   >(
     arg1: T | TUseCase,
     arg2?: TUseCase | CreateEntityReducersOptions<T, TUseCaseOptions>,
     arg3?: CreateEntityReducersOptions<T, TUseCaseOptions>
-  ): TReturnedReducers => {
+  ): ArrayifyEntityReducers<TResultReducers> => {
     const hasDefaultEntity = typeof arg2 === 'function';
     const defaultEntity = (hasDefaultEntity ? arg1 : null) as T;
     const usecase = (hasDefaultEntity ? arg2 : arg1) as EntityUseCase<T, TReducers, TUseCaseOptions>;
     const options = (hasDefaultEntity ? arg3 : arg2) as CreateEntityReducersOptions<T, TUseCaseOptions>;
     const { onChange, onGenerate, ...usecaseOptions } = initOptions(options);
-    const reducers: Partial<TReturnedReducers> = {};
+    const reducers: Partial<TResultReducers> = {};
     const originalReducers = usecase(usecaseOptions as TUseCaseOptions);
     const { setEntity } = originalReducers;
     const entityRef = createRef(defaultEntity);
@@ -38,7 +39,7 @@ export const entityReducerUseCase = (): EntityReducerReducers => {
     const doneOptions = initDoneOptions(entityRef, reducerRef, originalReducers, options);
 
     for (const [key, reducer] of Object.entries(originalReducers)) {
-      reducers[key as keyof TReturnedReducers] = (<TResult>(...restArgs: Parameters<EntityReducer<T>>): unknown => {
+      reducers[key as keyof TResultReducers] = (<TResult>(...restArgs: Parameters<EntityReducer<T>>): unknown => {
         const reducerArgs = (hasDefaultEntity ? [entityRef.current, ...restArgs] : restArgs) as Parameters<
           EntityReducer<T>
         >;
@@ -71,10 +72,10 @@ export const entityReducerUseCase = (): EntityReducerReducers => {
         }
 
         return onGenerate(...values);
-      }) as TReturnedReducers[keyof TReturnedReducers];
+      }) as TResultReducers[keyof TResultReducers];
     }
 
-    return reducers as TReturnedReducers;
+    return Object.assign([reducers['setEntity'], reducers], reducers) as ArrayifyEntityReducers<TResultReducers>;
   };
 
   return {

@@ -112,7 +112,11 @@ const fileUseCase = <T extends File>({ maxContentLength = 2000 }: FileUseCaseOpt
 // b.ts
 const defaultFile: File = { path: '', content: '' };
 const { createEntityReducers } = entityReducerUseCase();
-const { writeFile, isTxt, setEntity } = createEntityReducers(defaultFile, fileUseCase, { maxContentLength: 50 });
+
+// object deconstruction mode
+const { writeFile, isTxt, setEntity: setFile } = createEntityReducers(defaultFile, fileUseCase, { maxContentLength: 50 });
+// array deconstruction mode
+const [setFile, { writeFile, isTxt }] = createEntityReducers(defaultFile, fileUseCase, { maxContentLength: 50 });
 
 // no need to provide an entity parameter when you call these reducers!
 const [entity1, content1] = writeFile('hello world');
@@ -121,7 +125,7 @@ isTxt(); // false
 console.log(entity1); // { path: '', content: 'hello world' }
 console.log(content1); // 'hello world'
 
-const [entity2] = setEntity({ path: 'my.txt' });
+const [entity2] = setFile({ path: 'my.txt' });
 isTxt(); // true
 
 console.log(entity2); // { path: 'my.txt', content: 'hello world' }

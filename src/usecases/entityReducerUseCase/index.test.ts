@@ -102,6 +102,32 @@ describe('entityReducerUseCase', (): void => {
     const { createEntityReducers } = entityReducerUseCase();
 
     describe('entity', (): void => {
+      test('`entity` should be an array with reducers', (): void => {
+        const entity = createEntityReducers({ value: 1 }, testUseCase);
+
+        expect(entity instanceof Array).toBe(true);
+      });
+
+      test('`entity[0]` should be as same as `setEntity`', (): void => {
+        const [setValue, { setEntity }] = createEntityReducers({ value: 1 }, testUseCase);
+
+        expect(typeof setValue).toBe('function');
+        expect(setValue).toBe(setEntity);
+      });
+
+      test('`entity[1]` should be an object of reducers', (): void => {
+        const [, reducers] = createEntityReducers({ value: 1 }, testUseCase);
+
+        expect(typeof reducers).toBe('object');
+      });
+
+      test('`entity` should match all reducers', (): void => {
+        const entity = createEntityReducers({ value: 1 }, testUseCase);
+        const [, reducers] = entity;
+
+        expect(entity).toMatchObject(reducers);
+      });
+
       test('check `entity.value` on set entity callback - entity mode', async (): Promise<void> => {
         let prevValue = 0;
         const { setEntity } = createEntityReducers({ value: 1 }, testUseCase);
