@@ -22,28 +22,22 @@ export type CreateEntityReducersOptionsWithDefaults<T, TOptions extends object> 
 > &
   Required<Pick<CreateEntityReducersOwnOptions<T>, 'onGenerate'>>;
 
-export type SmoothEntityReducer<T, TReducer> = TReducer extends (
-  entity: infer TEntity,
-  ...args: infer TArgs
-) => infer TReturn
-  ? TReturn extends AsyncEntityGenerator<TEntity, infer TResult>
-    ? (entity: TEntity, ...args: TArgs) => AsyncEntityGeneratorValues<T, TResult>
-    : TReturn extends EntityGenerator<TEntity, infer TResult>
-    ? (entity: TEntity, ...args: TArgs) => EntityGeneratorValues<T, TResult>
-    : (entity: TEntity, ...args: TArgs) => TReturn
+export type SmoothEntityReducer<T, TReducer> = TReducer extends (entity: T, ...args: infer TArgs) => infer TReturn
+  ? TReturn extends AsyncEntityGenerator<T, infer TResult>
+    ? (entity: T, ...args: TArgs) => AsyncEntityGeneratorValues<T, TResult>
+    : TReturn extends EntityGenerator<T, infer TResult>
+    ? (entity: T, ...args: TArgs) => EntityGeneratorValues<T, TResult>
+    : TReducer
   : never;
 
 export type SmoothedEntityReducers<T, TReducers> = {
   [K in keyof TReducers]: SmoothEntityReducer<T, TReducers[K]>;
 };
 
-export type ScopedEntityReducer<T, TReducer> = TReducer extends (
-  entity: infer TEntity,
-  ...args: infer TArgs
-) => infer TReturn
-  ? TReturn extends AsyncEntityGenerator<TEntity, infer TResult>
+export type ScopedEntityReducer<T, TReducer> = TReducer extends (entity: T, ...args: infer TArgs) => infer TReturn
+  ? TReturn extends AsyncEntityGenerator<T, infer TResult>
     ? (...args: TArgs) => AsyncEntityGeneratorValues<T, TResult>
-    : TReturn extends EntityGenerator<TEntity, infer TResult>
+    : TReturn extends EntityGenerator<T, infer TResult>
     ? (...args: TArgs) => EntityGeneratorValues<T, TResult>
     : (...args: TArgs) => TReturn
   : never;
