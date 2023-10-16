@@ -5,7 +5,6 @@ import {
   EntityGeneratorValues,
   EntityReducers,
   EntityUseCase,
-  UseCase,
 } from '@/types';
 
 export interface CreateEntityReducersOwnOptions<T> {
@@ -48,12 +47,23 @@ export type ScopedEntityReducers<T, TReducers> = {
 
 export interface EntityReducersCreator {
   <T, TReducers extends EntityReducers<T>, TReturnedReducers = SmoothedEntityReducers<T, TReducers>>(
-    usecase: EntityUseCase<T, TReducers>
+    usecase: EntityUseCase<T, TReducers & EntityReducers<T>>
+  ): TReturnedReducers;
+
+  <
+    T,
+    TReducers extends EntityReducers<T>,
+    TUseCaseOptions extends object = object,
+    TOptions extends CreateEntityReducersOptions<T, TUseCaseOptions> = CreateEntityReducersOptions<T, TUseCaseOptions>,
+    TReturnedReducers = SmoothedEntityReducers<T, TReducers>
+  >(
+    usecase: EntityUseCase<T, TReducers & EntityReducers<T>, TUseCaseOptions>,
+    options: TOptions
   ): TReturnedReducers;
 
   <T, TReducers extends EntityReducers<T>, TReturnedReducers = ScopedEntityReducers<T, TReducers>>(
     entity: T,
-    usecase: EntityUseCase<T, TReducers>
+    usecase: EntityUseCase<T, TReducers & EntityReducers<T>>
   ): TReturnedReducers;
 
   <
@@ -64,45 +74,11 @@ export interface EntityReducersCreator {
     TReturnedReducers = ScopedEntityReducers<T, TReducers>
   >(
     entity: T,
-    usecase: EntityUseCase<T, TReducers, TUseCaseOptions> & UseCase<TReducers, TUseCaseOptions>,
+    usecase: EntityUseCase<T, TReducers & EntityReducers<T>, TUseCaseOptions>,
     options: TOptions
   ): TReturnedReducers;
 }
 
 export interface EntityReducerReducers {
-  createEntityReducers<
-    T,
-    TReducers extends EntityReducers<T>,
-    TReturnedReducers = SmoothedEntityReducers<T, TReducers>
-  >(
-    usecase: EntityUseCase<T, TReducers & EntityReducers<T>>
-  ): TReturnedReducers;
-
-  createEntityReducers<
-    T,
-    TReducers extends EntityReducers<T>,
-    TUseCaseOptions extends object = object,
-    TOptions extends CreateEntityReducersOptions<T, TUseCaseOptions> = CreateEntityReducersOptions<T, TUseCaseOptions>,
-    TReturnedReducers = SmoothedEntityReducers<T, TReducers>
-  >(
-    usecase: EntityUseCase<T, TReducers & EntityReducers<T>, TUseCaseOptions>,
-    options: TOptions
-  ): TReturnedReducers;
-
-  createEntityReducers<T, TReducers extends EntityReducers<T>, TReturnedReducers = ScopedEntityReducers<T, TReducers>>(
-    entity: T,
-    usecase: EntityUseCase<T, TReducers & EntityReducers<T>>
-  ): TReturnedReducers;
-
-  createEntityReducers<
-    T,
-    TReducers extends EntityReducers<T>,
-    TUseCaseOptions extends object = object,
-    TOptions extends CreateEntityReducersOptions<T, TUseCaseOptions> = CreateEntityReducersOptions<T, TUseCaseOptions>,
-    TReturnedReducers = ScopedEntityReducers<T, TReducers>
-  >(
-    entity: T,
-    usecase: EntityUseCase<T, TReducers & EntityReducers<T>, TUseCaseOptions>,
-    options: TOptions
-  ): TReturnedReducers;
+  createEntityReducers: EntityReducersCreator;
 }
