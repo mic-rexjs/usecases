@@ -20,21 +20,21 @@ export const entityGeneratorUseCase = (): EntityGeneratorReducers => {
       for (;;) {
         const ret = generator.next(onSync());
         const { value, done: hasDone } = ret instanceof Promise ? await ret : ret;
-        const prevEntity = onSync();
+        const oldEntity = onSync();
 
         if (hasDone) {
           const result = value as TResult;
 
           values[1] = result;
-          onReturn?.(result, prevEntity);
+          onReturn?.(result, oldEntity);
           break;
         }
 
         const isFunction = typeof value === 'function';
-        const newEntity = isFunction ? (value as YieldEntityCallback<T>)(prevEntity) : (value as T);
+        const newEntity = isFunction ? (value as YieldEntityCallback<T>)(oldEntity) : (value as T);
 
         values[0] = newEntity;
-        onYield?.(newEntity, prevEntity);
+        onYield?.(newEntity, oldEntity);
       }
 
       return values as EntityGeneratorValues<T, TResult>;

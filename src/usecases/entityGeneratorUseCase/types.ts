@@ -17,7 +17,7 @@ export type ExtractEntityGeneratorValues<
 export interface EntityGeneratorDoneOptions<T, TResult> {
   onSync?(): T;
 
-  onYield?(entity: T, prevEntity?: T): void;
+  onYield?(newEntity: T, oldEntity?: T): void;
 
   onReturn?(result: TResult, entity: T): void;
 }

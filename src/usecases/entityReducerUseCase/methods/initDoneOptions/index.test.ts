@@ -19,13 +19,13 @@ describe('initDoneOptions', (): void => {
   });
 
   describe('onYield', (): void => {
-    test('should trigger `onChange` event when entity is not equal prevEntity', (): void => {
+    test('should trigger `onChange` event when entity is not equal oldEntity', (): void => {
       const entity = {};
       const newEntity = {};
       const entityRef = createRef(entity);
       const reducerRef = createRef((): void => {});
       const reducers = entityUseCase<object>();
-      const onChange = jest.fn<(entity: object, prevEntity: object) => void>();
+      const onChange = jest.fn<(newEntity: object, oldEntity: object) => void>();
       const { onYield } = initDoneOptions(entityRef, reducerRef, reducers, { onChange });
 
       onYield?.(newEntity, entity);
@@ -34,12 +34,12 @@ describe('initDoneOptions', (): void => {
       expect(onChange).toHaveBeenCalledWith(newEntity, entity);
     });
 
-    test('should not trigger `onChange` event when entity is equal prevEntity', (): void => {
+    test('should not trigger `onChange` event when entity is equal oldEntity', (): void => {
       const entity = {};
       const entityRef = createRef(entity);
       const reducerRef = createRef((): void => {});
       const reducers = entityUseCase<object>();
-      const onChange = jest.fn<(entity: object, prevEntity: object) => void>();
+      const onChange = jest.fn<(newEntity: object, oldEntity: object) => void>();
       const { onYield } = initDoneOptions(entityRef, reducerRef, reducers, { onChange });
 
       onYield?.(entity, entity);

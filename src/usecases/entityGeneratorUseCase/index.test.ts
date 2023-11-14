@@ -19,12 +19,12 @@ const reducerAsync = async function* (): AsyncEntityGenerator<number, string> {
 };
 
 const reducerWithYieldFn = function* (entity: number): EntityGenerator<number, number> {
-  yield (prevEntity = entity): number => {
-    return prevEntity + 10;
+  yield (currentEntity = entity): number => {
+    return currentEntity + 10;
   };
 
-  const newEntity = yield (prevEntity = 1): number => {
-    return prevEntity + 100;
+  const newEntity = yield (currentEntity = 1): number => {
+    return currentEntity + 100;
   };
 
   return yield newEntity + 1000;
@@ -33,14 +33,14 @@ const reducerWithYieldFn = function* (entity: number): EntityGenerator<number, n
 const reducerWithYieldFnAsync = async function* (entity: number): AsyncEntityGenerator<number, number> {
   await Promise.resolve(null);
 
-  yield (prevEntity = entity): number => {
-    return prevEntity + 10;
+  yield (currentEntity = entity): number => {
+    return currentEntity + 10;
   };
 
   await Promise.resolve(null);
 
-  const newEntity = yield (prevEntity: number): number => {
-    return prevEntity + 100;
+  const newEntity = yield (currentEntity: number): number => {
+    return currentEntity + 100;
   };
 
   return yield newEntity + 1000;

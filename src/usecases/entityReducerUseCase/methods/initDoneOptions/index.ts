@@ -18,19 +18,19 @@ export const initDoneOptions = <T, TResult, TReducers extends EntityReducers<T>>
     onSync(): T {
       return entityRef.current;
     },
-    onYield(nextEntity: T, prevEntity: T): void {
-      if (nextEntity === prevEntity) {
+    onYield(nextEntity: T, oldEntity: T): void {
+      if (nextEntity === oldEntity) {
         return;
       }
 
       let newEntity = nextEntity;
 
       if (reducerRef.current !== setEntity) {
-        [newEntity] = done(setEntity(prevEntity, nextEntity));
+        [newEntity] = done(setEntity(oldEntity, nextEntity));
       }
 
       entityRef.current = newEntity;
-      onChange?.(newEntity, prevEntity);
+      onChange?.(newEntity, oldEntity);
     },
   };
 };

@@ -103,43 +103,43 @@ describe('entityReducerUseCase', (): void => {
 
     describe('entity', (): void => {
       test('check `entity.value` on set entity callback - entity mode', async (): Promise<void> => {
-        let prevValue = 0;
+        let oldValue = 0;
         const { setEntity } = createEntityReducers({ value: 1 }, testUseCase);
 
         await new Promise((res: (v: null) => void): void => {
           setEntity((entity: Data): Data => {
             const { value } = entity;
 
-            prevValue = value;
+            oldValue = value;
             return entity;
           });
 
           res(null);
         });
 
-        expect(prevValue).toBe(1);
+        expect(oldValue).toBe(1);
       });
 
       test('check `entity.value` on set entity callback - non-entity mode', async (): Promise<void> => {
-        let prevValue = 0;
+        let oldValue = 0;
         const { setEntity } = createEntityReducers(testUseCase);
 
         await new Promise((res: (v: null) => void): void => {
           setEntity({ value: 1 }, (entity: Data): Data => {
             const { value } = entity;
 
-            prevValue = value;
+            oldValue = value;
             return entity;
           });
 
           res(null);
         });
 
-        expect(prevValue).toBe(1);
+        expect(oldValue).toBe(1);
       });
 
       test('check `entity.value` after call setEntity on set entity callback - entity mode', async (): Promise<void> => {
-        let prevValue = 0;
+        let oldValue = 0;
         const { setEntity } = createEntityReducers({ value: 1 }, testUseCase);
 
         setEntity({ value: 2 });
@@ -148,18 +148,18 @@ describe('entityReducerUseCase', (): void => {
           setEntity((entity: Data): Data => {
             const { value } = entity;
 
-            prevValue = value;
+            oldValue = value;
             return entity;
           });
 
           res(null);
         });
 
-        expect(prevValue).toBe(2);
+        expect(oldValue).toBe(2);
       });
 
       test('check `entity.value` after call setEntity on set entity callback - non-entity mode', async (): Promise<void> => {
-        let prevEntity = 0;
+        let oldEntity = 0;
         const { setEntity } = createEntityReducers(testUseCase);
 
         setEntity({ value: 1 }, { value: 2 });
@@ -168,14 +168,14 @@ describe('entityReducerUseCase', (): void => {
           setEntity({ value: 3 }, (entity: Data): Data => {
             const { value } = entity;
 
-            prevEntity = value;
+            oldEntity = value;
             return entity;
           });
 
           res(null);
         });
 
-        expect(prevEntity).toBe(3);
+        expect(oldEntity).toBe(3);
       });
     });
 

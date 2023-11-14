@@ -9,7 +9,7 @@ import {
 } from '@/types';
 
 export interface CreateEntityReducersOwnOptions<T> {
-  onChange?(newEntity: T, prevEntity: T): void;
+  onChange?(newEntity: T, oldEntity: T): void;
 
   onGenerate?(entity: T, result: unknown): unknown;
 }

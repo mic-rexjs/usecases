@@ -36,7 +36,7 @@ export type EntityGeneratorValues<T, TResult> = [entity: T, result: TResult];
 export type AsyncEntityGeneratorValues<T, TResult> = Promise<EntityGeneratorValues<T, TResult>>;
 
 export interface SetEntityCallback<T> {
-  (prevEntity: T): T;
+  (currentEntity: T): T;
 }
 
 export type SettableEntity<T> = T | SetEntityCallback<T>;

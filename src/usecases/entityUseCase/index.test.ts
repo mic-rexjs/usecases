@@ -18,8 +18,8 @@ describe('entityUseCase', (): void => {
     test('`setEntity` should work with a set entity callback', (): void => {
       const { done } = entityGeneratorUseCase();
 
-      const gen = setEntity(1, (prevEntity: number): number => {
-        return prevEntity + 2;
+      const gen = setEntity(1, (entity: number): number => {
+        return entity + 2;
       });
 
       const [entity, result] = done(gen);
