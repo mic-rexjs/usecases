@@ -6,12 +6,15 @@ import {
   EntityReducer,
   EntityReducers,
   EntityUseCase,
+  Reducer,
 } from '@/types';
 
 export interface CreateEntityReducersOwnOptions<T> {
   onChange?(newEntity: T, oldEntity: T): void;
 
   onGenerate?(entity: T, result: unknown): unknown;
+
+  onMap?<TReducer extends Reducer>(reducer: Reducer, key: string): TReducer;
 }
 
 export type CreateEntityReducersOptions<T, TOptions extends object> = TOptions & CreateEntityReducersOwnOptions<T>;
@@ -20,7 +23,7 @@ export type CreateEntityReducersOptionsWithDefaults<T, TOptions extends object> 
   T,
   TOptions
 > &
-  Required<Pick<CreateEntityReducersOwnOptions<T>, 'onGenerate'>>;
+  Required<Pick<CreateEntityReducersOwnOptions<T>, 'onGenerate' | 'onMap'>>;
 
 export type SmoothEntityReducer<T, TReducer extends EntityReducer<T>> = TReducer extends (
   entity: T,

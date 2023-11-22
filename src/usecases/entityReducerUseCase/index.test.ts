@@ -1,6 +1,6 @@
 import { describe, expect, jest, test } from '@jest/globals';
 import { entityReducerUseCase } from '.';
-import { AsyncEntityGenerator, EntityGenerator, EntityReducers, EntityUseCase } from '@/types';
+import { AsyncEntityGenerator, EntityGenerator, EntityReducers, EntityUseCase, Reducer } from '@/types';
 import { entityUseCase } from '../entityUseCase';
 
 interface Data {
@@ -419,6 +419,31 @@ describe('entityReducerUseCase', (): void => {
         const result2 = await addAsync({ value: 3 }, 2);
         expect(onGenerate).toHaveBeenCalledTimes(2);
         expect(result2).toBe('[5](5)');
+      });
+
+      test('`options.onMap` should capture all reducers', async (): Promise<void> => {
+        const testReducer = jest.fn();
+
+        const onMap = jest.fn((): Reducer => {
+          return testReducer;
+        }) as <TReducer extends Reducer>() => TReducer;
+
+        const reducers = testUseCase();
+        const keys = Object.keys(reducers);
+
+        const entityReducers = createEntityReducers(testUseCase, {
+          onMap,
+        });
+
+        expect(onMap).toHaveBeenCalledTimes(keys.length);
+
+        expect(entityReducers).toEqual(
+          Object.fromEntries(
+            keys.map((key): [string, Reducer] => {
+              return [key, testReducer];
+            })
+          )
+        );
       });
 
       test('`options.defaultData` should be the initial entity - entity mode', (): void => {
