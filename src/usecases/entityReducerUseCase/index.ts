@@ -25,21 +25,21 @@ export const entityReducerUseCase = (): EntityReducerReducers => {
     arg2?: TUseCase | CreateEntityReducersOptions<T, TUseCaseOptions>,
     arg3?: CreateEntityReducersOptions<T, TUseCaseOptions>
   ): TReturnedReducers => {
-    const hasDefaultEntity = typeof arg2 === 'function';
-    const defaultEntity = (hasDefaultEntity ? arg1 : null) as T;
-    const usecase = (hasDefaultEntity ? arg2 : arg1) as EntityUseCase<T, TReducers, TUseCaseOptions>;
-    const options = (hasDefaultEntity ? arg3 : arg2) as CreateEntityReducersOptions<T, TUseCaseOptions>;
+    const hasInitialEntity = typeof arg2 === 'function';
+    const initialEntity = (hasInitialEntity ? arg1 : null) as T;
+    const usecase = (hasInitialEntity ? arg2 : arg1) as EntityUseCase<T, TReducers, TUseCaseOptions>;
+    const options = (hasInitialEntity ? arg3 : arg2) as CreateEntityReducersOptions<T, TUseCaseOptions>;
     const { onChange, onGenerate, ...usecaseOptions } = initOptions(options);
     const reducers: Partial<TReturnedReducers> = {};
     const originalReducers = usecase(usecaseOptions as TUseCaseOptions);
     const { setEntity } = originalReducers;
-    const entityRef = createRef(defaultEntity);
+    const entityRef = createRef(initialEntity);
     const reducerRef = createRef<EntityReducer<T>>(setEntity);
     const doneOptions = initDoneOptions(entityRef, reducerRef, originalReducers, options);
 
     for (const [key, reducer] of Object.entries(originalReducers)) {
       reducers[key as keyof TReturnedReducers] = (<TResult>(...restArgs: Parameters<EntityReducer<T>>): unknown => {
-        const reducerArgs = (hasDefaultEntity ? [entityRef.current, ...restArgs] : restArgs) as Parameters<
+        const reducerArgs = (hasInitialEntity ? [entityRef.current, ...restArgs] : restArgs) as Parameters<
           EntityReducer<T>
         >;
 
@@ -48,7 +48,7 @@ export const entityReducerUseCase = (): EntityReducerReducers => {
 
         reducerRef.current = reducer;
 
-        if (!hasDefaultEntity) {
+        if (!hasInitialEntity) {
           entityRef.current = restArgs[0];
         }
 
