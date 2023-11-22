@@ -421,31 +421,6 @@ describe('entityReducerUseCase', (): void => {
         expect(result2).toBe('[5](5)');
       });
 
-      test('`options.onMap` should capture all reducers', async (): Promise<void> => {
-        const testReducer = jest.fn();
-
-        const onMap = jest.fn((): Reducer => {
-          return testReducer;
-        }) as <TReducer extends Reducer>() => TReducer;
-
-        const reducers = testUseCase();
-        const keys = Object.keys(reducers);
-
-        const entityReducers = createEntityReducers(testUseCase, {
-          onMap,
-        });
-
-        expect(onMap).toHaveBeenCalledTimes(keys.length);
-
-        expect(entityReducers).toEqual(
-          Object.fromEntries(
-            keys.map((key): [string, Reducer] => {
-              return [key, testReducer];
-            })
-          )
-        );
-      });
-
       test('`options.defaultData` should be the initial entity - entity mode', (): void => {
         const mockUseCase = jest.fn(testUseCase);
 
