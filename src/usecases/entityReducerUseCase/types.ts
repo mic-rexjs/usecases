@@ -77,7 +77,7 @@ export interface EntityReducersCreator {
     TReturnedReducers = ScopedEntityReducers<T, TEntityReducers>
   >(
     initailEntity: T,
-    usecase: EntityUseCase<T, TEntityReducers> &
+    usecase: EntityUseCase<T, TEntityReducers, TUseCaseOptions> &
       /**
        * 1. 如果不使用 `&`，那么很多情况下 `options` 类型无法被正确推导；
        * 因为使用 `&` 是为了让该参数 `usecase` 的泛型 `T` 推导占优先级，
