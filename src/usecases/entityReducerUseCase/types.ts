@@ -88,7 +88,7 @@ export interface EntityReducersCreator {
        * 这是不应该的，所以要使用不带泛型参数的 `TEntityReducers`。
        *
        * 推导权重等级应该是：`initailEntity` > `usecase` > `options`，
-       * 即：以 `initailEntity` 中的泛型 `T` 为准.
+       * 即：以 `initailEntity` 中的泛型 `T` 为准。
        */
       UseCase<TEntityReducers, TUseCaseOptions>,
     options?: CreateEntityReducersOptions<T, TUseCaseOptions>
