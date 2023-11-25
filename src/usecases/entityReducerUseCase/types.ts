@@ -54,36 +54,44 @@ export type ScopedEntityReducers<T, TReducers extends EntityReducers<T>> = {
 };
 
 export interface EntityReducersCreator {
-  <T, TReducers extends EntityReducers<T>, TReturnedReducers = SmoothedEntityReducers<T, TReducers>>(
-    usecase: EntityUseCase<T, TReducers> & UseCase<EntityReducers<T>>
+  <
+    T,
+    TEntityReducers extends EntityReducers<T>,
+    TUseCaseOptions extends object = object,
+    TReturnedReducers = SmoothedEntityReducers<T, TEntityReducers>
+  >(
+    usecase: EntityUseCase<T, TEntityReducers, TUseCaseOptions> &
+      /**
+       * 如果不使用 `&`，那么很多情况下 `options` 类型无法被正确推导；
+       * 因为使用 `&` 是为了让该参数 `usecase` 的泛型 `T` 推导占优先级，
+       * 从而保证 `options` 里的泛型 `T` 是根据 `usecase` 来推导的。
+       */
+      UseCase<EntityReducers<T>, TUseCaseOptions>,
+    options?: CreateEntityReducersOptions<T, TUseCaseOptions>
   ): TReturnedReducers;
 
   <
     T,
-    TReducers extends EntityReducers<T>,
+    TEntityReducers extends EntityReducers<T>,
     TUseCaseOptions extends object = object,
-    TOptions extends CreateEntityReducersOptions<T, TUseCaseOptions> = CreateEntityReducersOptions<T, TUseCaseOptions>,
-    TReturnedReducers = SmoothedEntityReducers<T, TReducers>
+    TReturnedReducers = ScopedEntityReducers<T, TEntityReducers>
   >(
-    usecase: EntityUseCase<T, TReducers, TUseCaseOptions> & UseCase<EntityReducers<T>, TUseCaseOptions>,
-    options: TOptions
-  ): TReturnedReducers;
-
-  <T, TReducers extends EntityReducers<T>, TReturnedReducers = ScopedEntityReducers<T, TReducers>>(
-    entity: T,
-    usecase: EntityUseCase<T, TReducers> & UseCase<EntityReducers<T>>
-  ): TReturnedReducers;
-
-  <
-    T,
-    TReducers extends EntityReducers<T>,
-    TUseCaseOptions extends object = object,
-    TOptions extends CreateEntityReducersOptions<T, TUseCaseOptions> = CreateEntityReducersOptions<T, TUseCaseOptions>,
-    TReturnedReducers = ScopedEntityReducers<T, TReducers>
-  >(
-    entity: T,
-    usecase: EntityUseCase<T, TReducers, TUseCaseOptions> & UseCase<EntityReducers<T>, TUseCaseOptions>,
-    options: TOptions
+    initailEntity: T,
+    usecase: EntityUseCase<T, TEntityReducers> &
+      /**
+       * 1. 如果不使用 `&`，那么很多情况下 `options` 类型无法被正确推导；
+       * 因为使用 `&` 是为了让该参数 `usecase` 的泛型 `T` 推导占优先级，
+       * 从而保证 `options` 里的泛型 `T` 是根据 `usecase` 来推导的。
+       *
+       * 2. 以 `TEntityReducers` 代替了 `EntityReducers<T>`，
+       * 因为如果使用 `EntityReducers<T>` 则会导致其推导优先级比 `initailEntity` 还高，
+       * 这是不应该的，所以要使用不带泛型参数的 `TEntityReducers`。
+       *
+       * 推导权重等级应该是：`initailEntity` > `usecase` > `options`，
+       * 即：以 `initailEntity` 中的泛型 `T` 为准.
+       */
+      UseCase<TEntityReducers, TUseCaseOptions>,
+    options?: CreateEntityReducersOptions<T, TUseCaseOptions>
   ): TReturnedReducers;
 }
 

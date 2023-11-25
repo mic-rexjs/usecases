@@ -1,6 +1,6 @@
 import { describe, expect, jest, test } from '@jest/globals';
 import { entityReducerUseCase } from '.';
-import { AsyncEntityGenerator, EntityGenerator, EntityReducers, EntityUseCase, Reducer } from '@/types';
+import { AsyncEntityGenerator, EntityGenerator, EntityReducers, EntityUseCase } from '@/types';
 import { entityUseCase } from '../entityUseCase';
 
 interface Data {
