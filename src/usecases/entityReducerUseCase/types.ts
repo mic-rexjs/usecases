@@ -6,7 +6,7 @@ import {
   EntityReducer,
   EntityReducers,
   EntityUseCase,
-  Reducer,
+  UseCase,
 } from '@/types';
 
 export interface CreateEntityReducersOwnOptions<T> {
@@ -55,7 +55,7 @@ export type ScopedEntityReducers<T, TReducers extends EntityReducers<T>> = {
 
 export interface EntityReducersCreator {
   <T, TReducers extends EntityReducers<T>, TReturnedReducers = SmoothedEntityReducers<T, TReducers>>(
-    usecase: EntityUseCase<T, TReducers & EntityReducers<T>>
+    usecase: EntityUseCase<T, TReducers> & UseCase<EntityReducers<T>>
   ): TReturnedReducers;
 
   <
@@ -65,13 +65,13 @@ export interface EntityReducersCreator {
     TOptions extends CreateEntityReducersOptions<T, TUseCaseOptions> = CreateEntityReducersOptions<T, TUseCaseOptions>,
     TReturnedReducers = SmoothedEntityReducers<T, TReducers>
   >(
-    usecase: EntityUseCase<T, TReducers & EntityReducers<T>, TUseCaseOptions>,
+    usecase: EntityUseCase<T, TReducers, TUseCaseOptions> & UseCase<EntityReducers<T>>,
     options: TOptions
   ): TReturnedReducers;
 
   <T, TReducers extends EntityReducers<T>, TReturnedReducers = ScopedEntityReducers<T, TReducers>>(
     entity: T,
-    usecase: EntityUseCase<T, TReducers & EntityReducers<T>>
+    usecase: EntityUseCase<T, TReducers> & UseCase<EntityReducers<T>>
   ): TReturnedReducers;
 
   <
@@ -82,7 +82,7 @@ export interface EntityReducersCreator {
     TReturnedReducers = ScopedEntityReducers<T, TReducers>
   >(
     entity: T,
-    usecase: EntityUseCase<T, TReducers & EntityReducers<T>, TUseCaseOptions>,
+    usecase: EntityUseCase<T, TReducers, TUseCaseOptions> & UseCase<EntityReducers<T>>,
     options: TOptions
   ): TReturnedReducers;
 }
