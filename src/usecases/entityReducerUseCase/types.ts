@@ -65,7 +65,7 @@ export interface EntityReducersCreator {
     TOptions extends CreateEntityReducersOptions<T, TUseCaseOptions> = CreateEntityReducersOptions<T, TUseCaseOptions>,
     TReturnedReducers = SmoothedEntityReducers<T, TReducers>
   >(
-    usecase: EntityUseCase<T, TReducers, TUseCaseOptions> & UseCase<EntityReducers<T>>,
+    usecase: EntityUseCase<T, TReducers, TUseCaseOptions> & UseCase<EntityReducers<T>, TUseCaseOptions>,
     options: TOptions
   ): TReturnedReducers;
 
@@ -82,7 +82,7 @@ export interface EntityReducersCreator {
     TReturnedReducers = ScopedEntityReducers<T, TReducers>
   >(
     entity: T,
-    usecase: EntityUseCase<T, TReducers, TUseCaseOptions> & UseCase<EntityReducers<T>>,
+    usecase: EntityUseCase<T, TReducers, TUseCaseOptions> & UseCase<EntityReducers<T>, TUseCaseOptions>,
     options: TOptions
   ): TReturnedReducers;
 }
