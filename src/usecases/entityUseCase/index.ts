@@ -1,9 +1,9 @@
 import { EntityGenerator, EntityReducers, SetEntityCallback, SettableEntity } from '@/types';
 
 export const entityUseCase = <T>(): EntityReducers<T, Record<never, never>> => {
-  const setEntity = function* (entity: T, settableEntity: SettableEntity<T>): EntityGenerator<T, T> {
+  const setEntity = function* <S extends T>(entity: S, settableEntity: SettableEntity<S>): EntityGenerator<S, S> {
     const isFunction = typeof settableEntity === 'function';
-    const newEntity = isFunction ? (settableEntity as SetEntityCallback<T>)(entity) : settableEntity;
+    const newEntity = isFunction ? (settableEntity as SetEntityCallback<S>)(entity) : settableEntity;
 
     if (entity === newEntity) {
       return entity;

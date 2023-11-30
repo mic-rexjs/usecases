@@ -5,6 +5,6 @@ export type SettableObjectEntity<T extends object> = Partial<T> | SetEntityCallb
 export type ObjectReducers<T extends object> = EntityReducers<
   T,
   {
-    setEntity(entity: T, settableEntity: SettableObjectEntity<T>): EntityGenerator<T, T>;
+    setEntity<S extends T>(entity: S, settableEntity: SettableObjectEntity<S>): EntityGenerator<S, S>;
   }
 >;

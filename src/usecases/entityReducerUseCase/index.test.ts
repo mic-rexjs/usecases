@@ -16,9 +16,9 @@ type TestReducers<T extends Data> = EntityReducers<
   {
     getResult(entity: T, value: number): number;
     getResultAsync(entity: T, value: number): Promise<number>;
-    add(entity: T, value: number): EntityGenerator<T, string>;
-    addAsync(entity: T, value: number): AsyncEntityGenerator<T, string>;
-    addListAsync(entity: T, values: number[]): AsyncEntityGenerator<T, string>;
+    add<S extends T>(entity: S, value: number): EntityGenerator<S, string>;
+    addAsync<S extends T>(entity: S, value: number): AsyncEntityGenerator<S, string>;
+    addListAsync<S extends T>(entity: S, values: number[]): AsyncEntityGenerator<S, string>;
   }
 >;
 
@@ -47,7 +47,7 @@ const testUseCase = <T extends Data>(options: Options<T> = {}): TestReducers<T> 
     return entity.value + value;
   };
 
-  const add = function* (entity: T, value: number): EntityGenerator<T, string> {
+  const add = function* <S extends T>(entity: S, value: number): EntityGenerator<S, string> {
     const newEntity = yield {
       ...entity,
       value: entity.value + value,
@@ -56,7 +56,7 @@ const testUseCase = <T extends Data>(options: Options<T> = {}): TestReducers<T> 
     return `[${newEntity.value}]`;
   };
 
-  const addAsync = async function* addAsync(entity: T, value: number): AsyncEntityGenerator<T, string> {
+  const addAsync = async function* <S extends T>(entity: S, value: number): AsyncEntityGenerator<S, string> {
     await Promise.resolve(null);
 
     const newEntity = yield {
@@ -68,7 +68,7 @@ const testUseCase = <T extends Data>(options: Options<T> = {}): TestReducers<T> 
     return `[${newEntity.value}]`;
   };
 
-  const addListAsync = async function* addListAsync(entity: T, values: number[]): AsyncEntityGenerator<T, string> {
+  const addListAsync = async function* <S extends T>(entity: S, values: number[]): AsyncEntityGenerator<S, string> {
     let newEntity = entity;
 
     for (const value of values) {

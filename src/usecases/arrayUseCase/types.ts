@@ -7,20 +7,25 @@ export interface ArrayEntityFilter<T> {
 export type ArrayReducers<T> = EntityReducers<
   T[],
   {
-    extractEntity(entity: T[], filter: ArrayEntityFilter<T>): T[];
+    extractEntity<S extends T>(entity: S[], filter: ArrayEntityFilter<S>): S[];
 
-    fillEntity(entity: T[], value: T, start?: number, end?: number): EntityGenerator<T[], T[]>;
+    fillEntity<S extends T>(entity: S[], value: S, start?: number, end?: number): EntityGenerator<S[], S[]>;
 
-    filterEntity(entity: T[], filter: ArrayEntityFilter<T>): EntityGenerator<T[], T[]>;
+    filterEntity<S extends T>(entity: S[], filter: ArrayEntityFilter<S>): EntityGenerator<S[], S[]>;
 
-    popEntity(entity: T[]): EntityGenerator<T[], T | undefined>;
+    popEntity<S extends T>(entity: S[]): EntityGenerator<S[], S | undefined>;
 
-    pushEntity(entity: T[], ...items: T[]): EntityGenerator<T[], number>;
+    pushEntity<S extends T>(entity: S[], ...items: S[]): EntityGenerator<S[], number>;
 
-    shiftEntity(entity: T[]): EntityGenerator<T[], T | undefined>;
+    shiftEntity<S extends T>(entity: S[]): EntityGenerator<S[], S | undefined>;
 
-    spliceEntity(entity: T[], start: number, deleteCount?: number, ...items: T[]): EntityGenerator<T[], T[]>;
+    spliceEntity<S extends T>(
+      entity: S[],
+      start: number,
+      deleteCount?: number,
+      ...items: S[]
+    ): EntityGenerator<S[], S[]>;
 
-    unshiftEntity(entity: T[], ...items: T[]): EntityGenerator<T[], number>;
+    unshiftEntity<S extends T>(entity: S[], ...items: S[]): EntityGenerator<S[], number>;
   }
 >;

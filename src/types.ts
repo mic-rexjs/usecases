@@ -50,7 +50,7 @@ export interface EntityReducerMap<T> {
 }
 
 export type EntityBaseReducers<T> = {
-  setEntity(entity: T, settableEntity: SettableEntity<T>): EntityGenerator<T, T>;
+  setEntity<S extends T>(entity: S, settableEntity: SettableEntity<S>): EntityGenerator<S, S>;
 };
 
 export type EntityReducers<

@@ -5,22 +5,27 @@ import { ArrayEntityFilter, ArrayReducers } from './types';
 export const arrayUseCase = <T>(): ArrayReducers<T> => {
   const entityReducers = entityUseCase<T[]>();
 
-  const extractEntity = (entity: T[], filter: ArrayEntityFilter<T>): T[] => {
+  const extractEntity = <S extends T>(entity: S[], filter: ArrayEntityFilter<S>): S[] => {
     return entity.filter(filter);
   };
 
-  const fillEntity = function* (entity: T[], value: T, start?: number, end?: number): EntityGenerator<T[], T[]> {
+  const fillEntity = function* <S extends T>(
+    entity: S[],
+    value: S,
+    start?: number,
+    end?: number
+  ): EntityGenerator<S[], S[]> {
     const newEntity = entity.slice();
 
     newEntity.fill(value, start, end);
     return yield newEntity;
   };
 
-  const filterEntity = function* (entity: T[], filter: ArrayEntityFilter<T>): EntityGenerator<T[], T[]> {
+  const filterEntity = function* <S extends T>(entity: S[], filter: ArrayEntityFilter<S>): EntityGenerator<S[], S[]> {
     return yield entity.filter(filter);
   };
 
-  const popEntity = function* (entity: T[]): EntityGenerator<T[], T | undefined> {
+  const popEntity = function* <S extends T>(entity: S[]): EntityGenerator<S[], S | undefined> {
     const newEntity = entity.slice();
     const item = newEntity.pop();
 
@@ -28,7 +33,7 @@ export const arrayUseCase = <T>(): ArrayReducers<T> => {
     return item;
   };
 
-  const pushEntity = function* (entity: T[], ...items: T[]): EntityGenerator<T[], number> {
+  const pushEntity = function* <S extends T>(entity: S[], ...items: S[]): EntityGenerator<S[], number> {
     const newEntity = [...entity, ...items];
     const { length } = newEntity;
 
@@ -36,7 +41,7 @@ export const arrayUseCase = <T>(): ArrayReducers<T> => {
     return length;
   };
 
-  const shiftEntity = function* (entity: T[]): EntityGenerator<T[], T | undefined> {
+  const shiftEntity = function* <S extends T>(entity: S[]): EntityGenerator<S[], S | undefined> {
     const newEntity = entity.slice();
     const item = newEntity.shift();
 
@@ -44,18 +49,18 @@ export const arrayUseCase = <T>(): ArrayReducers<T> => {
     return item;
   };
 
-  const spliceEntity = function* (
-    entity: T[],
-    ...args: [start: number, deleteCount?: number, ...items: T[]]
-  ): EntityGenerator<T[], T[]> {
+  const spliceEntity = function* <S extends T>(
+    entity: S[],
+    ...args: [start: number, deleteCount?: number, ...items: S[]]
+  ): EntityGenerator<S[], S[]> {
     const newEntity = entity.slice();
-    const splicedItems = newEntity.splice(...(args as [number, number, ...T[]]));
+    const splicedItems = newEntity.splice(...(args as [number, number, ...S[]]));
 
     yield newEntity;
     return splicedItems;
   };
 
-  const unshiftEntity = function* (entity: T[], ...items: T[]): EntityGenerator<T[], number> {
+  const unshiftEntity = function* <S extends T>(entity: S[], ...items: S[]): EntityGenerator<S[], number> {
     const newEntity = [...items, ...entity];
     const { length } = newEntity;
 
