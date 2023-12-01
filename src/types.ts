@@ -1,5 +1,7 @@
+export type RestArguments = IArguments[number][];
+
 export interface Reducer<T = unknown> {
-  (...args: never[]): T;
+  (...args: RestArguments): T;
 }
 
 export interface ReducerMap {
@@ -42,7 +44,7 @@ export interface SetEntityCallback<T> {
 export type SettableEntity<T> = T | SetEntityCallback<T>;
 
 export interface EntityReducer<T, TReturn = unknown> {
-  (entity: T, ...args: never[]): TReturn;
+  (entity: T, ...args: RestArguments): TReturn;
 }
 
 export interface EntityReducerMap<T> {
