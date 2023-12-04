@@ -9,9 +9,11 @@ export { objectUseCase } from './usecases/objectUseCase';
 export type {
   Reducer,
   Reducers,
+  ReducerMap,
   UseCase,
   EntityReducer,
   EntityReducers,
+  EntityReducerMap,
   EntityUseCase,
   EntityGenerator,
   AsyncEntityGenerator,
