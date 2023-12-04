@@ -1,17 +1,22 @@
+declare const reducerTag: unique symbol;
+
 export type RestArguments = IArguments[number][];
 
 export interface Reducer<T = unknown> {
   (...args: RestArguments): T;
 }
 
-export interface ReducerMap {
-  [k: string]: Reducer;
+export interface ReducerMap<T extends Reducer = Reducer> {
+  [k: string]: T;
 }
 
-export type Reducers<T extends ReducerMap = ReducerMap, TExtends extends ReducerMap = Record<never, never>> = TExtends &
-  T;
+export type BaseReducers = {
+  readonly [reducerTag]?: unique symbol;
+};
 
-export interface UseCase<T extends Reducers, TOptions extends object = object> {
+export type Reducers<T extends ReducerMap = ReducerMap, TExtends extends ReducerMap = BaseReducers> = TExtends & T;
+
+export interface UseCase<T extends ReducerMap, TOptions extends object = object> {
   (options?: TOptions): T;
 }
 
@@ -47,22 +52,22 @@ export interface EntityReducer<T, TReturn = unknown> {
   (entity: T, ...args: RestArguments): TReturn;
 }
 
-export interface EntityReducerMap<T> {
-  [k: string]: EntityReducer<T>;
-}
+export interface EntityReducerMap<T> extends ReducerMap<EntityReducer<T>> {}
 
-export type EntityBaseReducers<T> = {
+export type BaseEntityReducers<T> = {
   setEntity<S extends T>(entity: S, settableEntity: SettableEntity<S>): EntityGenerator<S, S>;
+
+  readonly [reducerTag]?: unique symbol;
 };
 
 export type EntityReducers<
   T,
-  TReducers extends EntityReducerMap<T> & Partial<EntityBaseReducers<T>> = EntityReducerMap<T>,
-  TExtends extends EntityReducerMap<T> & EntityBaseReducers<T> = EntityBaseReducers<T>
+  TReducers extends EntityReducerMap<T> = EntityReducerMap<T>,
+  TExtends extends EntityReducerMap<T> = BaseEntityReducers<T>
 > = Reducers<TReducers, TExtends>;
 
 export interface EntityUseCase<
   T,
-  TReducers extends EntityReducers<T> = EntityBaseReducers<T>,
+  TReducers extends EntityReducerMap<T> = BaseEntityReducers<T>,
   TOptions extends object = object
 > extends UseCase<TReducers, TOptions> {}
