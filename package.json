@@ -1,6 +1,6 @@
 {
   "name": "@mic-rexjs/usecases",
-  "version": "1.4.26",
+  "version": "1.4.27",
   "description": "Usecases of Clean Architecture",
   "private": true,
   "keywords": [
@@ -24,7 +24,6 @@
     "test-staged": "jest --config=./configs/jest.config.ts --findRelatedTests $(git diff --name-only --cached) --passWithNoTests"
   },
   "main": "lib/index.js",
-  "module": "es/index.js",
   "typings": "es/index.d.ts",
   "unpkg": "dist/index.min.js",
   "files": [
