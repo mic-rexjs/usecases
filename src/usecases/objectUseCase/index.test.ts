@@ -1,8 +1,8 @@
 import { describe, expect, test } from '@jest/globals';
-import { entityReducerUseCase } from '../entityReducerUseCase';
 import { objectUseCase } from '.';
 import { EntityUseCase } from '@/types';
 import { ObjectReducers } from './types';
+import { createEntityReducers } from '@/methods/createEntityReducers';
 
 interface Data {
   key: string;
@@ -10,7 +10,6 @@ interface Data {
   value: number;
 }
 
-const { createEntityReducers } = entityReducerUseCase();
 const dataUseCase = objectUseCase as EntityUseCase<Data, ObjectReducers<Data>>;
 
 describe('objectUseCase', (): void => {

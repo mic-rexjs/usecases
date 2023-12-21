@@ -87,7 +87,3 @@ export interface EntityReducersCreator {
     options?: CreateEntityReducersOptions<T, TUseCaseOptions>
   ): TReturnedReducers;
 }
-
-export interface EntityReducerReducers {
-  createEntityReducers: EntityReducersCreator;
-}

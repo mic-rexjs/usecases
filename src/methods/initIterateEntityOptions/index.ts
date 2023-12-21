@@ -1,16 +1,15 @@
 import { RefObject } from '@/methods/createRef/types';
 import { EntityReducer, EntityReducers } from '@/types';
-import { entityGeneratorUseCase } from '@/usecases/entityGeneratorUseCase';
-import { EntityGeneratorDoneOptions } from '@/usecases/entityGeneratorUseCase/types';
-import { CreateEntityReducersOptions } from '../../types';
+import { CreateEntityReducersOptions } from '../createEntityReducers/types';
+import { iterateEntity } from '../iterateEntity';
+import { IterateEntityOptions } from '../iterateEntity/types';
 
-export const initDoneOptions = <T, TResult, TReducers extends EntityReducers<T>>(
+export const initIterateEntityOptions = <T, TResult, TReducers extends EntityReducers<T>>(
   entityRef: RefObject<T>,
   reducerRef: RefObject<EntityReducer<T>>,
   originalReducers: TReducers,
   options?: CreateEntityReducersOptions<T, object>
-): EntityGeneratorDoneOptions<T, TResult> => {
-  const { done } = entityGeneratorUseCase();
+): IterateEntityOptions<T, TResult> => {
   const { setEntity } = originalReducers;
   const { onChange } = options || {};
 
@@ -26,7 +25,7 @@ export const initDoneOptions = <T, TResult, TReducers extends EntityReducers<T>>
       let newEntity = nextEntity;
 
       if (reducerRef.current !== setEntity) {
-        [newEntity] = done(setEntity(oldEntity, nextEntity));
+        [newEntity] = iterateEntity(setEntity(oldEntity, nextEntity));
       }
 
       entityRef.current = newEntity;

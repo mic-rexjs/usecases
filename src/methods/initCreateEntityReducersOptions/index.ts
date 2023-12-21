@@ -1,11 +1,7 @@
-import {
-  CreateEntityReducersOptions,
-  CreateEntityReducersOptionsWithDefaults,
-} from '@/usecases/entityReducerUseCase/types';
-
 import { EntityGeneratorValues } from '@/types';
+import { CreateEntityReducersOptions, CreateEntityReducersOptionsWithDefaults } from '../createEntityReducers/types';
 
-export const initOptions = <T, TUseCaseOptions extends object>(
+export const initCreateEntityReducersOptions = <T, TUseCaseOptions extends object>(
   options?: CreateEntityReducersOptions<T, TUseCaseOptions>
 ): CreateEntityReducersOptionsWithDefaults<T, TUseCaseOptions> => {
   return {

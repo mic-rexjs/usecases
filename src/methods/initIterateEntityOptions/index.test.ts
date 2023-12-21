@@ -1,17 +1,17 @@
 import { describe, expect, jest, test } from '@jest/globals';
-import { initDoneOptions } from '.';
+import { initIterateEntityOptions } from '.';
 import { createRef } from '@/methods/createRef';
 import { entityUseCase } from '@/usecases/entityUseCase';
 import { EntityReducers } from '@/types';
 
-describe('initDoneOptions', (): void => {
+describe('initIterateEntityOptions', (): void => {
   describe('onSync', (): void => {
     test('should return current entity', (): void => {
       const entity = {};
       const entityRef = createRef(entity);
       const reducerRef = createRef((): void => {});
       const reducers = entityUseCase<object>();
-      const { onSync } = initDoneOptions(entityRef, reducerRef, reducers);
+      const { onSync } = initIterateEntityOptions(entityRef, reducerRef, reducers);
       const result = onSync?.();
 
       expect(result).toBe(entity);
@@ -26,7 +26,7 @@ describe('initDoneOptions', (): void => {
       const reducerRef = createRef((): void => {});
       const reducers = entityUseCase<object>();
       const onChange = jest.fn<(newEntity: object, oldEntity: object) => void>();
-      const { onYield } = initDoneOptions(entityRef, reducerRef, reducers, { onChange });
+      const { onYield } = initIterateEntityOptions(entityRef, reducerRef, reducers, { onChange });
 
       onYield?.(newEntity, entity);
 
@@ -40,7 +40,7 @@ describe('initDoneOptions', (): void => {
       const reducerRef = createRef((): void => {});
       const reducers = entityUseCase<object>();
       const onChange = jest.fn<(newEntity: object, oldEntity: object) => void>();
-      const { onYield } = initDoneOptions(entityRef, reducerRef, reducers, { onChange });
+      const { onYield } = initIterateEntityOptions(entityRef, reducerRef, reducers, { onChange });
 
       onYield?.(entity, entity);
 
@@ -54,7 +54,7 @@ describe('initDoneOptions', (): void => {
       const reducerRef = createRef((): void => {});
       const reducers = entityUseCase<object>();
       const setEntity = jest.spyOn(reducers, 'setEntity');
-      const { onYield } = initDoneOptions(entityRef, reducerRef, reducers);
+      const { onYield } = initIterateEntityOptions(entityRef, reducerRef, reducers);
 
       onYield?.(newEntity, entity);
 
@@ -69,7 +69,7 @@ describe('initDoneOptions', (): void => {
       const setEntity = jest.fn();
       const reducers = { ...entityUseCase<object>(), setEntity } as EntityReducers<object>;
       const reducerRef = createRef(setEntity);
-      const { onYield } = initDoneOptions(entityRef, reducerRef, reducers);
+      const { onYield } = initIterateEntityOptions(entityRef, reducerRef, reducers);
 
       onYield?.(newEntity, entity);
       expect(setEntity).toHaveBeenCalledTimes(0);

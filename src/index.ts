@@ -1,8 +1,9 @@
 import './types';
 
+export { iterateEntity } from './methods/iterateEntity';
+export { createEntityReducers } from './methods/createEntityReducers';
+
 export { entityUseCase } from './usecases/entityUseCase';
-export { entityGeneratorUseCase } from './usecases/entityGeneratorUseCase';
-export { entityReducerUseCase } from './usecases/entityReducerUseCase';
 export { arrayUseCase } from './usecases/arrayUseCase';
 export { objectUseCase } from './usecases/objectUseCase';
 
