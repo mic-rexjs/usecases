@@ -1,13 +1,13 @@
 import { RefObject } from '@/methods/createRef/types';
-import { EntityReducer, EntityReducers } from '@/types';
+import { EntityReducer, EntityReducerMap } from '@/types';
 import { CreateEntityReducersOptions } from '../createEntityReducers/types';
 import { iterateEntity } from '../iterateEntity';
 import { IterateEntityOptions } from '../iterateEntity/types';
 
-export const initIterateEntityOptions = <T, TResult, TReducers extends EntityReducers<T>>(
+export const initIterateEntityOptions = <T, TEntityReducers extends EntityReducerMap<T>, TResult>(
   entityRef: RefObject<T>,
   reducerRef: RefObject<EntityReducer<T>>,
-  originalReducers: TReducers,
+  originalReducers: TEntityReducers,
   options?: CreateEntityReducersOptions<T, object>
 ): IterateEntityOptions<T, TResult> => {
   const { setEntity } = originalReducers;

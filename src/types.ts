@@ -52,22 +52,26 @@ export interface EntityReducer<T, TReturn = unknown> {
   (entity: T, ...args: RestArguments): TReturn;
 }
 
-export interface EntityReducerMap<T> extends ReducerMap<EntityReducer<T>> {}
+export interface CustomEntityReducerMap<T> extends ReducerMap<EntityReducer<T>> {}
 
-export type BaseEntityReducers<T> = {
+export type NamedEntityReducerMap<T> = {
   setEntity<S extends T>(entity: S, settableEntity: SettableEntity<S>): EntityGenerator<S, S>;
+};
 
+export interface EntityReducerMap<T> extends CustomEntityReducerMap<T>, NamedEntityReducerMap<T> {}
+
+export type BaseEntityReducers<T> = NamedEntityReducerMap<T> & {
   readonly [reducerTag]?: unique symbol;
 };
 
 export type EntityReducers<
   T,
-  TReducers extends EntityReducerMap<T> = EntityReducerMap<T>,
+  TEntityReducers extends CustomEntityReducerMap<T> = CustomEntityReducerMap<T>,
   TExtends extends EntityReducerMap<T> = BaseEntityReducers<T>
-> = Reducers<TReducers, TExtends>;
+> = Reducers<TEntityReducers, TExtends>;
 
 export interface EntityUseCase<
   T,
-  TReducers extends EntityReducerMap<T> = BaseEntityReducers<T>,
+  TEntityReducers extends EntityReducerMap<T> = BaseEntityReducers<T>,
   TOptions extends object = object
-> extends UseCase<TReducers, TOptions> {}
+> extends UseCase<TEntityReducers, TOptions> {}

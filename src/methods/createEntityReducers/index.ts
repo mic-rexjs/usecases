@@ -1,4 +1,4 @@
-import { EntityGeneratorValues, EntityReducer, EntityReducers, EntityUseCase, TypedEntityGenerator } from '@/types';
+import { EntityGeneratorValues, EntityReducer, EntityReducerMap, EntityUseCase, TypedEntityGenerator } from '@/types';
 import {
   ScopedEntityReducers,
   CreateEntityReducersOptions,
@@ -12,10 +12,10 @@ import { initCreateEntityReducersOptions } from '../initCreateEntityReducersOpti
 
 export const createEntityReducers: EntityReducersCreator = <
   T,
-  TReducers extends EntityReducers<T>,
+  TEntityReducers extends EntityReducerMap<T>,
   TUseCaseOptions extends object,
-  TUseCase extends EntityUseCase<T, TReducers, TUseCaseOptions>,
-  TReturnedReducers extends SmoothedEntityReducers<T, TReducers> | ScopedEntityReducers<T, TReducers>
+  TUseCase extends EntityUseCase<T, TEntityReducers, TUseCaseOptions>,
+  TReturnedReducers extends SmoothedEntityReducers<T, TEntityReducers> | ScopedEntityReducers<T, TEntityReducers>
 >(
   arg1: T | TUseCase,
   arg2?: TUseCase | CreateEntityReducersOptions<T, TUseCaseOptions>,
@@ -23,7 +23,7 @@ export const createEntityReducers: EntityReducersCreator = <
 ): TReturnedReducers => {
   const hasInitialEntity = typeof arg2 === 'function';
   const initialEntity = (hasInitialEntity ? arg1 : null) as T;
-  const usecase = (hasInitialEntity ? arg2 : arg1) as EntityUseCase<T, TReducers, TUseCaseOptions>;
+  const usecase = (hasInitialEntity ? arg2 : arg1) as EntityUseCase<T, TEntityReducers, TUseCaseOptions>;
   const options = (hasInitialEntity ? arg3 : arg2) as CreateEntityReducersOptions<T, TUseCaseOptions>;
   const { onChange, onGenerate, ...usecaseOptions } = initCreateEntityReducersOptions(options);
   const reducers: Partial<TReturnedReducers> = {};
