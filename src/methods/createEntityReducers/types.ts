@@ -23,7 +23,7 @@ export type CreateEntityReducersOptionsWithDefaults<T, TOptions extends object> 
 > &
   Required<Pick<CreateEntityReducersOwnOptions<T>, 'onGenerate'>>;
 
-export type SmoothEntityReducer<T, TReducer extends EntityReducer<T>> = TReducer extends (
+export type SmoothedEntityReducer<T, TReducer extends EntityReducer<T>> = TReducer extends (
   entity: T,
   ...args: infer TArgs
 ) => infer TReturn
@@ -35,7 +35,7 @@ export type SmoothEntityReducer<T, TReducer extends EntityReducer<T>> = TReducer
   : never;
 
 export type SmoothedEntityReducers<T, TEntityReducers extends EntityReducerMap<T>> = {
-  [K in keyof TEntityReducers]: SmoothEntityReducer<T, TEntityReducers[K]>;
+  [K in keyof TEntityReducers]: SmoothedEntityReducer<T, TEntityReducers[K]>;
 };
 
 export type ScopedEntityReducer<T, TReducer extends EntityReducer<T>> = TReducer extends (
