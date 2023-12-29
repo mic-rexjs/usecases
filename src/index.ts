@@ -1,5 +1,7 @@
 import './types';
 
+export { EntityStore } from './classes/EntityStore';
+
 export { generateEntity } from './methods/generateEntity';
 export { createEntityReducers } from './methods/createEntityReducers';
 
