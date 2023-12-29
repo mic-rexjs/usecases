@@ -1,74 +1,99 @@
-import { EntityGeneratorValues, EntityReducer, EntityReducerMap, EntityUseCase, TypedEntityGenerator } from '@/types';
+import {
+  AsyncEntityGeneratorValues,
+  EntityGeneratorValues,
+  EntityReducer,
+  EntityReducerMap,
+  EntityUseCase,
+} from '@/types';
 import {
   ScopedEntityReducers,
   CreateEntityReducersOptions,
   SmoothedEntityReducers,
   EntityReducersCreator,
 } from './types';
-import { createRef } from '@/methods/createRef';
-import { initIterateEntityOptions } from '../initIterateEntityOptions';
-import { iterateEntity } from '../iterateEntity';
-import { initCreateEntityReducersOptions } from '../initCreateEntityReducersOptions';
+import { generateEntity } from '../generateEntity';
+import { EntityStore } from '@/classes/EntityStore';
 
 export const createEntityReducers: EntityReducersCreator = <
   T,
   TEntityReducers extends EntityReducerMap<T>,
   TUseCaseOptions extends object,
   TUseCase extends EntityUseCase<T, TEntityReducers, TUseCaseOptions>,
-  TReturnedReducers extends SmoothedEntityReducers<T, TEntityReducers> | ScopedEntityReducers<T, TEntityReducers>
+  TReturnedReducers = SmoothedEntityReducers<T, TEntityReducers> | ScopedEntityReducers<T, TEntityReducers>
 >(
   arg1: T | TUseCase,
   arg2?: TUseCase | CreateEntityReducersOptions<T, TUseCaseOptions>,
   arg3?: CreateEntityReducersOptions<T, TUseCaseOptions>
 ): TReturnedReducers => {
-  const hasInitialEntity = typeof arg2 === 'function';
-  const initialEntity = (hasInitialEntity ? arg1 : null) as T;
-  const usecase = (hasInitialEntity ? arg2 : arg1) as EntityUseCase<T, TEntityReducers, TUseCaseOptions>;
-  const options = (hasInitialEntity ? arg3 : arg2) as CreateEntityReducersOptions<T, TUseCaseOptions>;
-  const { onChange, onGenerate, ...usecaseOptions } = initCreateEntityReducersOptions(options);
+  const hasEntity = typeof arg2 === 'function';
+  const initialEntity = (hasEntity ? arg1 : null) as T;
+  const usecase = (hasEntity ? arg2 : arg1) as EntityUseCase<T, TEntityReducers, TUseCaseOptions>;
+  const options = (hasEntity ? arg3 : arg2) as CreateEntityReducersOptions<T, TUseCaseOptions> | undefined;
+
+  const {
+    store = new EntityStore(initialEntity),
+    onChange,
+    onGenerate = <TResult, TReturn = TResult>(newEntity: T, result: TResult): TReturn => {
+      return [newEntity, result] as TReturn;
+    },
+    ...usecaseOptions
+  } = options || {};
+
   const reducers: Partial<TReturnedReducers> = {};
   const originalReducers = usecase(usecaseOptions as TUseCaseOptions);
   const { setEntity } = originalReducers;
-  const entityRef = createRef(initialEntity);
-  const reducerRef = createRef<EntityReducer<T>>(setEntity);
-  const iterateEntityOptions = initIterateEntityOptions(entityRef, reducerRef, originalReducers, options);
+  let callingReducer: EntityReducer<T> = setEntity;
 
-  for (const [key, reducer] of Object.entries(originalReducers)) {
-    reducers[key as keyof TReturnedReducers] = (<TResult>(...restArgs: Parameters<EntityReducer<T>>): unknown => {
-      const reducerArgs = (hasInitialEntity ? [entityRef.current, ...restArgs] : restArgs) as Parameters<
-        EntityReducer<T>
-      >;
+  store.watch((currentEntity: T, prevEntity: T): void => {
+    let newEntity = currentEntity;
 
-      const ret = reducer(...reducerArgs) as TResult;
-      const iterator = ret?.[Symbol.iterator as keyof TResult] || ret?.[Symbol.asyncIterator as keyof TResult];
+    if (callingReducer !== setEntity) {
+      [newEntity] = generateEntity(setEntity(prevEntity, currentEntity));
+    }
 
-      reducerRef.current = reducer;
+    onChange?.(newEntity, prevEntity);
+  });
 
-      if (!hasInitialEntity) {
-        entityRef.current = restArgs[0];
+  Object.keys(originalReducers).forEach(<TReturn>(key: string): void => {
+    const reducer = originalReducers[key] as EntityReducer<T, TReturn>;
+
+    reducers[key as keyof TReturnedReducers] = (<TResult>(
+      ...restArgs: Parameters<EntityReducer<T>>
+    ): TResult | Promise<TResult> => {
+      const reducerArgs = (hasEntity ? [store.getValue(), ...restArgs] : restArgs) as Parameters<EntityReducer<T>>;
+
+      const ret = reducer(...reducerArgs) as TReturn & TResult;
+      const iterator = ret?.[Symbol.iterator as keyof TReturn] || ret?.[Symbol.asyncIterator as keyof TReturn];
+
+      callingReducer = reducer;
+
+      if (!hasEntity) {
+        store.resetValue(restArgs[0]);
       }
 
       if (typeof iterator !== 'function') {
         return ret;
       }
 
-      const gen = iterator.call(ret) as TypedEntityGenerator<T, TResult>;
+      const gen = iterator.call(ret);
 
       if (gen !== ret) {
         return ret;
       }
 
-      const values = iterateEntity<T, TResult>(gen, iterateEntityOptions);
+      const values = generateEntity(gen, { store }) as
+        | EntityGeneratorValues<T, TReturn>
+        | AsyncEntityGeneratorValues<T, TReturn>;
 
       if (values instanceof Promise) {
-        return values.then(([newEntity, value]: EntityGeneratorValues<T, TResult>): unknown => {
-          return onGenerate(newEntity, value);
+        return values.then(([newEntity, value]: EntityGeneratorValues<T, TReturn>): TResult => {
+          return onGenerate(newEntity, value) as TResult;
         });
       }
 
-      return onGenerate(...values);
+      return onGenerate(...values) as TResult;
     }) as TReturnedReducers[keyof TReturnedReducers];
-  }
+  });
 
   return reducers as TReturnedReducers;
 };

@@ -2,6 +2,7 @@ import { describe, expect, jest, test } from '@jest/globals';
 import { AsyncEntityGenerator, EntityGenerator, EntityReducers, EntityUseCase } from '@/types';
 import { entityUseCase } from '@/usecases/entityUseCase';
 import { createEntityReducers } from '.';
+import { EntityStore } from '@/classes/EntityStore';
 
 interface Data {
   value: number;
@@ -48,24 +49,28 @@ const testUseCase = <T extends Data>(options: Options<T> = {}): TestReducers<T> 
   };
 
   const add = function* <S extends T>(entity: S, value: number): EntityGenerator<S, string> {
-    const newEntity = yield {
+    const newValue = entity.value + value;
+
+    yield {
       ...entity,
-      value: entity.value + value,
+      value: newValue,
     };
 
-    return `[${newEntity.value}]`;
+    return `[${newValue}]`;
   };
 
   const addAsync = async function* <S extends T>(entity: S, value: number): AsyncEntityGenerator<S, string> {
+    const newValue = entity.value + value;
+
     await Promise.resolve(null);
 
-    const newEntity = yield {
+    yield {
       ...entity,
-      value: entity.value + value,
+      value: newValue,
     };
 
     await Promise.resolve(null);
-    return `[${newEntity.value}]`;
+    return `[${newValue}]`;
   };
 
   const addListAsync = async function* <S extends T>(entity: S, values: number[]): AsyncEntityGenerator<S, string> {
@@ -273,7 +278,7 @@ describe('createEntityReducers', (): void => {
       expect(mockSetEntity).toHaveBeenCalledTimes(0);
     });
 
-    test('`setEntity` should be called after `yield` - entity mode', (): void => {
+    test('`setEntity` should be called after yield - entity mode', (): void => {
       const { add } = createEntityReducers({ value: 1 }, testUseCaseWithMockSetEntity);
 
       expect(mockSetEntity).toHaveBeenCalledTimes(0);
@@ -281,7 +286,7 @@ describe('createEntityReducers', (): void => {
       expect(mockSetEntity).toHaveBeenCalledTimes(1);
     });
 
-    test('`setEntity` should be called after `yield` - non-entity mode', (): void => {
+    test('`setEntity` should be called after yield - non-entity mode', (): void => {
       const { add } = createEntityReducers(testUseCaseWithMockSetEntity);
 
       expect(mockSetEntity).toHaveBeenCalledTimes(0);
@@ -289,7 +294,7 @@ describe('createEntityReducers', (): void => {
       expect(mockSetEntity).toHaveBeenCalledTimes(1);
     });
 
-    test('`setEntity` should be called after `yield` on async mode - entity mode', async (): Promise<void> => {
+    test('`setEntity` should be called after yield on async mode - entity mode', async (): Promise<void> => {
       const { addAsync } = createEntityReducers({ value: 1 }, testUseCaseWithMockSetEntity);
 
       expect(mockSetEntity).toHaveBeenCalledTimes(0);
@@ -297,7 +302,7 @@ describe('createEntityReducers', (): void => {
       expect(mockSetEntity).toHaveBeenCalledTimes(1);
     });
 
-    test('`setEntity` should be called after `yield` on async mode - non-entity mode', async (): Promise<void> => {
+    test('`setEntity` should be called after yield on async mode - non-entity mode', async (): Promise<void> => {
       const { addAsync } = createEntityReducers(testUseCaseWithMockSetEntity);
 
       expect(mockSetEntity).toHaveBeenCalledTimes(0);
@@ -337,6 +342,53 @@ describe('createEntityReducers', (): void => {
 
       createEntityReducers(mockUseCase);
       expect(mockUseCase).toHaveBeenCalledTimes(1);
+    });
+
+    test('when `options.store` is provided, entity should get from this store with normal method has been called', (): void => {
+      const x = 2;
+      let y = 5;
+
+      const { getResult } = createEntityReducers({ value: 1 }, testUseCase, {
+        store: new EntityStore((): Data => {
+          return { value: x + y };
+        }),
+      });
+
+      expect(getResult(66)).toBe(73);
+      y += 5;
+      expect(getResult(88)).toBe(100);
+    });
+
+    test('when `options.store` is provided, entity should get from this store after yield', (): void => {
+      const x = 2;
+      let y = 5;
+
+      const { add } = createEntityReducers({ value: 1 }, testUseCase, {
+        store: new EntityStore((): Data => {
+          return { value: x + y };
+        }),
+      });
+
+      expect(add(66)).toEqual([{ value: 7 }, `[${73}]`]);
+      y += 5;
+      expect(add(88)).toEqual([{ value: 12 }, `[${100}]`]);
+    });
+
+    test('when `options.store` is provided, entity should get from this store after yield on async mode', async (): Promise<void> => {
+      const x = 2;
+      let y = 5;
+
+      const { addAsync } = createEntityReducers({ value: 1 }, testUseCase, {
+        store: new EntityStore((): Data => {
+          return { value: x + y };
+        }),
+      });
+
+      const promise = addAsync(88);
+      y += 5;
+
+      const result = await promise;
+      expect(result).toEqual([{ value: 12 }, `[${95}]`]);
     });
 
     test('`options.onChange` should be called after entity changed - entity mode', (): void => {

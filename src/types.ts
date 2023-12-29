@@ -1,5 +1,9 @@
 declare const reducerTag: unique symbol;
 
+export interface EntityGetter<T> {
+  (): T;
+}
+
 export type RestArguments = IArguments[number][];
 
 export interface Reducer<T = unknown> {
@@ -35,8 +39,6 @@ export type YieldEntityCallback<T> =
 export interface EntityGenerator<T, TResult> extends Generator<T | YieldEntityCallback<T>, TResult, T> {}
 
 export interface AsyncEntityGenerator<T, TResult> extends AsyncGenerator<T | YieldEntityCallback<T>, TResult, T> {}
-
-export type TypedEntityGenerator<T, TResult> = EntityGenerator<T, TResult> | AsyncEntityGenerator<T, TResult>;
 
 export type EntityGeneratorValues<T, TResult> = [entity: T, result: TResult];
 

@@ -1,3 +1,4 @@
+import { EntityStore } from '@/classes/EntityStore';
 import {
   AsyncEntityGenerator,
   AsyncEntityGeneratorValues,
@@ -10,18 +11,14 @@ import {
 } from '@/types';
 
 export interface CreateEntityReducersOwnOptions<T> {
-  onChange?(newEntity: T, oldEntity: T): void;
+  store?: EntityStore<T>;
+
+  onChange?<S extends T>(newEntity: S, oldEntity: S): void;
 
   onGenerate?(entity: T, result: unknown): unknown;
 }
 
 export type CreateEntityReducersOptions<T, TOptions extends object> = TOptions & CreateEntityReducersOwnOptions<T>;
-
-export type CreateEntityReducersOptionsWithDefaults<T, TOptions extends object> = CreateEntityReducersOptions<
-  T,
-  TOptions
-> &
-  Required<Pick<CreateEntityReducersOwnOptions<T>, 'onGenerate'>>;
 
 export type SmoothedEntityReducer<T, TReducer extends EntityReducer<T>> = TReducer extends (
   entity: T,

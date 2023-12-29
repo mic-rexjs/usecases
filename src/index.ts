@@ -1,6 +1,6 @@
 import './types';
 
-export { iterateEntity } from './methods/iterateEntity';
+export { generateEntity } from './methods/generateEntity';
 export { createEntityReducers } from './methods/createEntityReducers';
 
 export { entityUseCase } from './usecases/entityUseCase';
@@ -13,6 +13,7 @@ export type {
   Reducers,
   ReducerMap,
   UseCase,
+  EntityGetter,
   EntityReducer,
   EntityReducers,
   EntityReducerMap,
