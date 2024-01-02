@@ -44,14 +44,14 @@ export const createEntityReducers: EntityReducersCreator = <
   const { setEntity } = originalReducers;
   let callingReducer: EntityReducer<T> = setEntity;
 
-  store.watch((currentEntity: T, prevEntity: T): void => {
-    let newEntity = currentEntity;
+  store.watch((newEntity: T, oldEntity: T): void => {
+    let entity = newEntity;
 
     if (callingReducer !== setEntity) {
-      [newEntity] = generateEntity(setEntity(prevEntity, currentEntity));
+      [entity] = generateEntity(setEntity(oldEntity, newEntity));
     }
 
-    onChange?.(newEntity, prevEntity);
+    onChange?.(entity, oldEntity);
   });
 
   Object.keys(originalReducers).forEach(<TReturn>(key: string): void => {

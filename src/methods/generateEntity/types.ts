@@ -4,7 +4,7 @@ import { AsyncEntityGenerator, AsyncEntityGeneratorValues, EntityGenerator, Enti
 export interface GenerateEntityOptions<T, TResult> {
   store?: EntityStore<T>;
 
-  onYield?(currentEntity: T, prevEntity?: T): void;
+  onYield?(newEntity: T, oldEntity?: T): void;
 
   onReturn?(result: TResult, entity: T): void;
 }
