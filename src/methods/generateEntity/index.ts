@@ -1,5 +1,5 @@
 import { AsyncEntityGenerator, EntityGenerator, EntityGeneratorValues, YieldEntityCallback } from '@/types';
-import { GenerateEntityMethod, GenerateEntityOptions } from './types';
+import { EntityGeneratorHandler, GenerateEntityOptions } from './types';
 import { EntityStore } from '@/classes/EntityStore';
 
 export const generateEntity = (<T, TResult, TReturn = EntityGeneratorValues<T, TResult>>(
@@ -50,4 +50,4 @@ export const generateEntity = (<T, TResult, TReturn = EntityGeneratorValues<T, T
   return promise.then(([entity, value]: EntityGeneratorValues<T, TResult>): TReturn => {
     return onGenerate(entity, value) as TReturn;
   });
-}) as GenerateEntityMethod;
+}) as EntityGeneratorHandler;

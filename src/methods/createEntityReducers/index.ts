@@ -15,15 +15,16 @@ export const createEntityReducers: EntityReducersCreator = <
   TUseCase extends EntityUseCase<T, TEntityReducers, TUseCaseOptions>,
   TReturnedReducers = SmoothedEntityReducers<T, TEntityReducers> | ScopedEntityReducers<T, TEntityReducers>
 >(
-  arg1: T | TUseCase,
+  arg1: T | EntityStore<T> | TUseCase,
   arg2?: TUseCase | CreateEntityReducersOptions<T, TUseCaseOptions>,
   arg3?: CreateEntityReducersOptions<T, TUseCaseOptions>
 ): TReturnedReducers => {
   const hasEntity = typeof arg2 === 'function';
-  const initialEntity = (hasEntity ? arg1 : null) as T;
+  const initialEntity = (hasEntity ? arg1 : null) as T | EntityStore<T>;
+  const store = initialEntity instanceof EntityStore ? initialEntity : new EntityStore(initialEntity);
   const usecase = (hasEntity ? arg2 : arg1) as EntityUseCase<T, TEntityReducers, TUseCaseOptions>;
   const options = (hasEntity ? arg3 : arg2) as CreateEntityReducersOptions<T, TUseCaseOptions> | undefined;
-  const { store = new EntityStore(initialEntity), onChange, onGenerate, ...usecaseOptions } = options || {};
+  const { onChange, onGenerate, ...usecaseOptions } = options || {};
   const reducers = usecase(usecaseOptions as TUseCaseOptions);
   const keys = Object.keys(reducers);
   const { setEntity } = reducers;

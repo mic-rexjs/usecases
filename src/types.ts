@@ -1,9 +1,5 @@
 declare const reducerTag: unique symbol;
 
-export interface EntityGetter<T> {
-  (): T;
-}
-
 export type RestArguments = IArguments[number][];
 
 export interface Reducer<T = unknown> {

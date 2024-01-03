@@ -1,21 +1,12 @@
-import { EntityGetter } from '@/types';
 import { EntityWatcher } from './types';
 
 export class EntityStore<T> {
   private value: T;
 
-  private readonly getter: EntityGetter<T> | null;
-
   private readonly watchers: EntityWatcher<T>[] = [];
 
-  constructor(initialEntity: T | EntityGetter<T>, watcher?: EntityWatcher<T>) {
-    if (typeof initialEntity === 'function') {
-      this.value = null as T;
-      this.getter = initialEntity as EntityGetter<T>;
-    } else {
-      this.value = initialEntity;
-      this.getter = null;
-    }
+  constructor(initialEntity: T, watcher?: EntityWatcher<T>) {
+    this.value = initialEntity;
 
     if (watcher) {
       this.watch(watcher);
@@ -23,11 +14,7 @@ export class EntityStore<T> {
   }
 
   getValue(): T {
-    const { getter, value } = this;
-
-    if (getter) {
-      return getter();
-    }
+    const { value } = this;
 
     return value;
   }

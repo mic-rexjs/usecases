@@ -10,8 +10,6 @@ import {
 } from '@/types';
 
 export interface CreateEntityReducersOwnOptions<T> {
-  store?: EntityStore<T>;
-
   onChange?<S extends T>(newEntity: S, oldEntity: S): void;
 
   onGenerate?(entity: T, result: unknown): unknown;
@@ -72,7 +70,7 @@ export interface EntityReducersCreator {
     TUseCaseOptions extends object = object,
     TReturnedReducers = ScopedEntityReducers<T, TEntityReducers>
   >(
-    initailEntity: T,
+    initailEntity: T | EntityStore<T>,
     usecase: EntityUseCase<T, TEntityReducers, TUseCaseOptions> &
       /**
        * 如果不使用 `&`，那么很多情况下 `options` 类型无法被正确推导；

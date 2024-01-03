@@ -11,7 +11,7 @@ export interface GenerateEntityOptions<T, TResult, TReturn = EntityGeneratorValu
   onGenerate?(entity: T, result: TResult): TReturn;
 }
 
-export interface GenerateEntityMethod {
+export interface EntityGeneratorHandler {
   <T, TResult, TReturn = EntityGeneratorValues<T, TResult>>(
     generator: AsyncEntityGenerator<T, TResult>,
     options?: GenerateEntityOptions<T, TResult, TReturn>

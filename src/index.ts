@@ -15,7 +15,6 @@ export type {
   Reducers,
   ReducerMap,
   UseCase,
-  EntityGetter,
   EntityReducer,
   EntityReducers,
   EntityReducerMap,
