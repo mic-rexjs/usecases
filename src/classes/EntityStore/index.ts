@@ -53,6 +53,19 @@ export class EntityStore<T> {
   }
 
   watch(watcher: EntityWatcher<T>): void {
-    this.watchers.push(watcher);
+    const { watchers } = this;
+
+    watchers.push(watcher);
+  }
+
+  unwatch(watcher: EntityWatcher<T>): void {
+    const { watchers } = this;
+    const index = watchers.indexOf(watcher);
+
+    if (index === -1) {
+      return;
+    }
+
+    watchers.splice(index, 1);
   }
 }
