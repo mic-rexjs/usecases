@@ -42,8 +42,6 @@ export interface AsyncEntityGenerator<T, TResult> extends AsyncGenerator<T | Yie
 
 export type EntityGeneratorValues<T, TResult> = [entity: T, result: TResult];
 
-export type AsyncEntityGeneratorValues<T, TResult> = Promise<EntityGeneratorValues<T, TResult>>;
-
 export interface SetEntityCallback<T> {
   (currentEntity: T): T;
 }

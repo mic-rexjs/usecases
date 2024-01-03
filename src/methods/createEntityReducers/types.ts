@@ -1,7 +1,6 @@
 import { EntityStore } from '@/classes/EntityStore';
 import {
   AsyncEntityGenerator,
-  AsyncEntityGeneratorValues,
   EntityGenerator,
   EntityGeneratorValues,
   EntityReducer,
@@ -25,7 +24,7 @@ export type SmoothedEntityReducer<T, TReducer extends EntityReducer<T>> = TReduc
   ...args: infer TArgs
 ) => infer TReturn
   ? TReturn extends AsyncEntityGenerator<T, infer TResult>
-    ? (entity: T, ...args: TArgs) => AsyncEntityGeneratorValues<T, TResult>
+    ? (entity: T, ...args: TArgs) => Promise<EntityGeneratorValues<T, TResult>>
     : TReturn extends EntityGenerator<T, infer TResult>
     ? (entity: T, ...args: TArgs) => EntityGeneratorValues<T, TResult>
     : TReducer
@@ -40,7 +39,7 @@ export type ScopedEntityReducer<T, TReducer extends EntityReducer<T>> = TReducer
   ...args: infer TArgs
 ) => infer TReturn
   ? TReturn extends AsyncEntityGenerator<T, infer TResult>
-    ? (...args: TArgs) => AsyncEntityGeneratorValues<T, TResult>
+    ? (...args: TArgs) => Promise<EntityGeneratorValues<T, TResult>>
     : TReturn extends EntityGenerator<T, infer TResult>
     ? (...args: TArgs) => EntityGeneratorValues<T, TResult>
     : (...args: TArgs) => TReturn
