@@ -1,4 +1,4 @@
-import { EntityReducer, EntityReducerMap, EntityUseCase } from '@/types';
+import { EntityReducer, EntityReducerMap, EntityUseCase, RestArguments } from '@/types';
 import {
   ScopedEntityReducers,
   CreateEntityReducersOptions,
@@ -25,55 +25,53 @@ export const createEntityReducers: EntityReducersCreator = <
   const usecase = (hasEntity ? arg2 : arg1) as EntityUseCase<T, TEntityReducers, TUseCaseOptions>;
   const options = (hasEntity ? arg3 : arg2) as CreateEntityReducersOptions<T, TUseCaseOptions> | undefined;
   const { onChange, onGenerate, ...usecaseOptions } = options || {};
-  const reducers = usecase(usecaseOptions as TUseCaseOptions);
-  const keys = Object.keys(reducers);
-  const { setEntity } = reducers;
+  const smoothedReducers: Partial<TReturnedReducers> = {};
+  const sourceReducers = usecase(usecaseOptions as TUseCaseOptions);
+  const keys = Object.keys(sourceReducers);
+  const { setEntity } = sourceReducers;
 
-  const entries = keys.map(<TReturn>(key: string): [string, TReturnedReducers[keyof TReturnedReducers]] => {
-    const reducer = reducers[key] as EntityReducer<T, TReturn>;
+  keys.forEach(<TReturn>(key: string): void => {
+    const reducer = sourceReducers[key] as EntityReducer<T, TReturn>;
 
-    return [
-      key,
-      (<TResult>(...args: Parameters<EntityReducer<T, TReturn>>): TReturn | TResult => {
-        const reducerArgs = (hasEntity ? [store.getValue(), ...args] : args) as Parameters<EntityReducer<T, TReturn>>;
-        const ret = reducer(...reducerArgs);
-        const iterator = ret?.[Symbol.iterator as keyof TReturn] || ret?.[Symbol.asyncIterator as keyof TReturn];
+    smoothedReducers[key as keyof TReturnedReducers] = (<TResult>(...args: RestArguments): TReturn | TResult => {
+      const reducerArgs = (hasEntity ? [store.getValue(), ...args] : args) as [entity: T, ...args: RestArguments];
+      const ret = reducer(...reducerArgs);
+      const iterator = ret?.[Symbol.iterator as keyof TReturn] || ret?.[Symbol.asyncIterator as keyof TReturn];
 
-        if (!hasEntity) {
-          store.resetValue(args[0]);
-        }
+      if (!hasEntity) {
+        store.resetValue(args[0]);
+      }
 
-        if (typeof iterator !== 'function') {
-          return ret;
-        }
+      if (typeof iterator !== 'function') {
+        return ret;
+      }
 
-        const gen = iterator.call(ret);
+      const gen = iterator.call(ret);
 
-        if (gen !== ret) {
-          return ret;
-        }
+      if (gen !== ret) {
+        return ret;
+      }
 
-        return generateEntity(gen, {
-          store,
-          onYield(newEntity: T, oldEntity: T): boolean {
-            let entity = newEntity;
+      return generateEntity(gen, {
+        store,
+        onYield(newEntity: T, oldEntity: T): boolean {
+          let entity = newEntity;
 
-            if (reducer !== setEntity) {
-              [entity] = generateEntity(setEntity(oldEntity, newEntity));
-            }
+          if (reducer !== setEntity) {
+            [entity] = generateEntity(setEntity(oldEntity, newEntity));
+          }
 
-            store.setValue(entity);
-            return true;
-          },
-          onGenerate,
-        }) as TResult;
-      }) as TReturnedReducers[keyof TReturnedReducers],
-    ];
+          store.setValue(entity);
+          return true;
+        },
+        onGenerate,
+      }) as TResult;
+    }) as TReturnedReducers[keyof TReturnedReducers];
   });
 
   store.watch((newEntity: T, oldEntity: T): void => {
     onChange?.(newEntity, oldEntity);
   });
 
-  return Object.fromEntries(entries) as TReturnedReducers;
+  return smoothedReducers as TReturnedReducers;
 };
