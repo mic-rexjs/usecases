@@ -3,6 +3,7 @@ import './types';
 export { EntityStore } from './classes/EntityStore';
 
 export { generateEntity } from './methods/generateEntity';
+export { createUseCase } from './methods/createUseCase';
 export { createEntityReducers } from './methods/createEntityReducers';
 
 export { entityUseCase } from './usecases/entityUseCase';
