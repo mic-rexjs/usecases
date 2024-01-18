@@ -18,13 +18,14 @@ export interface CreateEntityReducersOwnOptions<T> {
 export type CreateEntityReducersOptions<T, TOptions extends object> = TOptions & CreateEntityReducersOwnOptions<T>;
 
 export type SmoothedEntityReducer<T, TReducer extends EntityReducer<T>> = TReducer extends (
-  entity: T,
+  // 不能使用 `entity: T`， 因为 `TEntity` 不完全等于 `T`
+  entity: infer TEntity,
   ...args: infer TArgs
 ) => infer TReturn
-  ? TReturn extends AsyncEntityGenerator<T, infer TResult>
-    ? (entity: T, ...args: TArgs) => Promise<EntityGeneratorValues<T, TResult>>
-    : TReturn extends EntityGenerator<T, infer TResult>
-    ? (entity: T, ...args: TArgs) => EntityGeneratorValues<T, TResult>
+  ? TReturn extends AsyncEntityGenerator<TEntity, infer TResult>
+    ? (entity: TEntity, ...args: TArgs) => Promise<EntityGeneratorValues<TEntity, TResult>>
+    : TReturn extends EntityGenerator<TEntity, infer TResult>
+    ? (entity: TEntity, ...args: TArgs) => EntityGeneratorValues<TEntity, TResult>
     : TReducer
   : never;
 
@@ -33,13 +34,14 @@ export type SmoothedEntityReducers<T, TEntityReducers extends EntityReducerMap<T
 };
 
 export type ScopedEntityReducer<T, TReducer extends EntityReducer<T>> = TReducer extends (
-  entity: T,
+  // 不能使用 `entity: T`， 因为 `TEntity` 不完全等于 `T`
+  entity: infer TEntity,
   ...args: infer TArgs
 ) => infer TReturn
-  ? TReturn extends AsyncEntityGenerator<T, infer TResult>
-    ? (...args: TArgs) => Promise<EntityGeneratorValues<T, TResult>>
-    : TReturn extends EntityGenerator<T, infer TResult>
-    ? (...args: TArgs) => EntityGeneratorValues<T, TResult>
+  ? TReturn extends AsyncEntityGenerator<TEntity, infer TResult>
+    ? (...args: TArgs) => Promise<EntityGeneratorValues<TEntity, TResult>>
+    : TReturn extends EntityGenerator<TEntity, infer TResult>
+    ? (...args: TArgs) => EntityGeneratorValues<TEntity, TResult>
     : (...args: TArgs) => TReturn
   : never;
 
