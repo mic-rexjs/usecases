@@ -131,8 +131,9 @@ console.log(entity2); // { path: 'my.txt', content: 'hello world' }
 See more about [@mic-rexjs/usecases-react](https://www.npmjs.com/package/@mic-rexjs/usecases-react)
 
 ## Test Demos
+- [createEntityReducers](https://github.com/mic-rexjs/usecases/blob/main/src/methods/createEntityReducers/index.test.ts)
+- [generateEntity](https://github.com/mic-rexjs/usecases/blob/main/src/usecases/generateEntity/index.test.ts)
 - [entityUseCase](https://github.com/mic-rexjs/usecases/blob/main/src/usecases/entityUseCase/index.test.ts)
 - [arrayUseCase](https://github.com/mic-rexjs/usecases/blob/main/src/usecases/arrayUseCase/index.test.ts)
 - [objectUseCase](https://github.com/mic-rexjs/usecases/blob/main/src/usecases/objectUseCase/index.test.ts)
-- [entityReducerUseCase](https://github.com/mic-rexjs/usecases/blob/main/src/usecases/entityReducerUseCase/index.test.ts)
-- [entityGeneratorUseCase](https://github.com/mic-rexjs/usecases/blob/main/src/usecases/entityGeneratorUseCase/index.test.ts)
+- [runtimeUseCase](https://github.com/mic-rexjs/usecases/blob/main/src/usecases/runtimeUseCase/index.test.ts)
