@@ -1,6 +1,7 @@
 declare const reducerTag: unique symbol;
 
-export type RestArguments = IArguments[number][];
+// 不能使用 `IArguments[number][]`，因为它不能满足模式： `[x: number, ...args: Parameters<T[K]>]`
+export type RestArguments = IArguments[number];
 
 export interface Reducer<T = unknown> {
   (...args: RestArguments): T;

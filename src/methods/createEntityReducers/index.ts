@@ -1,4 +1,4 @@
-import { EntityReducer, EntityReducerMap, EntityUseCase, RestArguments } from '@/types';
+import { EntityGenerator, EntityReducer, EntityReducerMap, EntityUseCase, RestArguments } from '@/types';
 import {
   ScopedEntityReducers,
   CreateEntityReducersOptions,
@@ -7,6 +7,7 @@ import {
 } from './types';
 import { generateEntity } from '../generateEntity';
 import { EntityStore } from '@/classes/EntityStore';
+import { isGenerator } from '../isGenerator';
 
 export const createEntityReducers: EntityReducersCreator = <
   T,
@@ -36,23 +37,16 @@ export const createEntityReducers: EntityReducersCreator = <
     smoothedReducers[key as keyof TReturnedReducers] = (<TResult>(...args: RestArguments): TReturn | TResult => {
       const reducerArgs = (hasEntity ? [store.getValue(), ...args] : args) as [entity: T, ...args: RestArguments];
       const ret = reducer(...reducerArgs);
-      const iterator = ret?.[Symbol.iterator as keyof TReturn] || ret?.[Symbol.asyncIterator as keyof TReturn];
 
       if (!hasEntity) {
         store.resetValue(args[0]);
       }
 
-      if (typeof iterator !== 'function') {
+      if (!isGenerator(ret)) {
         return ret;
       }
 
-      const gen = iterator.call(ret);
-
-      if (gen !== ret) {
-        return ret;
-      }
-
-      return generateEntity(gen, {
+      return generateEntity(ret as EntityGenerator<T, TResult>, {
         store,
         onYield(newEntity: T, oldEntity: T): boolean {
           let entity = newEntity;
