@@ -4,7 +4,7 @@ import { ObjectReducers } from '../objectUseCase/types';
 export type EventName<T extends string = string> = `on${Capitalize<T>}`;
 
 export type ExtractEventNames<T, K extends keyof T & EventName = keyof T & EventName> = K extends `on${infer TName}`
-  ? T[K] extends (...args: RestArguments) => unknown
+  ? NonNullable<T[K]> extends (...args: RestArguments) => unknown
     ? Uncapitalize<TName>
     : never
   : never;
