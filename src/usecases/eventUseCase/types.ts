@@ -24,13 +24,13 @@ export type EventReducers<T> = EntityReducers<
     addListener<S extends T, M extends EventMap<S>, TName extends ExtractEventNames<S>>(
       entity: M,
       eventName: TName,
-      listener: ExtractEventListeners<S, TName>
+      listener: ExtractEventListeners<S, TName> | null
     ): EntityGenerator<M, void>;
 
     addListenerOnce<S extends T, M extends EventMap<S>, TName extends ExtractEventNames<S>>(
       entity: M,
       eventName: TName,
-      listener: ExtractEventListeners<S, TName>
+      listener: ExtractEventListeners<S, TName> | null
     ): AsyncEntityGenerator<M, void>;
 
     emit<S extends T, M extends EventMap<S>, TName extends ExtractEventNames<S>>(
@@ -44,31 +44,31 @@ export type EventReducers<T> = EntityReducers<
     off<S extends T, M extends EventMap<S>, TName extends ExtractEventNames<S>>(
       entity: M,
       eventName: TName,
-      listener: ExtractEventListeners<S, TName>
+      listener: ExtractEventListeners<S, TName> | null
     ): EntityGenerator<M, void>;
 
     on<S extends T, M extends EventMap<S>, TName extends ExtractEventNames<S>>(
       entity: M,
       eventName: TName,
-      listener: ExtractEventListeners<S, TName>
+      listener: ExtractEventListeners<S, TName> | null
     ): EntityGenerator<M, void>;
 
     once<S extends T, M extends EventMap<S>, TName extends ExtractEventNames<S>>(
       entity: M,
       eventName: TName,
-      listener: ExtractEventListeners<S, TName>
+      listener: ExtractEventListeners<S, TName> | null
     ): AsyncEntityGenerator<M, void>;
 
     prependListener<S extends T, M extends EventMap<S>, TName extends ExtractEventNames<S>>(
       entity: M,
       eventName: TName,
-      listener: ExtractEventListeners<S, TName>
+      listener: ExtractEventListeners<S, TName> | null
     ): EntityGenerator<M, void>;
 
     prependOnceListener<S extends T, M extends EventMap<S>, TName extends ExtractEventNames<S>>(
       entity: M,
       eventName: TName,
-      listener: ExtractEventListeners<S, TName>
+      listener: ExtractEventListeners<S, TName> | null
     ): AsyncEntityGenerator<M, void>;
 
     removeAllListeners<S extends T, M extends EventMap<S>>(
@@ -79,7 +79,7 @@ export type EventReducers<T> = EntityReducers<
     removeListener<S extends T, M extends EventMap<S>, TName extends ExtractEventNames<S>>(
       entity: M,
       eventName: TName,
-      listener: ExtractEventListeners<S, TName>
+      listener: ExtractEventListeners<S, TName> | null
     ): EntityGenerator<M, void>;
   },
   ObjectReducers<EventMap<T>>

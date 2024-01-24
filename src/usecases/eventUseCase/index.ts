@@ -8,7 +8,7 @@ export const eventUseCase = <T>(): EventReducers<T> => {
   const addListener = <S extends T, M extends EventMap<S>, TName extends ExtractEventNames<S>>(
     entity: M,
     eventName: TName,
-    listener: ExtractEventListeners<S, TName>
+    listener: ExtractEventListeners<S, TName> | null
   ): EntityGenerator<M, void> => {
     return listen(entity, eventName, listener);
   };
@@ -16,7 +16,7 @@ export const eventUseCase = <T>(): EventReducers<T> => {
   const addListenerOnce = <S extends T, M extends EventMap<S>, TName extends ExtractEventNames<S>>(
     entity: M,
     eventName: TName,
-    listener: ExtractEventListeners<S, TName>
+    listener: ExtractEventListeners<S, TName> | null
   ): AsyncEntityGenerator<M, void> => {
     return listenOnce(entity, eventName, listener);
   };
@@ -46,7 +46,7 @@ export const eventUseCase = <T>(): EventReducers<T> => {
   const off = <S extends T, M extends EventMap<S>, TName extends ExtractEventNames<S>>(
     entity: M,
     eventName: TName,
-    listener: ExtractEventListeners<S, TName>
+    listener: ExtractEventListeners<S, TName> | null
   ): EntityGenerator<M, void> => {
     return removeListener(entity, eventName, listener);
   };
@@ -54,7 +54,7 @@ export const eventUseCase = <T>(): EventReducers<T> => {
   const on = <S extends T, M extends EventMap<S>, TName extends ExtractEventNames<S>>(
     entity: M,
     eventName: TName,
-    listener: ExtractEventListeners<S, TName>
+    listener: ExtractEventListeners<S, TName> | null
   ): EntityGenerator<M, void> => {
     return addListener(entity, eventName, listener);
   };
@@ -62,7 +62,7 @@ export const eventUseCase = <T>(): EventReducers<T> => {
   const once = <S extends T, M extends EventMap<S>, TName extends ExtractEventNames<S>>(
     entity: M,
     eventName: TName,
-    listener: ExtractEventListeners<S, TName>
+    listener: ExtractEventListeners<S, TName> | null
   ): AsyncEntityGenerator<M, void> => {
     return addListenerOnce(entity, eventName, listener);
   };
@@ -70,9 +70,13 @@ export const eventUseCase = <T>(): EventReducers<T> => {
   const listen = function* <S extends T, M extends EventMap<S>, TName extends ExtractEventNames<S>>(
     entity: M,
     eventName: TName,
-    listener: ExtractEventListeners<S, TName>,
+    listener: ExtractEventListeners<S, TName> | null,
     prepend = false
   ): EntityGenerator<M, void> {
+    if (!listener) {
+      return;
+    }
+
     const { [eventName]: listeners = [] } = entity;
 
     yield {
@@ -84,9 +88,13 @@ export const eventUseCase = <T>(): EventReducers<T> => {
   const listenOnce = async function* <S extends T, M extends EventMap<S>, TName extends ExtractEventNames<S>>(
     entity: M,
     eventName: TName,
-    listener: ExtractEventListeners<S, TName>,
+    listener: ExtractEventListeners<S, TName> | null,
     prepend?: boolean
   ): AsyncEntityGenerator<M, void> {
+    if (!listener) {
+      return;
+    }
+
     let resolve: (value: null) => void;
 
     // `ts 5.4.0` 以后要替换成 `Promise.withResolvers`
@@ -114,7 +122,7 @@ export const eventUseCase = <T>(): EventReducers<T> => {
   const prependListener = <S extends T, M extends EventMap<S>, TName extends ExtractEventNames<S>>(
     entity: M,
     eventName: TName,
-    listener: ExtractEventListeners<S, TName>
+    listener: ExtractEventListeners<S, TName> | null
   ): EntityGenerator<M, void> => {
     return listen(entity, eventName, listener, true);
   };
@@ -122,7 +130,7 @@ export const eventUseCase = <T>(): EventReducers<T> => {
   const prependOnceListener = <S extends T, M extends EventMap<S>, TName extends ExtractEventNames<S>>(
     entity: M,
     eventName: TName,
-    listener: ExtractEventListeners<S, TName>
+    listener: ExtractEventListeners<S, TName> | null
   ): AsyncEntityGenerator<M, void> => {
     return listenOnce(entity, eventName, listener, true);
   };
@@ -143,8 +151,12 @@ export const eventUseCase = <T>(): EventReducers<T> => {
   const removeListener = function* <S extends T, M extends EventMap<S>, TName extends ExtractEventNames<S>>(
     entity: M,
     eventName: TName,
-    listener: ExtractEventListeners<S, TName>
+    listener: ExtractEventListeners<S, TName> | null
   ): EntityGenerator<M, void> {
+    if (!listener) {
+      return;
+    }
+
     const { [eventName]: listeners = [] } = entity;
     const index = listeners.indexOf(listener);
 
