@@ -383,34 +383,80 @@ describe('createEntityReducers', (): void => {
       expect(await promise2).toEqual([{ value: 114 }, `[${114}]`]);
     });
 
-    test('`options.onChange` should be called after entity changed - entity mode', (): void => {
-      const onChange = jest.fn((): void => {});
+    test('`options.onYield` should be called after yield - entity mode', (): void => {
+      const onYield = jest.fn((newEntity: Data): Data => {
+        const { value } = newEntity;
 
-      const { setEntity } = createEntityReducers({ value: 1 }, testUseCase, {
-        onChange,
+        return {
+          ...newEntity,
+          value: value + 100,
+        };
       });
 
-      setEntity({ value: 2 });
-      setEntity({ value: 3 });
+      const { add } = createEntityReducers({ value: 1 }, testUseCase, {
+        onYield,
+      });
 
-      expect(onChange).toHaveBeenCalledTimes(2);
-      expect(onChange).toHaveBeenNthCalledWith(1, { value: 2 }, { value: 1 });
-      expect(onChange).toHaveBeenNthCalledWith(2, { value: 3 }, { value: 2 });
+      const [entity] = add(5);
+
+      expect(onYield).toHaveBeenCalledWith({ value: 6 });
+
+      expect(entity).toEqual({
+        value: 106,
+      });
     });
 
-    test('`options.onChange` should be called after entity changed - non-entity mode', (): void => {
-      const onChange = jest.fn((): void => {});
+    test('`options.onYield` should be called after yield - non-entity mode', (): void => {
+      const onYield = jest.fn((newEntity: Data): Data => {
+        const { value } = newEntity;
 
-      const { setEntity } = createEntityReducers(testUseCase, {
-        onChange,
+        return {
+          ...newEntity,
+          value: value + 100,
+        };
       });
 
-      setEntity({ value: 1 }, { value: 2 });
-      setEntity({ value: 1 }, { value: 3 });
+      const { add } = createEntityReducers(testUseCase, {
+        onYield,
+      });
 
-      expect(onChange).toHaveBeenCalledTimes(2);
-      expect(onChange).toHaveBeenNthCalledWith(1, { value: 2 }, { value: 1 });
-      expect(onChange).toHaveBeenNthCalledWith(2, { value: 3 }, { value: 1 });
+      const [entity] = add({ value: 1 }, 5);
+
+      expect(onYield).toHaveBeenCalledWith({ value: 6 });
+
+      expect(entity).toEqual({
+        value: 106,
+      });
+    });
+
+    test('`options.onReturn` should be called after return - entity mode', (): void => {
+      const onReturn = jest.fn((val: string): string => {
+        return `hello ${val}`;
+      });
+
+      const { add } = createEntityReducers({ value: 1 }, testUseCase, {
+        onReturn,
+      });
+
+      const [, ret] = add(5);
+
+      expect(onReturn).toHaveBeenCalledWith('[6]', { value: 6 });
+      expect(ret).toBe('hello [6]');
+    });
+
+    test('`options.onReturn` should be called after return - non-entity mode', (): void => {
+      const onReturn = jest.fn((val: string): string => {
+        return `hello ${val}`;
+      });
+
+      const { add } = createEntityReducers(testUseCase, {
+        onReturn,
+      });
+
+      const [, ret] = add({ value: 1 }, 5);
+
+      expect(onReturn).toHaveBeenCalledWith('[6]', { value: 6 });
+      expect(ret).toBe('hello [6]');
     });
 
     test('`options.onGenerate` should be called after generator done - entity mode', async (): Promise<void> => {

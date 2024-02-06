@@ -12,34 +12,36 @@ export const generateEntity = (<T, TResult, TReturn = EntityGeneratorValues<T, T
 
   const {
     store = new EntityStore(void 0 as T),
-    onYield,
-    onReturn,
-    onGenerate = (newEntity: T, result: TResult): EntityGeneratorValues<T, TResult> => {
-      return [newEntity, result] as EntityGeneratorValues<T, TResult>;
+    onYield = (entity: T): T => {
+      return entity;
+    },
+    onReturn = (result: TResult): TResult => {
+      return result;
+    },
+    onGenerate = (entity: T, result: TResult): EntityGeneratorValues<T, TResult> => {
+      return [entity, result] as EntityGeneratorValues<T, TResult>;
     },
   } = options;
 
   const generate = async (): Promise<EntityGeneratorValues<T, TResult>> => {
     for (;;) {
-      const ret = generator.next(store.getValue());
+      const ret = generator.next(store.value);
       const syncRet = ret as IteratorResult<T | YieldEntityCallback<T>, TResult>;
       const asyncRet = ret as Promise<IteratorResult<T | YieldEntityCallback<T>, TResult>>;
       const { value, done } = isAsync ? await asyncRet : syncRet;
-      const currentEntity = store.getValue();
+      const { value: currentEntity } = store;
 
       if (done) {
-        const result = value as TResult;
+        const result = onReturn(value as TResult, currentEntity);
 
         results[0] = result;
-        onReturn?.(result, currentEntity);
         return [currentEntity, result] as EntityGeneratorValues<T, TResult>;
       }
 
-      const newEntity = typeof value === 'function' ? (value as YieldEntityCallback<T>)(currentEntity) : value;
-
-      if (onYield?.(newEntity, currentEntity)) {
-        continue;
-      }
+      const newEntity = onYield(
+        typeof value === 'function' ? (value as YieldEntityCallback<T>)(currentEntity) : value,
+        currentEntity
+      );
 
       store.setValue(newEntity);
     }
@@ -48,10 +50,10 @@ export const generateEntity = (<T, TResult, TReturn = EntityGeneratorValues<T, T
   const promise = generate();
 
   if (results.length > 0) {
-    return onGenerate(store.getValue(), results[0]) as TReturn;
+    return onGenerate(store.value, results[0]) as TReturn;
   }
 
-  return promise.then(([entity, value]: EntityGeneratorValues<T, TResult>): TReturn => {
-    return onGenerate(entity, value) as TReturn;
+  return promise.then(([entity, result]: EntityGeneratorValues<T, TResult>): TReturn => {
+    return onGenerate(entity, result) as TReturn;
   });
 }) as EntityGeneratorHandler;

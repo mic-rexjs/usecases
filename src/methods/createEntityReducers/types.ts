@@ -10,7 +10,9 @@ import {
 } from '@/types';
 
 export interface CreateEntityReducersOwnOptions<T> {
-  onChange?<S extends T>(newEntity: S, oldEntity: S): void;
+  onYield?(newEntity: T, oldEntity?: T): T;
+
+  onReturn?(result: unknown, entity: T): unknown;
 
   onGenerate?(entity: T, result: unknown): unknown;
 }

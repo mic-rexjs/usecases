@@ -1,30 +1,17 @@
-import { EntityWatcher } from './types';
+import { EntityStoreOptions } from './types';
 
 export class EntityStore<T> {
-  private value: T;
+  value: T;
 
-  private readonly watchers: EntityWatcher<T>[] = [];
+  private readonly options: EntityStoreOptions<T>;
 
-  constructor(initialEntity: T, watcher?: EntityWatcher<T>) {
+  constructor(initialEntity: T, options: EntityStoreOptions<T> = {}) {
     this.value = initialEntity;
-
-    if (watcher) {
-      this.watch(watcher);
-    }
-  }
-
-  getValue(): T {
-    const { value } = this;
-
-    return value;
-  }
-
-  resetValue(value: T): void {
-    this.value = value;
+    this.options = options;
   }
 
   setValue(value: T): void {
-    const prevValue = this.getValue();
+    const { value: prevValue, options } = this;
 
     this.value = value;
 
@@ -32,27 +19,8 @@ export class EntityStore<T> {
       return;
     }
 
-    const { watchers } = this;
+    const { onChange } = options;
 
-    for (const watcher of watchers) {
-      watcher(value, prevValue);
-    }
-  }
-
-  watch(watcher: EntityWatcher<T>): void {
-    const { watchers } = this;
-
-    watchers.push(watcher);
-  }
-
-  unwatch(watcher: EntityWatcher<T>): void {
-    const { watchers } = this;
-    const index = watchers.indexOf(watcher);
-
-    if (index === -1) {
-      return;
-    }
-
-    watchers.splice(index, 1);
+    onChange?.(value, prevValue);
   }
 }

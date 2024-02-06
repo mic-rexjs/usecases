@@ -25,7 +25,16 @@ export const createEntityReducers: EntityReducersCreator = <
   const store = initialEntity instanceof EntityStore ? initialEntity : new EntityStore(initialEntity);
   const usecase = (hasEntity ? arg2 : arg1) as EntityUseCase<T, TEntityReducers, TUseCaseOptions>;
   const options = (hasEntity ? arg3 : arg2) as CreateEntityReducersOptions<T, TUseCaseOptions> | undefined;
-  const { onChange, onGenerate, ...usecaseOptions } = options || {};
+
+  const {
+    onYield = (entity: T): T => {
+      return entity;
+    },
+    onReturn,
+    onGenerate,
+    ...usecaseOptions
+  } = options || {};
+
   const smoothedReducers: Partial<TReturnedReducers> = {};
   const sourceReducers = usecase(usecaseOptions as TUseCaseOptions);
   const keys = Object.keys(sourceReducers);
@@ -35,11 +44,11 @@ export const createEntityReducers: EntityReducersCreator = <
     const reducer = sourceReducers[key] as EntityReducer<T, TReturn>;
 
     smoothedReducers[key as keyof TReturnedReducers] = (<TResult>(...args: RestArguments): TReturn | TResult => {
-      const reducerArgs = (hasEntity ? [store.getValue(), ...args] : args) as [entity: T, ...args: RestArguments];
+      const reducerArgs = (hasEntity ? [store.value, ...args] : args) as [entity: T, ...args: RestArguments];
       const ret = reducer(...reducerArgs);
 
       if (!hasEntity) {
-        store.resetValue(args[0]);
+        store.value = args[0];
       }
 
       if (!isGenerator(ret)) {
@@ -48,23 +57,19 @@ export const createEntityReducers: EntityReducersCreator = <
 
       return generateEntity(ret as EntityGenerator<T, TResult>, {
         store,
-        onYield(newEntity: T, oldEntity: T): boolean {
+        onYield(newEntity: T, oldEntity: T): T {
           let entity = newEntity;
 
           if (reducer !== setEntity) {
             [entity] = generateEntity(setEntity(oldEntity, newEntity));
           }
 
-          store.setValue(entity);
-          return true;
+          return onYield(entity);
         },
+        onReturn,
         onGenerate,
       }) as TResult;
     }) as TReturnedReducers[keyof TReturnedReducers];
-  });
-
-  store.watch((newEntity: T, oldEntity: T): void => {
-    onChange?.(newEntity, oldEntity);
   });
 
   return smoothedReducers as TReturnedReducers;
