@@ -58,13 +58,7 @@ export interface EntityReducersCreator {
     TUseCaseOptions extends object = object,
     TReturnedReducers = SmoothedEntityReducers<T, TEntityReducers>
   >(
-    usecase: EntityUseCase<T, TEntityReducers, TUseCaseOptions> &
-      /**
-       * 如果不使用 `&`，那么很多情况下 `options` 类型无法被正确推导；
-       * 因为使用 `&` 是为了让该参数 `usecase` 的泛型 `T` 推导占优先级，
-       * 从而保证 `options` 里的泛型 `T` 是根据 `usecase` 来推导的。
-       */
-      UseCase<EntityReducerMap<T>, TUseCaseOptions>,
+    usecase: EntityUseCase<T, TEntityReducers, TUseCaseOptions> & UseCase<EntityReducerMap<T>, TUseCaseOptions>,
     options?: CreateEntityReducersOptions<T, TUseCaseOptions>
   ): TReturnedReducers;
 
@@ -75,13 +69,7 @@ export interface EntityReducersCreator {
     TReturnedReducers = ScopedEntityReducers<T, TEntityReducers>
   >(
     initailEntity: T | EntityStore<T>,
-    usecase: EntityUseCase<T, TEntityReducers, TUseCaseOptions> &
-      /**
-       * 如果不使用 `&`，那么很多情况下 `options` 类型无法被正确推导；
-       * 因为使用 `&` 是为了让该参数 `usecase` 的泛型 `T` 推导占优先级，
-       * 从而保证 `options` 里的泛型 `T` 是根据 `usecase` 来推导的。
-       */
-      UseCase<EntityReducerMap<T>, TUseCaseOptions>,
+    usecase: EntityUseCase<T, TEntityReducers, TUseCaseOptions> & UseCase<EntityReducerMap<T>, TUseCaseOptions>,
     options?: CreateEntityReducersOptions<T, TUseCaseOptions>
   ): TReturnedReducers;
 }

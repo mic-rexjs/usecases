@@ -1,3 +1,5 @@
+import { EntityChangeEvent } from '../EntityChangeEvent';
+
 export interface EntityStoreOptions<T> {
-  onChange?(newEntity: T, oldEntity: T): void;
+  onChange?(e: EntityChangeEvent<T>): void;
 }

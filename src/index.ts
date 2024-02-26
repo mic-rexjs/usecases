@@ -1,6 +1,8 @@
 import './types';
 
 export { EntityStore } from './classes/EntityStore';
+export { EntityEvent } from './classes/EntityEvent';
+export { EntityChangeEvent } from './classes/EntityChangeEvent';
 
 export { generateEntity } from './methods/generateEntity';
 export { createUseCase } from './methods/createUseCase';
@@ -9,8 +11,6 @@ export { createEntityReducers } from './methods/createEntityReducers';
 export { entityUseCase } from './usecases/entityUseCase';
 export { arrayUseCase } from './usecases/arrayUseCase';
 export { objectUseCase } from './usecases/objectUseCase';
-export { eventUseCase } from './usecases/eventUseCase';
-export { runtimeUseCase } from './usecases/runtimeUseCase';
 
 export type {
   Reducer,

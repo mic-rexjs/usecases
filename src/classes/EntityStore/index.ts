@@ -1,26 +1,30 @@
+import { EntityChangeEvent } from '../EntityChangeEvent';
 import { EntityStoreOptions } from './types';
 
-export class EntityStore<T> {
+export class EntityStore<T> extends EventTarget {
   value: T;
 
-  private readonly options: EntityStoreOptions<T>;
-
   constructor(initialEntity: T, options: EntityStoreOptions<T> = {}) {
+    const { onChange } = options;
+
+    super();
+
     this.value = initialEntity;
-    this.options = options;
+
+    this.addEventListener('change', (e: Event): void => {
+      onChange?.(e as EntityChangeEvent<T>);
+    });
   }
 
   setValue(value: T): void {
-    const { value: prevValue, options } = this;
+    const { value: oldValue } = this;
 
     this.value = value;
 
-    if (prevValue === value) {
+    if (oldValue === value) {
       return;
     }
 
-    const { onChange } = options;
-
-    onChange?.(value, prevValue);
+    this.dispatchEvent(new EntityChangeEvent('change', { newEntity: value, oldEntity: oldValue }));
   }
 }

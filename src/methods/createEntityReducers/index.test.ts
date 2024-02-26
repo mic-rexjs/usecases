@@ -93,8 +93,8 @@ const testUseCase = <T extends Data>(options: Options<T> = {}): TestReducers<T> 
 
 let mockSetEntity: TestReducers<Data>['setEntity'] | null = null;
 
-const testUseCaseWithMockSetEntity = (): TestReducers<Data> => {
-  const testReducers = testUseCase<Data>();
+const mockedTestUseCase = (): TestReducers<Data> => {
+  const testReducers = testUseCase<Data>({});
   const { setEntity } = testReducers;
 
   mockSetEntity = jest.fn(setEntity);
@@ -263,7 +263,7 @@ describe('createEntityReducers', (): void => {
 
   describe('`setEntity` should be called', (): void => {
     test('`setEntity` should not be called after a normal method executed - entity mode', (): void => {
-      const { getResult } = createEntityReducers({ value: 1 }, testUseCaseWithMockSetEntity);
+      const { getResult } = createEntityReducers({ value: 1 }, mockedTestUseCase);
 
       expect(mockSetEntity).toHaveBeenCalledTimes(0);
       getResult(100);
@@ -271,7 +271,7 @@ describe('createEntityReducers', (): void => {
     });
 
     test('`setEntity` should not be called after a normal method executed - non-entity mode', (): void => {
-      const { getResult } = createEntityReducers(testUseCaseWithMockSetEntity);
+      const { getResult } = createEntityReducers(mockedTestUseCase);
 
       expect(mockSetEntity).toHaveBeenCalledTimes(0);
       getResult({ value: 1 }, 100);
@@ -279,7 +279,7 @@ describe('createEntityReducers', (): void => {
     });
 
     test('`setEntity` should be called after yield - entity mode', (): void => {
-      const { add } = createEntityReducers({ value: 1 }, testUseCaseWithMockSetEntity);
+      const { add } = createEntityReducers({ value: 1 }, mockedTestUseCase);
 
       expect(mockSetEntity).toHaveBeenCalledTimes(0);
       add(100);
@@ -287,7 +287,7 @@ describe('createEntityReducers', (): void => {
     });
 
     test('`setEntity` should be called after yield - non-entity mode', (): void => {
-      const { add } = createEntityReducers(testUseCaseWithMockSetEntity);
+      const { add } = createEntityReducers(mockedTestUseCase);
 
       expect(mockSetEntity).toHaveBeenCalledTimes(0);
       add({ value: 1 }, 100);
@@ -295,7 +295,7 @@ describe('createEntityReducers', (): void => {
     });
 
     test('`setEntity` should be called after yield on async mode - entity mode', async (): Promise<void> => {
-      const { addAsync } = createEntityReducers({ value: 1 }, testUseCaseWithMockSetEntity);
+      const { addAsync } = createEntityReducers({ value: 1 }, mockedTestUseCase);
 
       expect(mockSetEntity).toHaveBeenCalledTimes(0);
       await addAsync(100);
@@ -303,7 +303,7 @@ describe('createEntityReducers', (): void => {
     });
 
     test('`setEntity` should be called after yield on async mode - non-entity mode', async (): Promise<void> => {
-      const { addAsync } = createEntityReducers(testUseCaseWithMockSetEntity);
+      const { addAsync } = createEntityReducers(mockedTestUseCase);
 
       expect(mockSetEntity).toHaveBeenCalledTimes(0);
       await addAsync({ value: 1 }, 100);
@@ -311,7 +311,7 @@ describe('createEntityReducers', (): void => {
     });
 
     test('`setEntity` should be called multiple times - entity mode', async (): Promise<void> => {
-      const { addListAsync } = createEntityReducers({ value: 1 }, testUseCaseWithMockSetEntity);
+      const { addListAsync } = createEntityReducers({ value: 1 }, mockedTestUseCase);
       const list = [3, 5, 6, 8];
 
       expect(mockSetEntity).toHaveBeenCalledTimes(0);
@@ -320,7 +320,7 @@ describe('createEntityReducers', (): void => {
     });
 
     test('`setEntity` should be called multiple times - non-entity mode', async (): Promise<void> => {
-      const { addListAsync } = createEntityReducers(testUseCaseWithMockSetEntity);
+      const { addListAsync } = createEntityReducers(mockedTestUseCase);
       const list = [3, 5, 6, 8];
 
       expect(mockSetEntity).toHaveBeenCalledTimes(0);
