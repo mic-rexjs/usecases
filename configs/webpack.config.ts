@@ -14,8 +14,11 @@ const initConfig = (): Configuration => {
     output: {
       filename: 'index.min.js',
       path: distPath,
-      libraryTarget: 'umd',
-      globalObject: 'globalThis',
+      library: {
+        name: 'usecases',
+        type: 'umd',
+      },
+      globalObject: 'window',
     },
     resolve: {
       extensions: ['.js'],
