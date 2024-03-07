@@ -1,4 +1,4 @@
-import * as path from 'path';
+import path from 'path';
 import { Configuration } from 'webpack';
 import CopyWebpackPlugin from 'copy-webpack-plugin';
 
@@ -15,7 +15,7 @@ const initConfig = (): Configuration => {
       filename: 'index.min.js',
       path: distPath,
       libraryTarget: 'umd',
-      globalObject: 'this',
+      globalObject: 'globalThis',
     },
     resolve: {
       extensions: ['.js'],
