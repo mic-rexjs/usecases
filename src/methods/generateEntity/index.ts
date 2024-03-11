@@ -5,7 +5,7 @@ import { isGenerator } from '../isGenerator';
 
 export const generateEntity = (<T, TResult, TReturn = EntityGeneratorValues<T, TResult>>(
   generator: EntityGenerator<T, TResult> | AsyncEntityGenerator<T, TResult>,
-  options: GenerateEntityOptions<T, TResult, TReturn> = {}
+  options: GenerateEntityOptions<T, TResult, TReturn> = {},
 ): TReturn | Promise<TReturn> => {
   const results: TResult[] = [];
   const isAsync = isGenerator(generator, Symbol.asyncIterator);
@@ -40,7 +40,7 @@ export const generateEntity = (<T, TResult, TReturn = EntityGeneratorValues<T, T
 
       const newEntity = onYield(
         typeof value === 'function' ? (value as YieldEntityCallback<T>)(currentEntity) : value,
-        currentEntity
+        currentEntity,
       );
 
       store.setValue(newEntity);

@@ -469,7 +469,7 @@ describe('createEntityReducers', (): void => {
         testUseCase as unknown as EntityUseCase<Data, TestGeneratedReducers<Data, string>>,
         {
           onGenerate,
-        }
+        },
       );
 
       getResult(100);
@@ -493,7 +493,7 @@ describe('createEntityReducers', (): void => {
         testUseCase as unknown as EntityUseCase<Data, TestGeneratedReducers<Data, string>>,
         {
           onGenerate,
-        }
+        },
       );
 
       getResult({ value: 1 }, 100);

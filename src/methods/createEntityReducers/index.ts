@@ -14,11 +14,11 @@ export const createEntityReducers: EntityReducersCreator = <
   TEntityReducers extends EntityReducerMap<T>,
   TUseCaseOptions extends object,
   TUseCase extends EntityUseCase<T, TEntityReducers, TUseCaseOptions>,
-  TReturnedReducers = SmoothedEntityReducers<T, TEntityReducers> | ScopedEntityReducers<T, TEntityReducers>
+  TReturnedReducers = SmoothedEntityReducers<T, TEntityReducers> | ScopedEntityReducers<T, TEntityReducers>,
 >(
   arg1: T | EntityStore<T> | TUseCase,
   arg2?: TUseCase | CreateEntityReducersOptions<T, TUseCaseOptions>,
-  arg3?: CreateEntityReducersOptions<T, TUseCaseOptions>
+  arg3?: CreateEntityReducersOptions<T, TUseCaseOptions>,
 ): TReturnedReducers => {
   const hasEntity = typeof arg2 === 'function';
   const initialEntity = (hasEntity ? arg1 : null) as T | EntityStore<T>;

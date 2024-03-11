@@ -13,7 +13,7 @@ export const arrayUseCase = <T>(): ArrayReducers<T> => {
     entity: S[],
     value: S,
     start?: number,
-    end?: number
+    end?: number,
   ): EntityGenerator<S[], S[]> {
     const newEntity = entity.slice();
 

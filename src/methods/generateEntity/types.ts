@@ -14,11 +14,11 @@ export interface GenerateEntityOptions<T, TResult, TReturn = EntityGeneratorValu
 export interface EntityGeneratorHandler {
   <T, TResult, TReturn = EntityGeneratorValues<T, TResult>>(
     generator: AsyncEntityGenerator<T, TResult>,
-    options?: GenerateEntityOptions<T, TResult, TReturn>
+    options?: GenerateEntityOptions<T, TResult, TReturn>,
   ): Promise<TReturn>;
 
   <T, TResult, TReturn = EntityGeneratorValues<T, TResult>>(
     generator: EntityGenerator<T, TResult>,
-    options?: GenerateEntityOptions<T, TResult, TReturn>
+    options?: GenerateEntityOptions<T, TResult, TReturn>,
   ): TReturn;
 }

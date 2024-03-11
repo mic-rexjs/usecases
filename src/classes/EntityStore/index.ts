@@ -1,19 +1,20 @@
-import { EntityChangeEvent } from '../EntityChangeEvent';
-import { EntityStoreOptions } from './types';
+import { EntityStoreOptions, EntityWatcher } from './types';
 
-export class EntityStore<T> extends EventTarget {
+export class EntityStore<T> {
+  readonly #watchers: EntityWatcher<T>[] = [];
+
   value: T;
 
   constructor(initialEntity: T, options: EntityStoreOptions<T> = {}) {
     const { onChange } = options;
 
-    super();
-
     this.value = initialEntity;
 
-    this.addEventListener('change', (e: Event): void => {
-      onChange?.(e as EntityChangeEvent<T>);
-    });
+    if (!onChange) {
+      return;
+    }
+
+    this.watch(onChange);
   }
 
   setValue(value: T): void {
@@ -25,6 +26,23 @@ export class EntityStore<T> extends EventTarget {
       return;
     }
 
-    this.dispatchEvent(new EntityChangeEvent('change', { newEntity: value, oldEntity: oldValue }));
+    for (const watcher of this.#watchers) {
+      watcher(value, oldValue);
+    }
+  }
+
+  unwatch(watcher: EntityWatcher<T>): void {
+    const watchers = this.#watchers;
+    const index = watchers.indexOf(watcher);
+
+    if (index === -1) {
+      return;
+    }
+
+    watchers.splice(index, 1);
+  }
+
+  watch(watcher: EntityWatcher<T>): void {
+    this.#watchers.push(watcher);
   }
 }
