@@ -1,5 +1,10 @@
 declare const symbolSetKey: unique symbol;
 
+export type ReducerKeys<T> = keyof T & string;
+
+// 不能使用 `IArguments[number][]`，因为它不能满足模式： `[x: number, ...args: Parameters<T[K]>]`
+export type RestArguments = IArguments[number];
+
 export type ToType<T> = Omit<T, never>;
 
 export interface SymbolSet {
@@ -17,9 +22,6 @@ export interface GlobalSymbolSet extends EntitySymbolSet {
 export interface SymbolSetTarget<T> {
   readonly [symbolSetKey]?: T;
 }
-
-// 不能使用 `IArguments[number][]`，因为它不能满足模式： `[x: number, ...args: Parameters<T[K]>]`
-export type RestArguments = IArguments[number];
 
 export interface Reducer<T = unknown> {
   (...args: RestArguments): T;

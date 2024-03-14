@@ -6,6 +6,7 @@ import {
   EntityReducer,
   EntityReducers,
   EntityUseCase,
+  ReducerKeys,
   UseCase,
 } from '@/types';
 
@@ -32,7 +33,7 @@ export type SmoothedEntityReducer<T, TReducer extends EntityReducer<T>> = TReduc
   : never;
 
 export type SmoothedEntityReducers<T, TEntityReducers extends EntityReducers<T>> = {
-  [K in keyof TEntityReducers]: SmoothedEntityReducer<T, TEntityReducers[K]>;
+  [K in ReducerKeys<TEntityReducers>]: SmoothedEntityReducer<T, TEntityReducers[K]>;
 };
 
 export type ScopedEntityReducer<T, TReducer extends EntityReducer<T>> = TReducer extends (
@@ -48,7 +49,7 @@ export type ScopedEntityReducer<T, TReducer extends EntityReducer<T>> = TReducer
   : never;
 
 export type ScopedEntityReducers<T, TEntityReducers extends EntityReducers<T>> = {
-  [K in keyof TEntityReducers]: ScopedEntityReducer<T, TEntityReducers[K]>;
+  [K in ReducerKeys<TEntityReducers>]: ScopedEntityReducer<T, TEntityReducers[K]>;
 };
 
 export interface EntityReducersCreator {

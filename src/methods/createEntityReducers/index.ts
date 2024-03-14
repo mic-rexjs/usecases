@@ -1,4 +1,4 @@
-import { EntityGenerator, EntityReducer, EntityReducers, EntityUseCase, RestArguments } from '@/types';
+import { EntityGenerator, EntityReducer, EntityReducers, EntityUseCase, ReducerKeys, RestArguments } from '@/types';
 import {
   ScopedEntityReducers,
   CreateEntityReducersOptions,
@@ -43,7 +43,7 @@ export const createEntityReducers: EntityReducersCreator = <
   keys.forEach(<TReturn>(key: string): void => {
     const reducer = sourceReducers[key] as EntityReducer<T, TReturn>;
 
-    smoothedReducers[key as keyof TReturnedReducers] = (<TResult>(...args: RestArguments): TReturn | TResult => {
+    smoothedReducers[key as ReducerKeys<TReturnedReducers>] = (<TResult>(...args: RestArguments): TReturn | TResult => {
       const reducerArgs = (hasEntity ? [store.value, ...args] : args) as [entity: T, ...args: RestArguments];
       const ret = reducer(...reducerArgs);
 
@@ -69,7 +69,7 @@ export const createEntityReducers: EntityReducersCreator = <
         onReturn,
         onGenerate,
       }) as TResult;
-    }) as TReturnedReducers[keyof TReturnedReducers];
+    }) as TReturnedReducers[ReducerKeys<TReturnedReducers>];
   });
 
   return smoothedReducers as TReturnedReducers;
