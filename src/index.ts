@@ -1,11 +1,9 @@
 export type {
   Reducer,
   Reducers,
-  ReducerMap,
   UseCase,
   EntityReducer,
   EntityReducers,
-  EntityReducerMap,
   EntityUseCase,
   EntityGenerator,
   AsyncEntityGenerator,

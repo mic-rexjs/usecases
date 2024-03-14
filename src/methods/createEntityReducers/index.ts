@@ -1,4 +1,4 @@
-import { EntityGenerator, EntityReducer, EntityReducerMap, EntityUseCase, RestArguments } from '@/types';
+import { EntityGenerator, EntityReducer, EntityReducers, EntityUseCase, RestArguments } from '@/types';
 import {
   ScopedEntityReducers,
   CreateEntityReducersOptions,
@@ -11,7 +11,7 @@ import { isGenerator } from '../isGenerator';
 
 export const createEntityReducers: EntityReducersCreator = <
   T,
-  TEntityReducers extends EntityReducerMap<T>,
+  TEntityReducers extends EntityReducers<T>,
   TUseCaseOptions extends object,
   TUseCase extends EntityUseCase<T, TEntityReducers, TUseCaseOptions>,
   TReturnedReducers = SmoothedEntityReducers<T, TEntityReducers> | ScopedEntityReducers<T, TEntityReducers>,

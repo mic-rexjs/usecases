@@ -1,4 +1,22 @@
-declare const reducerTag: unique symbol;
+declare const symbolSetKey: unique symbol;
+
+export type ToType<T> = Omit<T, never>;
+
+export interface SymbolSet {
+  readonly normal: unique symbol;
+}
+
+export interface EntitySymbolSet extends SymbolSet {
+  readonly entity: unique symbol;
+}
+
+export interface GlobalSymbolSet extends EntitySymbolSet {
+  readonly global: unique symbol;
+}
+
+export interface SymbolSetTarget<T> {
+  readonly [symbolSetKey]?: T;
+}
 
 // 不能使用 `IArguments[number][]`，因为它不能满足模式： `[x: number, ...args: Parameters<T[K]>]`
 export type RestArguments = IArguments[number];
@@ -11,11 +29,10 @@ export interface ReducerMap<T extends Reducer = Reducer> {
   [k: string]: T;
 }
 
-export type BaseReducers = {
-  readonly [reducerTag]?: unique symbol;
-};
+export interface BaseReducers extends SymbolSetTarget<SymbolSet> {}
 
-export type Reducers<T extends ReducerMap = ReducerMap, TExtends extends ReducerMap = BaseReducers> = TExtends & T;
+export type Reducers<T extends ReducerMap = ReducerMap, TExtends extends ReducerMap = ToType<BaseReducers>> = TExtends &
+  T;
 
 export interface UseCase<T extends ReducerMap, TOptions extends object = object> {
   (options?: TOptions): T;
@@ -49,26 +66,40 @@ export interface EntityReducer<T, TReturn = unknown> {
   (entity: T, ...args: RestArguments): TReturn;
 }
 
-export interface CustomEntityReducerMap<T> extends ReducerMap<EntityReducer<T>> {}
+export interface EntityReducerMap<T> extends ReducerMap<EntityReducer<T>> {}
 
-export type NamedEntityReducerMap<T> = {
+export interface BaseEntityReducers<T> extends BaseReducers {
+  readonly [symbolSetKey]?: EntitySymbolSet;
+
   setEntity<S extends T>(entity: S, settableEntity: SettableEntity<S>): EntityGenerator<S, S>;
-};
+}
 
-export interface EntityReducerMap<T> extends CustomEntityReducerMap<T>, NamedEntityReducerMap<T> {}
-
-export type BaseEntityReducers<T> = NamedEntityReducerMap<T> & {
-  readonly [reducerTag]?: unique symbol;
-};
+export interface BaseEntityReducerMap<T> extends EntityReducerMap<T>, BaseEntityReducers<T> {}
 
 export type EntityReducers<
   T,
-  TEntityReducers extends CustomEntityReducerMap<T> = CustomEntityReducerMap<T>,
-  TExtends extends EntityReducerMap<T> = BaseEntityReducers<T>
-> = Reducers<TEntityReducers, TExtends>;
+  TCustomReducers extends EntityReducerMap<T> = EntityReducerMap<T>,
+  TExtends extends BaseEntityReducerMap<T> = ToType<BaseEntityReducers<T>>,
+> = Reducers<TCustomReducers, TExtends>;
 
 export interface EntityUseCase<
   T,
-  TEntityReducers extends EntityReducerMap<T> = BaseEntityReducers<T>,
-  TOptions extends object = object
+  TEntityReducers extends EntityReducerMap<T> = ToType<BaseEntityReducers<T>>,
+  TOptions extends object = object,
 > extends UseCase<TEntityReducers, TOptions> {}
+
+export interface BaseGlobalReducers<T> extends BaseEntityReducers<T> {
+  readonly [symbolSetKey]?: GlobalSymbolSet;
+}
+
+export type GlobalReducers<
+  T,
+  TCustomReducers extends EntityReducerMap<T> = EntityReducerMap<T>,
+  TExtends extends BaseEntityReducerMap<T> = ToType<BaseGlobalReducers<T>>,
+> = EntityReducers<T, TCustomReducers, TExtends>;
+
+export interface GlobalUseCase<
+  T,
+  TGlobalReducers extends EntityReducerMap<T> = ToType<BaseGlobalReducers<T>>,
+  TOptions extends object = object,
+> extends UseCase<TGlobalReducers, TOptions> {}
