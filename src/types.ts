@@ -15,17 +15,11 @@ export interface EntitySymbolSet extends SymbolSet {
   readonly entity: unique symbol;
 }
 
-export interface GlobalSymbolSet extends EntitySymbolSet {
-  readonly global: unique symbol;
-}
-
 export interface SymbolSetTarget<T = SymbolSet> {
   readonly [symbolSetKey]?: T;
 }
 
 export interface EntitySymbolSetTarget extends SymbolSetTarget<EntitySymbolSet> {}
-
-export interface GlobalSymbolSetTarget extends SymbolSetTarget<GlobalSymbolSet> {}
 
 export interface Reducer<T = unknown> {
   (...args: RestArguments): T;
@@ -93,17 +87,3 @@ export interface EntityUseCase<
   TEntityReducers extends EntityReducerMap<T> = ToType<BaseEntityReducers<T>>,
   TOptions extends object = object,
 > extends UseCase<TEntityReducers, TOptions> {}
-
-export interface BaseGlobalReducers<T> extends BaseEntityReducers<T> {}
-
-export type GlobalReducers<
-  T,
-  TCustomReducers extends EntityReducerMap<T> = EntityReducerMap<T>,
-  TExtends extends BaseEntityReducerMap<T> = ToType<BaseGlobalReducers<T>>,
-> = EntityReducers<T, TCustomReducers, ToType<GlobalSymbolSetTarget> & TExtends>;
-
-export interface GlobalUseCase<
-  T,
-  TGlobalReducers extends EntityReducerMap<T> = ToType<BaseGlobalReducers<T>>,
-  TOptions extends object = object,
-> extends UseCase<TGlobalReducers, TOptions> {}
