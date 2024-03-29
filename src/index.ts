@@ -22,3 +22,4 @@ export { createEntityReducers } from './methods/createEntityReducers';
 export { entityUseCase } from './usecases/entityUseCase';
 export { arrayUseCase } from './usecases/arrayUseCase';
 export { objectUseCase } from './usecases/objectUseCase';
+export { rejectedErrorUseCase } from './usecases/rejectedErrorUseCase';
