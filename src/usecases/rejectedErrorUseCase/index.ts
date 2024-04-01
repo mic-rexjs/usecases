@@ -1,31 +1,22 @@
 import { createUseCase } from '@/methods/createUseCase';
-import {
-  RejectedErrorReducers,
-  FulfilledEventHandler,
-  RejectedCode,
-  InitRejectedErrorOptions,
-  RejectedError,
-} from './types';
+import { RejectedErrorReducers, FulfilledEventHandler, InitRejectedErrorOptions } from './types';
 import { UseCase } from '@/types';
+import { RejectedCode, RejectedError } from '@/entities/rejectedError/types';
 
 export const rejectedErrorUseCase = createUseCase((): UseCase<RejectedErrorReducers> => {
   let initOptions: InitRejectedErrorOptions<unknown>;
 
   return (): RejectedErrorReducers => {
-    const createError = <T = null>(code: RejectedCode, msg: string, data?: T): RejectedError<T> => {
-      return {
-        code,
-        msg,
-        data: typeof data === 'undefined' ? (null as T) : data,
-      };
-    };
-
     const initRejectedError = <T>(options: InitRejectedErrorOptions<T>): void => {
       initOptions = options;
     };
 
     const reject = <T>(code: RejectedCode, msg: string, data: T): Promise<never> => {
-      const error: RejectedError<T> = createError(code, msg, data);
+      const error: RejectedError<T> = {
+        code,
+        msg,
+        data,
+      };
 
       initOptions.onReject?.(error);
       return Promise.reject(error);
@@ -103,7 +94,6 @@ export const rejectedErrorUseCase = createUseCase((): UseCase<RejectedErrorReduc
     };
 
     return {
-      createError,
       initRejectedError,
       reject,
       rejectCode,

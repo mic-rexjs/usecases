@@ -12,7 +12,9 @@ export type {
 
 export type { ArrayReducers } from './usecases/arrayUseCase/types';
 export type { ObjectReducers } from './usecases/objectUseCase/types';
+export type { RejectedError } from './entities/rejectedError/types';
 
+export { defaultRejectedError } from './entities/rejectedError';
 export { EntityStore } from './classes/EntityStore';
 
 export { generateEntity } from './methods/generateEntity';

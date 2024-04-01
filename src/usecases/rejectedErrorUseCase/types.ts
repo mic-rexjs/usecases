@@ -1,17 +1,8 @@
+import { RejectedCode, RejectedError } from '@/entities/rejectedError/types';
 import { Reducers } from '@/types';
-
-export type RejectedCode = number | string;
 
 export interface FulfilledEventHandler<T> {
   (res: T): T | PromiseLike<T>;
-}
-
-export interface RejectedError<T = null> {
-  code: RejectedCode;
-
-  msg: string;
-
-  data: T;
 }
 
 export interface InitRejectedErrorOptions<T> {
@@ -19,8 +10,6 @@ export interface InitRejectedErrorOptions<T> {
 }
 
 export type RejectedErrorReducers = Reducers<{
-  createError<T = null>(code: RejectedCode, msg: string, data?: T): RejectedError<T>;
-
   initRejectedError<T>(options: InitRejectedErrorOptions<T>): void;
 
   reject<T>(code: RejectedCode, msg: string, data: T): Promise<never>;
