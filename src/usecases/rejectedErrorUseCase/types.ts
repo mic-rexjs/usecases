@@ -6,7 +6,7 @@ export interface FulfilledEventHandler<T> {
   (res: T): T | PromiseLike<T>;
 }
 
-export interface RejectedError<T> {
+export interface RejectedError<T = null> {
   code: RejectedCode;
 
   msg: string;
