@@ -4,7 +4,7 @@ import { UseCase } from '@/types';
 import { RejectedCode, RejectedError } from '@/entities/rejectedError/types';
 
 export const rejectedErrorUseCase = createUseCase((): UseCase<RejectedErrorReducers> => {
-  let initOptions: InitRejectedErrorOptions<unknown>;
+  let initOptions: InitRejectedErrorOptions<unknown> = {};
 
   return (): RejectedErrorReducers => {
     const initRejectedError = <T>(options: InitRejectedErrorOptions<T>): void => {
