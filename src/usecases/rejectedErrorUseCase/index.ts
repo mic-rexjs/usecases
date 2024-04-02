@@ -62,22 +62,15 @@ export const rejectedErrorUseCase = createUseCase((): UseCase<RejectedErrorReduc
     const resolveNonNullable = <T>(
       target: T | PromiseLike<T>,
       rejectedCode: RejectedCode,
-      rejectedMsg?: string,
+      rejectedMsg: string = '',
     ): Promise<NonNullable<T>> => {
-      return resolveWith(
-        target,
-        (res: T): NonNullable<T> | Promise<T> => {
-          const isNullable = typeof res === 'undefined' || res === null;
+      const isNullable = typeof target === 'undefined' || target === null;
 
-          if (isNullable) {
-            return Promise.reject(res);
-          }
+      if (isNullable) {
+        return rejectMsg(rejectedCode, rejectedMsg);
+      }
 
-          return res;
-        },
-        rejectedCode,
-        rejectedMsg,
-      ) as Promise<NonNullable<Awaited<T>>>;
+      return resolve(target, rejectedCode, rejectedMsg) as Promise<NonNullable<Awaited<T>>>;
     };
 
     const resolveWith = <T>(
