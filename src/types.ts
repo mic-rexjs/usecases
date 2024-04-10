@@ -34,7 +34,7 @@ export interface BaseReducers extends SymbolSetTarget<SymbolSet> {}
 export type Reducers<
   T extends ReducerMap = ReducerMap,
   TExtends extends ReducerMap = ToType<BaseReducers>,
-> = ToType<SymbolSetTarget> & TExtends & T;
+> = ToType<SymbolSetTarget> & Omit<TExtends, keyof T> & T;
 
 export interface UseCase<T extends ReducerMap, TOptions extends object = object> {
   (options?: TOptions): T;
@@ -78,7 +78,7 @@ export interface BaseEntityReducerMap<T> extends EntityReducerMap<T>, BaseEntity
 
 export type EntityReducers<
   T,
-  TCustomReducers extends EntityReducerMap<T> = EntityReducerMap<T>,
+  TCustomReducers extends EntityReducerMap<T> = BaseEntityReducerMap<T>,
   TExtends extends BaseEntityReducerMap<T> = ToType<BaseEntityReducers<T>>,
 > = Reducers<TCustomReducers, ToType<EntitySymbolSetTarget> & TExtends>;
 
