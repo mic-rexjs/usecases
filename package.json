@@ -1,6 +1,6 @@
 {
   "name": "@mic-rexjs/usecases",
-  "version": "2.7.6",
+  "version": "2.7.7",
   "description": "Usecases of Clean Architecture",
   "private": true,
   "keywords": [
@@ -21,7 +21,7 @@
     "postinstall": "husky install",
     "lint-all": "eslint src/* --ext .tsx,.ts",
     "test": "jest --config=./configs/jest.config.ts",
-    "test-staged": "jest --config=./configs/jest.config.ts --findRelatedTests $(git diff --name-only --cached) --passWithNoTests"
+    "test-staged": "jest --config=./configs/jest.config.ts --passWithNoTests --onlyChanged"
   },
   "main": "lib/index.js",
   "typings": "es/index.d.ts",
