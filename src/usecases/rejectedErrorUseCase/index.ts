@@ -16,6 +16,7 @@ export const rejectedErrorUseCase = createUseCase((): UseCase<RejectedErrorReduc
         code,
         msg,
         data,
+        content: `${data}`,
       };
 
       initOptions.onReject?.(error);

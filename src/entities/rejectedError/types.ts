@@ -6,4 +6,6 @@ export interface RejectedError<T = null> {
   msg: string;
 
   data: T;
+
+  content: string;
 }

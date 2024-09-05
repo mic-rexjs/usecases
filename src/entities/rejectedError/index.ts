@@ -4,4 +4,5 @@ export const defaultRejectedError: RejectedError = {
   code: '',
   msg: '',
   data: null,
+  content: 'null',
 };
