@@ -17,7 +17,9 @@ export const rejectedErrorUseCase = createUseCase((): UseCase<RejectedErrorReduc
         msg,
         data,
         content:
-          typeof data === 'object' && data?.toString === Object.prototype.toString ? JSON.stringify(data) : `${data}`,
+          typeof data === 'object' && data?.toString === Object.prototype.toString
+            ? JSON.stringify(data)
+            : `${data instanceof Error ? data.stack : data}`,
       };
 
       initOptions.onReject?.(error);
