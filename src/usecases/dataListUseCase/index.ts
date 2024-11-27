@@ -1,6 +1,6 @@
 import { EntityGenerator } from '@/types';
 import { arrayUseCase } from '../arrayUseCase';
-import { Data, DataListReducers, ExtractDataKeyValue } from './types';
+import { Data, DataListReducers, DataKeyValue } from './types';
 import { getDataKeyValue } from './methods/getDataKeyValue';
 
 export const dataListUseCase = <T extends Data>(): DataListReducers<T> => {
@@ -9,25 +9,25 @@ export const dataListUseCase = <T extends Data>(): DataListReducers<T> => {
 
   const filterEntityBy = <S extends T>(
     entity: S[],
-    id: ExtractDataKeyValue<S>,
+    target: DataKeyValue,
     expect = false,
   ): EntityGenerator<S[], S[]> => {
     return filterEntity(entity, (item: S): boolean => {
-      const itemId = getDataKeyValue(item);
+      const value = getDataKeyValue(item);
 
-      return (itemId === id) === expect;
+      return (value === target) === expect;
     });
   };
 
   const replaceEntity = function* <S extends T>(
     entity: S[],
     newItem: S,
-    targetId: ExtractDataKeyValue<S> = getDataKeyValue(newItem),
+    target = getDataKeyValue(newItem),
   ): Generator<S[], S | null> {
     const index = entity.findIndex((item: S): boolean => {
-      const id = getDataKeyValue(item);
+      const value = getDataKeyValue(item);
 
-      return id === targetId;
+      return value === target;
     });
 
     if (index === -1) {

@@ -1,19 +1,19 @@
-import { _IdOwner, Data, ExtractDataKeyValue, IdOwner, KeyOwner } from '../../types';
+import { _IdOwner, Data, DataKeyValue, IdOwner, KeyOwner } from '../../types';
 
-export const getDataKeyValue = <T extends Data>(data: Data): ExtractDataKeyValue<T> => {
+export const getDataKeyValue = (data: Data): DataKeyValue => {
   if (Object.hasOwn(data, 'id')) {
     const { id } = data as IdOwner;
 
-    return id as ExtractDataKeyValue<T>;
+    return id;
   }
 
   if (Object.hasOwn(data, '_id')) {
     const { _id } = data as _IdOwner;
 
-    return _id as ExtractDataKeyValue<T>;
+    return _id;
   }
 
   const { key } = data as KeyOwner;
 
-  return key as ExtractDataKeyValue<T>;
+  return key;
 };
