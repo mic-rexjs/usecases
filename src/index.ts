@@ -19,6 +19,7 @@ export { defaultRejectedError } from './entities/rejectedError';
 export { EntityStore } from './classes/EntityStore';
 
 export { generateEntity } from './methods/generateEntity';
+export { createEntity } from './methods/createEntity';
 export { createUseCase } from './methods/createUseCase';
 export { createEntityReducers } from './methods/createEntityReducers';
 
