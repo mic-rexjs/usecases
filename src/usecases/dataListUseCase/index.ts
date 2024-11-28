@@ -5,18 +5,22 @@ import { getDataKeyValue } from './methods/getDataKeyValue';
 
 export const dataListUseCase = <T extends Data>(): DataListReducers<T> => {
   const arrayReducers = arrayUseCase<T>();
-  const { filterEntity } = arrayReducers;
+  const { extractEntity } = arrayReducers;
 
-  const filterEntityBy = <S extends T>(
-    entity: S[],
-    target: DataKeyValue,
-    expect = false,
-  ): EntityGenerator<S[], S[]> => {
-    return filterEntity(entity, (item: S): boolean => {
+  const extractEntityBy = <S extends T>(entity: S[], target: DataKeyValue, expect = false): S[] => {
+    return extractEntity(entity, (item: S): boolean => {
       const value = getDataKeyValue(item);
 
       return (value === target) === expect;
     });
+  };
+
+  const filterEntityBy = function* <S extends T>(
+    entity: S[],
+    target: DataKeyValue,
+    expect?: boolean,
+  ): EntityGenerator<S[], S[]> {
+    return yield extractEntityBy(entity, target, expect);
   };
 
   const replaceEntity = function* <S extends T>(
@@ -45,6 +49,7 @@ export const dataListUseCase = <T extends Data>(): DataListReducers<T> => {
 
   return {
     ...arrayReducers,
+    extractEntityBy,
     filterEntityBy,
     replaceEntity,
   };

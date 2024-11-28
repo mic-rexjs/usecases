@@ -20,6 +20,8 @@ export type Data = IdOwner | _IdOwner | KeyOwner;
 export type DataListReducers<T extends Data> = EntityReducers<
   T[],
   {
+    extractEntityBy<S extends T>(entity: S[], target: DataKeyValue, expect?: boolean): S[];
+
     filterEntityBy<S extends T>(entity: S[], target: DataKeyValue, expect?: boolean): EntityGenerator<S[], S[]>;
 
     replaceEntity<S extends T>(entity: S[], newItem: S, target?: DataKeyValue): EntityGenerator<S[], S | null>;
