@@ -9,16 +9,20 @@ export const objectUseCase = <T extends object>(): ObjectReducers<T> => {
   const entityReducers = entityUseCase<T>();
 
   const setEntity = function* <S extends T>(entity: S, settableEntity: SettableObjectEntity<S>): EntityGenerator<S, S> {
-    const partialEntity = typeof settableEntity === 'function' ? settableEntity(entity) : settableEntity;
+    let newEntity: S;
 
-    if (entity === partialEntity) {
-      return entity;
+    if (typeof settableEntity === 'function') {
+      newEntity = settableEntity(entity);
+
+      if (entity === newEntity) {
+        return newEntity;
+      }
+    } else {
+      newEntity = {
+        ...entity,
+        ...settableEntity,
+      };
     }
-
-    const newEntity = {
-      ...entity,
-      ...partialEntity,
-    };
 
     if (accessorDescriptors === null) {
       accessorDescriptors = getAccessorDescriptorMap(entity);
