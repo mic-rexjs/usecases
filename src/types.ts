@@ -42,8 +42,8 @@ export interface UseCase<T extends ReducerMap, TOptions extends object = object>
 
 export type InferableUseCase<
   T extends ReducerMap,
-  TOptions extends object,
-  TUseCase extends UseCase<T, TOptions>,
+  TOptions extends object = object,
+  TUseCase extends UseCase<T, TOptions> = UseCase<T, TOptions>,
 > = TUseCase & UseCase<T, TOptions>;
 
 export interface YieldEntityCallbackWithOptionalEntity<T> {
