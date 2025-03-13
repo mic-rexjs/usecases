@@ -1,13 +1,13 @@
 import { EntityStore } from '@/classes/EntityStore';
+
 import {
   AsyncEntityGenerator,
   EntityGenerator,
   EntityGeneratorValues,
   EntityReducer,
   EntityReducers,
-  EntityUseCase,
+  InferableEntityUseCase,
   ReducerKeys,
-  UseCase,
 } from '@/types';
 
 export interface CreateEntityReducersOwnOptions<T> {
@@ -59,7 +59,7 @@ export interface EntityReducersCreator {
     TUseCaseOptions extends object = object,
     TReturnedReducers = SmoothedEntityReducers<T, TEntityReducers>,
   >(
-    usecase: EntityUseCase<T, TEntityReducers, TUseCaseOptions> & UseCase<EntityReducers<T>, TUseCaseOptions>,
+    usecase: InferableEntityUseCase<T, TEntityReducers, TUseCaseOptions>,
     options?: CreateEntityReducersOptions<T, TUseCaseOptions>,
   ): TReturnedReducers;
 
@@ -70,7 +70,7 @@ export interface EntityReducersCreator {
     TReturnedReducers = ScopedEntityReducers<T, TEntityReducers>,
   >(
     initailEntity: T | EntityStore<T>,
-    usecase: EntityUseCase<T, TEntityReducers, TUseCaseOptions> & UseCase<EntityReducers<T>, TUseCaseOptions>,
+    usecase: InferableEntityUseCase<T, TEntityReducers, TUseCaseOptions>,
     options?: CreateEntityReducersOptions<T, TUseCaseOptions>,
   ): TReturnedReducers;
 }

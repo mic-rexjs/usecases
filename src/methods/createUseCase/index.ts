@@ -1,4 +1,4 @@
-import { ReducerMap, UseCase } from '@/types';
+import { InferableUseCase, ReducerMap, UseCase } from '@/types';
 import { CreateUseCaseFactory } from './types';
 
 export const createUseCase = <
@@ -6,7 +6,7 @@ export const createUseCase = <
   TUseCaseOptions extends object,
   TUsecase extends UseCase<T, TUseCaseOptions>,
 >(
-  factory: CreateUseCaseFactory<T, TUseCaseOptions, TUsecase & UseCase<T, TUseCaseOptions>>,
+  factory: CreateUseCaseFactory<T, TUseCaseOptions, InferableUseCase<T, TUseCaseOptions, TUsecase>>,
 ): TUsecase => {
   return factory();
 };
