@@ -1,17 +1,19 @@
-import { EntityGenerator, EntityReducer, EntityReducers, EntityUseCase, ReducerKeys, RestArguments } from '@/types';
 import {
   ScopedEntityReducers,
   CreateEntityReducersOptions,
   SmoothedEntityReducers,
   EntityReducersCreator,
 } from './types';
+
+import { EntityGenerator, EntityReducer, EntityReducerMap, EntityUseCase, ReducerKeys, RestArguments } from '@/types';
 import { generateEntity } from '../generateEntity';
 import { EntityStore } from '@/classes/EntityStore';
 import { isGenerator } from '../isGenerator';
+import { entityUseCase } from '@/usecases/entityUseCase';
 
 export const createEntityReducers: EntityReducersCreator = <
   T,
-  TEntityReducers extends EntityReducers<T>,
+  TEntityReducers extends EntityReducerMap<T>,
   TUseCaseOptions extends object,
   TUseCase extends EntityUseCase<T, TEntityReducers, TUseCaseOptions>,
   TReturnedReducers = SmoothedEntityReducers<T, TEntityReducers> | ScopedEntityReducers<T, TEntityReducers>,
@@ -36,7 +38,9 @@ export const createEntityReducers: EntityReducersCreator = <
   } = options || {};
 
   const smoothedReducers: Partial<TReturnedReducers> = {};
-  const sourceReducers = usecase(usecaseOptions as TUseCaseOptions);
+  const entityReducers = entityUseCase();
+  const usecaseReducers = usecase(usecaseOptions as TUseCaseOptions);
+  const sourceReducers = { ...entityReducers, ...usecaseReducers };
   const keys = Object.keys(sourceReducers);
   const { setEntity } = sourceReducers;
 

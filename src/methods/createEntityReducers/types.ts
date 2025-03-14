@@ -5,7 +5,7 @@ import {
   EntityGenerator,
   EntityGeneratorValues,
   EntityReducer,
-  EntityReducers,
+  EntityReducerMap,
   InferableEntityUseCase,
   ReducerKeys,
 } from '@/types';
@@ -32,7 +32,7 @@ export type SmoothedEntityReducer<T, TReducer extends EntityReducer<T>> = TReduc
       : TReducer
   : never;
 
-export type SmoothedEntityReducers<T, TEntityReducers extends EntityReducers<T>> = {
+export type SmoothedEntityReducers<T, TEntityReducers extends EntityReducerMap<T>> = {
   [K in ReducerKeys<TEntityReducers>]: SmoothedEntityReducer<T, TEntityReducers[K]>;
 };
 
@@ -48,14 +48,14 @@ export type ScopedEntityReducer<T, TReducer extends EntityReducer<T>> = TReducer
       : (...args: TArgs) => TReturn
   : never;
 
-export type ScopedEntityReducers<T, TEntityReducers extends EntityReducers<T>> = {
+export type ScopedEntityReducers<T, TEntityReducers extends EntityReducerMap<T>> = {
   [K in ReducerKeys<TEntityReducers>]: ScopedEntityReducer<T, TEntityReducers[K]>;
 };
 
 export interface EntityReducersCreator {
   <
     T,
-    TEntityReducers extends EntityReducers<T>,
+    TEntityReducers extends EntityReducerMap<T>,
     TUseCaseOptions extends object = object,
     TReturnedReducers = SmoothedEntityReducers<T, TEntityReducers>,
   >(
@@ -65,7 +65,7 @@ export interface EntityReducersCreator {
 
   <
     T,
-    TEntityReducers extends EntityReducers<T>,
+    TEntityReducers extends EntityReducerMap<T>,
     TUseCaseOptions extends object = object,
     TReturnedReducers = ScopedEntityReducers<T, TEntityReducers>,
   >(
