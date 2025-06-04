@@ -110,11 +110,12 @@ const fileUseCase = <T extends File>({ maxContentLength = 2000 }: FileUseCaseOpt
 };
 
 // b.ts
+import { createEntityReducers } from '@mic-rexjs/usecases';
 const defaultFile: File = { path: '', content: '' };
-const { createEntityReducers } = entityReducerUseCase();
+// Init reducers with an entity, we need not provide the entity any more.
 const { writeFile, isTxt, setEntity } = createEntityReducers(defaultFile, fileUseCase, { maxContentLength: 50 });
 
-// no need to provide an entity parameter when you call these reducers!
+// we need not provide the entity any more.
 const [entity1, content1] = writeFile('hello world');
 isTxt(); // false
 
