@@ -1,8 +1,9 @@
 {
   "name": "@mic-rexjs/usecases",
-  "version": "2.12.3",
+  "version": "2.12.4",
   "description": "Usecases of Clean Architecture",
   "private": true,
+  "sideEffects": false,
   "keywords": [
     "clean architecture",
     "entity",
