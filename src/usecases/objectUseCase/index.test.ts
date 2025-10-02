@@ -1,4 +1,4 @@
-import { describe, expect, test } from '@jest/globals';
+import { describe, expect, test, jest } from '@jest/globals';
 import { objectUseCase } from '.';
 import { EntityUseCase } from '@/types';
 import { ObjectReducers } from './types';
@@ -70,6 +70,35 @@ describe('objectUseCase', (): void => {
       expect(result2).toBe(entity2);
       expect(entity3).toEqual({ key: '10_xyz', value: 10 });
       expect(result3).toBe(entity3);
+    });
+
+    test('The `onYield` event should work correctly when using `setEntity`', (): void => {
+      const defaultEntity = {
+        get key(): string {
+          return this.value + '_xyz';
+        },
+        value: 1,
+      };
+
+      const onYield = jest.fn((value: Data): Data => {
+        return value;
+      });
+
+      const { setEntity } = createEntityReducers(defaultEntity, dataUseCase, {
+        onYield,
+      });
+
+      const [entity1, result1] = setEntity({ value: 1 });
+
+      expect(entity1).toBe(defaultEntity);
+      expect(result1).toBe(defaultEntity);
+      expect(onYield).toHaveBeenCalledTimes(0);
+
+      const [entity2, result2] = setEntity({ value: 2 });
+
+      expect(entity2).toEqual({ key: '2_xyz', value: 2 });
+      expect(result2).toEqual({ key: '2_xyz', value: 2 });
+      expect(onYield).toHaveBeenCalledTimes(1);
     });
   });
 });
