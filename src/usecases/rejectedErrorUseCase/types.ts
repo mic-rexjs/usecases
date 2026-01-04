@@ -20,18 +20,18 @@ export type RejectedErrorReducers = Reducers<{
 
   rejectMsg(code: RejectedCode, msg: string): Promise<never>;
 
-  resolve<T>(target: T | PromiseLike<T>, rejectedCode: RejectedCode, rejectedMsg?: string): Promise<T>;
+  resolve<T>(promise: T | PromiseLike<T>, rejectedCode: RejectedCode, rejectedMsg?: string): Promise<T>;
 
-  resolveId(target: Promise<string> | string, rejectedMsg: string): Promise<string>;
+  resolveId(promise: Promise<string> | string, rejectedMsg: string): Promise<string>;
 
   resolveNonNullable<T>(
-    target: T | PromiseLike<T>,
+    promise: T | PromiseLike<T>,
     rejectedCode: RejectedCode,
     rejectedMsg?: string,
   ): Promise<NonNullable<T>>;
 
   resolveWith<T>(
-    target: T | PromiseLike<T>,
+    promise: T | PromiseLike<T>,
     onFulfilled: FulfilledEventHandler<T>,
     rejectedCode: RejectedCode,
     rejectedMsg?: string,

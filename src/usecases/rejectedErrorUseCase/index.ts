@@ -38,9 +38,9 @@ export const rejectedErrorUseCase = createUseCase((): UseCase<RejectedErrorReduc
       return reject(code, '', data);
     };
 
-    const resolve = <T>(target: T | PromiseLike<T>, rejectedCode: RejectedCode, rejectedMsg?: string): Promise<T> => {
+    const resolve = <T>(promise: T | PromiseLike<T>, rejectedCode: RejectedCode, rejectedMsg?: string): Promise<T> => {
       return resolveWith(
-        target,
+        promise,
         (res: T): T => {
           return res;
         },
@@ -49,9 +49,9 @@ export const rejectedErrorUseCase = createUseCase((): UseCase<RejectedErrorReduc
       );
     };
 
-    const resolveId = (target: Awaited<string>, rejectedMsg: string): Promise<Awaited<string>> => {
+    const resolveId = (promise: Awaited<string>, rejectedMsg: string): Promise<Awaited<string>> => {
       return resolveWith(
-        target,
+        promise,
         (unsafedId: Awaited<string>): Awaited<string> => {
           if (unsafedId) {
             return unsafedId;
@@ -64,26 +64,26 @@ export const rejectedErrorUseCase = createUseCase((): UseCase<RejectedErrorReduc
     };
 
     const resolveNonNullable = <T>(
-      target: T | PromiseLike<T>,
+      promise: T | PromiseLike<T>,
       rejectedCode: RejectedCode,
       rejectedMsg: string = '',
     ): Promise<NonNullable<T>> => {
-      const isNullable = typeof target === 'undefined' || target === null;
+      const isNullable = typeof promise === 'undefined' || promise === null;
 
       if (isNullable) {
         return rejectMsg(rejectedCode, rejectedMsg);
       }
 
-      return resolve(target, rejectedCode, rejectedMsg) as Promise<NonNullable<Awaited<T>>>;
+      return resolve(promise, rejectedCode, rejectedMsg) as Promise<NonNullable<Awaited<T>>>;
     };
 
     const resolveWith = <T>(
-      target: T | PromiseLike<T>,
+      promise: T | PromiseLike<T>,
       onFulfilled: FulfilledEventHandler<T>,
       rejectedCode: RejectedCode,
       rejectedMsg = '',
     ): Promise<T> => {
-      return Promise.resolve(target)
+      return Promise.resolve(promise)
         .then(onFulfilled)
         .catch(<TError>(error: TError): Promise<never> => {
           return reject(rejectedCode, rejectedMsg, error);
