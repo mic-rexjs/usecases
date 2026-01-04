@@ -22,7 +22,7 @@ export type RejectedErrorReducers = Reducers<{
 
   resolve<T>(promise: T | PromiseLike<T>, rejectedCode: RejectedCode, rejectedMsg?: string): Promise<T>;
 
-  resolveId(promise: Promise<string> | string, rejectedMsg: string): Promise<string>;
+  resolveId(promise: Promise<string> | string, rejectedCode: RejectedCode, rejectedMsg?: string): Promise<string>;
 
   resolveNonNullable<T>(
     promise: T | PromiseLike<T>,

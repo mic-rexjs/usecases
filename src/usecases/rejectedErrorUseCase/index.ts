@@ -49,7 +49,11 @@ export const rejectedErrorUseCase = createUseCase((): UseCase<RejectedErrorReduc
       );
     };
 
-    const resolveId = (promise: Awaited<string>, rejectedMsg: string): Promise<Awaited<string>> => {
+    const resolveId = (
+      promise: Awaited<string>,
+      rejectedCode: RejectedCode,
+      rejectedMsg?: string,
+    ): Promise<Awaited<string>> => {
       return resolveWith(
         promise,
         (unsafedId: Awaited<string>): Awaited<string> => {
@@ -59,6 +63,7 @@ export const rejectedErrorUseCase = createUseCase((): UseCase<RejectedErrorReduc
 
           throw unsafedId;
         },
+        rejectedCode,
         rejectedMsg,
       );
     };
