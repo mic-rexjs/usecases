@@ -1,12 +1,14 @@
 import { createUseCase } from '@/methods/createUseCase';
-import { RejectedErrorReducers, FulfilledEventHandler, InitRejectedErrorOptions } from './types';
+import { PromiseReducers, FulfilledEventHandler, InitRejectedErrorOptions } from './types';
 import { UseCase } from '@/types';
 import { RejectedCode, RejectedError } from '@/entities/rejectedError/types';
+import { PromiseResult } from '@/entities/promiseResult/types';
+import { defaultPromiseResult } from '@/entities/promiseResult';
 
-export const rejectedErrorUseCase = createUseCase((): UseCase<RejectedErrorReducers> => {
+export const promiseUseCase = createUseCase((): UseCase<PromiseReducers> => {
   let initOptions: InitRejectedErrorOptions<unknown> = {};
 
-  return (): RejectedErrorReducers => {
+  return (): PromiseReducers => {
     const initRejectedError = <T>(options: InitRejectedErrorOptions<T>): void => {
       initOptions = options;
     };
@@ -82,6 +84,27 @@ export const rejectedErrorUseCase = createUseCase((): UseCase<RejectedErrorReduc
       return resolve(promise, rejectedCode, rejectedMsg) as Promise<NonNullable<Awaited<T>>>;
     };
 
+    const resolveResult = async <T, TError>(
+      promise: T | PromiseLike<T>,
+      rejectedCode: RejectedCode = '',
+      rejectedMsg?: string,
+    ): Promise<PromiseResult<NonNullable<T>, TError>> => {
+      const result: Partial<PromiseResult<NonNullable<T>, TError>> = {};
+
+      await resolveNonNullable(promise, rejectedCode, rejectedMsg)
+        .then((value: NonNullable<T>): void => {
+          result.value = value;
+        })
+        .catch((error: RejectedError<TError>): void => {
+          result.error = error;
+        });
+
+      return {
+        ...defaultPromiseResult,
+        ...result,
+      } as PromiseResult<NonNullable<T>, TError>;
+    };
+
     const resolveWith = <T>(
       promise: T | PromiseLike<T>,
       onFulfilled: FulfilledEventHandler<T>,
@@ -104,6 +127,7 @@ export const rejectedErrorUseCase = createUseCase((): UseCase<RejectedErrorReduc
       resolve,
       resolveId,
       resolveNonNullable,
+      resolveResult,
       resolveWith,
     };
   };

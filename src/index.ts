@@ -27,4 +27,4 @@ export { entityUseCase } from './usecases/entityUseCase';
 export { arrayUseCase } from './usecases/arrayUseCase';
 export { objectUseCase } from './usecases/objectUseCase';
 export { dataListUseCase } from './usecases/dataListUseCase';
-export { rejectedErrorUseCase } from './usecases/rejectedErrorUseCase';
+export { promiseUseCase } from './usecases/promiseUseCase';
