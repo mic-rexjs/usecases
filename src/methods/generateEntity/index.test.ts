@@ -161,7 +161,8 @@ describe('generateEntity', (): void => {
 
   describe('options.onYield', (): void => {
     test('`options.onYield` should work with sync mode', (): void => {
-      const onYield = jest.fn((currentEntity: number): number => {
+      const onYield = jest.fn((currentEntity: number, oldEntity?: number): number => {
+        void oldEntity;
         return currentEntity + 5;
       });
 
@@ -177,7 +178,8 @@ describe('generateEntity', (): void => {
     });
 
     test('`options.onYield` should work with async mode', async (): Promise<void> => {
-      const onYield = jest.fn((currentEntity: number): number => {
+      const onYield = jest.fn((currentEntity: number, oldEntity?: number): number => {
+        void oldEntity;
         return currentEntity + 5;
       });
 
@@ -195,7 +197,8 @@ describe('generateEntity', (): void => {
 
   describe('options.onReturn', (): void => {
     test('`options.onReturn` should work with sync mode', (): void => {
-      const onReturn = jest.fn((): string => {
+      const onReturn = jest.fn((result: string, entity: number): string => {
+        void entity;
         return 'hello xyz2';
       });
 
@@ -209,7 +212,8 @@ describe('generateEntity', (): void => {
     });
 
     test('`options.onReturn` should work with async mode', async (): Promise<void> => {
-      const onReturn = jest.fn((): string => {
+      const onReturn = jest.fn((result: string, entity: number): string => {
+        void entity;
         return 'hello xyz2';
       });
 

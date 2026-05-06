@@ -2,10 +2,9 @@
   "compilerOptions": {
     "strictNullChecks": true,
     "module": "CommonJS",
-    "moduleResolution": "Node",
+    "moduleResolution": "bundler",
     "esModuleInterop": true,
     "target": "ESNext",
-    "downlevelIteration": true,
     "jsx": "react-jsx",
     "experimentalDecorators": true,
     "noImplicitThis": true,
@@ -14,10 +13,7 @@
     "resolveJsonModule": true,
     "strictPropertyInitialization": true,
     "lib": ["ESNext"],
-    "baseUrl": "./src",
-    "paths": {
-      "@/*": ["./*"]
-    }
+    "paths": { "@/*": ["./src/*"] }
   },
   "exclude": ["./build"]
 }

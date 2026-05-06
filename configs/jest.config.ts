@@ -4,22 +4,15 @@ import { pathsToModuleNameMapper } from 'ts-jest';
 import { compilerOptions } from '../tsconfig.json';
 
 const initConfig = (): Config => {
-  const { baseUrl, paths } = compilerOptions;
+  const { paths } = compilerOptions;
   const projectDir = path.resolve(__dirname, '../');
 
   return {
     testEnvironment: 'node',
-    rootDir: path.resolve(projectDir, baseUrl),
+    rootDir: projectDir,
     displayName: 'test',
     testRegex: '\\.test\\.tsx?',
-    transform: {
-      '^.+\\.[tj]sx?$': [
-        'ts-jest',
-        {
-          tsconfig: './tsconfig.json',
-        },
-      ],
-    },
+    transform: { '^.+\\.[tj]sx?$': ['ts-jest', { tsconfig: './tsconfig.json' }] },
     moduleNameMapper: pathsToModuleNameMapper(
       Object.fromEntries(
         Object.getOwnPropertyNames(paths).map((name: string): [string, string[]] => {
@@ -29,8 +22,8 @@ const initConfig = (): Config => {
               return p.replace(/^\.\//g, '<rootDir>/');
             }),
           ];
-        })
-      )
+        }),
+      ),
     ),
   };
 };

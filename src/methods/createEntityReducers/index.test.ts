@@ -51,10 +51,7 @@ const testUseCase = <T extends Data>(options: Options<T> = {}): TestReducers<T> 
   const add = function* <S extends T>(entity: S, value: number): EntityGenerator<S, string> {
     const newValue = entity.value + value;
 
-    yield {
-      ...entity,
-      value: newValue,
-    };
+    yield { ...entity, value: newValue };
 
     return `[${newValue}]`;
   };
@@ -63,10 +60,7 @@ const testUseCase = <T extends Data>(options: Options<T> = {}): TestReducers<T> 
     await Promise.resolve(null);
 
     const { value: newValue } = yield (currentEntity: S): S => {
-      return {
-        ...currentEntity,
-        value: currentEntity.value + value,
-      };
+      return { ...currentEntity, value: currentEntity.value + value };
     };
 
     await Promise.resolve(null);
@@ -79,10 +73,7 @@ const testUseCase = <T extends Data>(options: Options<T> = {}): TestReducers<T> 
     for (const value of values) {
       await Promise.resolve(null);
 
-      newEntity = yield {
-        ...entity,
-        value: entity.value + value,
-      };
+      newEntity = yield { ...entity, value: entity.value + value };
     }
 
     return `[${newEntity.value}]`;
@@ -387,56 +378,41 @@ describe('createEntityReducers', (): void => {
       const onYield = jest.fn((newEntity: Data): Data => {
         const { value } = newEntity;
 
-        return {
-          ...newEntity,
-          value: value + 100,
-        };
+        return { ...newEntity, value: value + 100 };
       });
 
-      const { add } = createEntityReducers({ value: 1 }, testUseCase, {
-        onYield,
-      });
+      const { add } = createEntityReducers({ value: 1 }, testUseCase, { onYield });
 
       const [entity] = add(5);
 
       expect(onYield).toHaveBeenCalledWith({ value: 6 });
 
-      expect(entity).toEqual({
-        value: 106,
-      });
+      expect(entity).toEqual({ value: 106 });
     });
 
     test('`options.onYield` should be called after yield - non-entity mode', (): void => {
       const onYield = jest.fn((newEntity: Data): Data => {
         const { value } = newEntity;
 
-        return {
-          ...newEntity,
-          value: value + 100,
-        };
+        return { ...newEntity, value: value + 100 };
       });
 
-      const { add } = createEntityReducers(testUseCase, {
-        onYield,
-      });
+      const { add } = createEntityReducers(testUseCase, { onYield });
 
       const [entity] = add({ value: 1 }, 5);
 
       expect(onYield).toHaveBeenCalledWith({ value: 6 });
 
-      expect(entity).toEqual({
-        value: 106,
-      });
+      expect(entity).toEqual({ value: 106 });
     });
 
     test('`options.onReturn` should be called after return - entity mode', (): void => {
-      const onReturn = jest.fn((val: string): string => {
+      const onReturn = jest.fn((val: string, entity: Record<'value', number>): string => {
+        void entity;
         return `hello ${val}`;
       });
 
-      const { add } = createEntityReducers({ value: 1 }, testUseCase, {
-        onReturn,
-      });
+      const { add } = createEntityReducers({ value: 1 }, testUseCase, { onReturn });
 
       const [, ret] = add(5);
 
@@ -445,13 +421,12 @@ describe('createEntityReducers', (): void => {
     });
 
     test('`options.onReturn` should be called after return - non-entity mode', (): void => {
-      const onReturn = jest.fn((val: string): string => {
+      const onReturn = jest.fn((val: string, entity: Record<'value', number>): string => {
+        void entity;
         return `hello ${val}`;
       });
 
-      const { add } = createEntityReducers(testUseCase, {
-        onReturn,
-      });
+      const { add } = createEntityReducers(testUseCase, { onReturn });
 
       const [, ret] = add({ value: 1 }, 5);
 
@@ -467,9 +442,7 @@ describe('createEntityReducers', (): void => {
       const { getResult, add, addAsync } = createEntityReducers(
         { value: 1 },
         testUseCase as unknown as EntityUseCase<Data, TestGeneratedReducers<Data, string>>,
-        {
-          onGenerate,
-        },
+        { onGenerate },
       );
 
       getResult(100);
@@ -491,9 +464,7 @@ describe('createEntityReducers', (): void => {
 
       const { getResult, add, addAsync } = createEntityReducers(
         testUseCase as unknown as EntityUseCase<Data, TestGeneratedReducers<Data, string>>,
-        {
-          onGenerate,
-        },
+        { onGenerate },
       );
 
       getResult({ value: 1 }, 100);
