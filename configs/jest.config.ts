@@ -1,7 +1,11 @@
 import path from 'path';
+import fs from 'fs';
 import { Config } from 'jest';
 import { pathsToModuleNameMapper } from 'ts-jest';
-import { compilerOptions } from '../tsconfig.json';
+
+const { compilerOptions }: typeof import('../tsconfig.json') = JSON.parse(
+  fs.readFileSync(path.resolve(__dirname, '../tsconfig.json'), 'utf8'),
+);
 
 const initConfig = (): Config => {
   const { paths } = compilerOptions;
