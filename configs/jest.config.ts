@@ -3,11 +3,11 @@ import fs from 'fs';
 import { Config } from 'jest';
 import { pathsToModuleNameMapper } from 'ts-jest';
 
-const { compilerOptions }: typeof import('../tsconfig.json') = JSON.parse(
-  fs.readFileSync(path.resolve(__dirname, '../tsconfig.json'), 'utf8'),
-);
-
 const initConfig = (): Config => {
+  const { compilerOptions }: typeof import('../tsconfig.json') = JSON.parse(
+    fs.readFileSync(path.resolve(__dirname, '../tsconfig.json'), 'utf8'),
+  );
+
   const { paths } = compilerOptions;
   const projectDir = path.resolve(__dirname, '../');
 
