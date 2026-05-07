@@ -52,7 +52,7 @@ export const createEntityReducers: EntityReducersCreator = <
       const ret = reducer(...reducerArgs);
 
       if (!hasEntity) {
-        store.value = args[0];
+        store.setValue(args[0], true);
       }
 
       if (!isGenerator(ret)) {

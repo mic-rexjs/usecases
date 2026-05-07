@@ -17,12 +17,16 @@ export class EntityStore<T> {
     this.watch(onChange);
   }
 
-  setValue(value: T): void {
+  setValue(value: T, setOnly?: boolean): void {
     const { value: oldValue } = this;
+
+    if (oldValue === value) {
+      return;
+    }
 
     this.value = value;
 
-    if (oldValue === value) {
+    if (setOnly) {
       return;
     }
 
