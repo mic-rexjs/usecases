@@ -1,6 +1,6 @@
 {
   "name": "@mic-rexjs/usecases",
-  "version": "2.13.3",
+  "version": "2.13.4",
   "description": "Usecases of Clean Architecture",
   "private": true,
   "sideEffects": false,
@@ -59,7 +59,6 @@
     "@eslint/js": "^10.0.1",
     "@jest/globals": "^30.3.0",
     "@types/node": "^25.6.0",
-    "@typescript-eslint/eslint-plugin": "^8.59.2",
     "@typescript-eslint/parser": "^8.59.2",
     "babel-loader": "^10.1.1",
     "copy-webpack-plugin": "^14.0.0",
@@ -77,6 +76,7 @@
     "ts-node": "^10.9.1",
     "tsc-alias": "^1.8.17",
     "typescript": "^6.0.3",
+    "typescript-eslint": "^8.59.2",
     "webpack": "^5.106.2",
     "webpack-cli": "^7.0.2"
   },
