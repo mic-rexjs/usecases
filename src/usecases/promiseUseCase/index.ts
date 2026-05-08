@@ -1,9 +1,9 @@
-import { createUseCase } from '@/methods/createUseCase';
-import { PromiseReducers, FulfilledEventHandler, InitRejectedErrorOptions } from './types';
-import { UseCase } from '@/types';
-import { RejectedCode, RejectedError } from '@/entities/rejectedError/types';
-import { PromiseResult } from '@/entities/promiseResult/types';
+import { FulfilledEventHandler, InitRejectedErrorOptions, PromiseReducers } from './types';
 import { defaultPromiseResult } from '@/entities/promiseResult';
+import { PromiseResult } from '@/entities/promiseResult/types';
+import { RejectedCode, RejectedError } from '@/entities/rejectedError/types';
+import { createUseCase } from '@/methods/createUseCase';
+import { UseCase } from '@/types';
 
 export const promiseUseCase = createUseCase((): UseCase<PromiseReducers> => {
   let initOptions: InitRejectedErrorOptions<unknown> = {};

@@ -1,7 +1,7 @@
-import { EntityGenerator } from '@/types';
 import { arrayUseCase } from '../arrayUseCase';
-import { Data, DataListReducers, DataKeyValue } from './types';
 import { getDataKeyValue } from './methods/getDataKeyValue';
+import { Data, DataKeyValue, DataListReducers } from './types';
+import { EntityGenerator } from '@/types';
 
 export const dataListUseCase = <T extends Data>(): DataListReducers<T> => {
   const arrayReducers = arrayUseCase<T>();

@@ -1,8 +1,8 @@
 import { arrayUseCase } from '.';
-import { describe, expect, test } from '@jest/globals';
-import { EntityUseCase } from '@/types';
 import { ArrayReducers } from './types';
+import { describe, expect, test } from '@jest/globals';
 import { createEntityReducers } from '@/methods/createEntityReducers';
+import { EntityUseCase } from '@/types';
 
 const numbersUseCase = arrayUseCase as EntityUseCase<number[], ArrayReducers<number>>;
 

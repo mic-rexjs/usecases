@@ -1,8 +1,8 @@
+import { createEntityReducers } from '.';
 import { describe, expect, jest, test } from '@jest/globals';
+import { EntityStore } from '@/classes/EntityStore';
 import { AsyncEntityGenerator, EntityGenerator, EntityReducers, EntityUseCase } from '@/types';
 import { entityUseCase } from '@/usecases/entityUseCase';
-import { createEntityReducers } from '.';
-import { EntityStore } from '@/classes/EntityStore';
 
 interface Data {
   value: number;

@@ -1,6 +1,6 @@
-import { describe, test, expect, jest } from '@jest/globals';
-import { AsyncEntityGenerator, EntityGenerator } from '@/types';
 import { generateEntity } from '.';
+import { describe, expect, jest, test } from '@jest/globals';
+import { AsyncEntityGenerator, EntityGenerator } from '@/types';
 
 const reducer = function* (): EntityGenerator<number, string> {
   const newEntity1 = yield 1;

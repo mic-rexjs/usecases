@@ -1,5 +1,5 @@
-import { EntityGenerator, EntityReducers } from '@/types';
 import { ArrayReducers } from '../arrayUseCase/types';
+import { EntityGenerator, EntityReducers } from '@/types';
 
 export type DataKeyValue = number | string;
 

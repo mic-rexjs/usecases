@@ -1,8 +1,8 @@
-import { EntityGenerator } from '@/types';
 import { entityUseCase } from '../entityUseCase';
-import { AccessorDescriptors, ObjectReducers, SettableObjectEntity } from './types';
-import { getAccessorDescriptorMap } from './methods/getAccessorDescriptorMap';
 import { compareObject } from './methods/compareObject';
+import { getAccessorDescriptorMap } from './methods/getAccessorDescriptorMap';
+import { AccessorDescriptors, ObjectReducers, SettableObjectEntity } from './types';
+import { EntityGenerator } from '@/types';
 
 export const objectUseCase = <T extends object>(): ObjectReducers<T> => {
   let hasAccessors = false;

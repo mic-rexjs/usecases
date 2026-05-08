@@ -1,6 +1,6 @@
-import { EntityGenerator } from '@/types';
 import { entityUseCase } from '../entityUseCase';
 import { ArrayEntityFilter, ArrayReducers } from './types';
+import { EntityGenerator } from '@/types';
 
 export const arrayUseCase = <T>(): ArrayReducers<T> => {
   const entityReducers = entityUseCase<T[]>();

@@ -1,5 +1,4 @@
 import { EntityStore } from '@/classes/EntityStore';
-
 import {
   AsyncEntityGenerator,
   EntityGenerator,

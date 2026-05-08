@@ -1,14 +1,13 @@
-import {
-  ScopedEntityReducers,
-  CreateEntityReducersOptions,
-  SmoothedEntityReducers,
-  EntityReducersCreator,
-} from './types';
-
-import { EntityGenerator, EntityReducer, EntityReducerMap, EntityUseCase, ReducerKeys, RestArguments } from '@/types';
 import { generateEntity } from '../generateEntity';
-import { EntityStore } from '@/classes/EntityStore';
 import { isGenerator } from '../isGenerator';
+import {
+  CreateEntityReducersOptions,
+  EntityReducersCreator,
+  ScopedEntityReducers,
+  SmoothedEntityReducers,
+} from './types';
+import { EntityStore } from '@/classes/EntityStore';
+import { EntityGenerator, EntityReducer, EntityReducerMap, EntityUseCase, ReducerKeys, RestArguments } from '@/types';
 import { entityUseCase } from '@/usecases/entityUseCase';
 
 export const createEntityReducers: EntityReducersCreator = <

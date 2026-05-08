@@ -1,6 +1,6 @@
-import { EntityReducers, EntityUseCase, Reducers, UseCase } from '@/types';
-import { describe, expect, test } from '@jest/globals';
 import { createUseCase } from '.';
+import { describe, expect, test } from '@jest/globals';
+import { EntityReducers, EntityUseCase, Reducers, UseCase } from '@/types';
 import { objectUseCase } from '@/usecases/objectUseCase';
 
 describe('createUseCase', (): void => {

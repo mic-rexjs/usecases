@@ -1,8 +1,8 @@
-import { describe, expect, test, jest } from '@jest/globals';
 import { objectUseCase } from '.';
-import { EntityUseCase } from '@/types';
 import { ObjectReducers } from './types';
+import { describe, expect, jest, test } from '@jest/globals';
 import { createEntityReducers } from '@/methods/createEntityReducers';
+import { EntityUseCase } from '@/types';
 
 interface Data {
   key: string;

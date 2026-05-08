@@ -1,5 +1,5 @@
-import { describe, expect, test } from '@jest/globals';
 import { entityUseCase } from '.';
+import { describe, expect, test } from '@jest/globals';
 import { createEntityReducers } from '@/methods/createEntityReducers';
 
 describe('entityUseCase', (): void => {

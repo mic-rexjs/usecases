@@ -1,7 +1,7 @@
-import { AsyncEntityGenerator, EntityGenerator, EntityGeneratorValues, YieldEntityCallback } from '@/types';
+import { isGenerator } from '../isGenerator';
 import { EntityGeneratorHandler, GenerateEntityOptions } from './types';
 import { EntityStore } from '@/classes/EntityStore';
-import { isGenerator } from '../isGenerator';
+import { AsyncEntityGenerator, EntityGenerator, EntityGeneratorValues, YieldEntityCallback } from '@/types';
 
 export const generateEntity = (<T, TResult, TReturn = EntityGeneratorValues<T, TResult>>(
   generator: EntityGenerator<T, TResult> | AsyncEntityGenerator<T, TResult>,

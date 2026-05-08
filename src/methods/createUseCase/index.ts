@@ -1,5 +1,5 @@
-import { InferableUseCase, ReducerMap, UseCase } from '@/types';
 import { CreateUseCaseFactory } from './types';
+import { InferableUseCase, ReducerMap, UseCase } from '@/types';
 
 export const createUseCase = <
   T extends ReducerMap,
