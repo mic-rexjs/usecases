@@ -1,11 +1,11 @@
-import { defineConfig, globalIgnores } from 'eslint/config';
 import { ConfigWithExtendsArray } from '@eslint/config-helpers';
-import globals from 'globals';
+import js from '@eslint/js';
 import tsParser from '@typescript-eslint/parser';
 import jest from 'eslint-plugin-jest';
-import js from '@eslint/js';
-import tseslint from 'typescript-eslint';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
+import { defineConfig, globalIgnores } from 'eslint/config';
+import globals from 'globals';
+import tseslint from 'typescript-eslint';
 
 export default defineConfig(
   js.configs.recommended,

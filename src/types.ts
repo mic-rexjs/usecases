@@ -2,8 +2,7 @@ declare const symbolSetKey: unique symbol;
 
 export type ReducerKeys<T> = keyof T & string;
 
-// 不能使用 `IArguments[number][]`，因为它不能满足模式： `[x: number, ...args: Parameters<T[K]>]`
-export type RestArguments = IArguments[number];
+export type RestArguments = IArguments[number][];
 
 export type ToType<T> = Omit<T, never>;
 
