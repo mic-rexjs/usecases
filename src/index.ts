@@ -28,3 +28,4 @@ export { arrayUseCase } from './usecases/arrayUseCase';
 export { objectUseCase } from './usecases/objectUseCase';
 export { dataListUseCase } from './usecases/dataListUseCase';
 export { promiseUseCase } from './usecases/promiseUseCase';
+export { utilsUseCase } from './usecases/utilsUseCase';
