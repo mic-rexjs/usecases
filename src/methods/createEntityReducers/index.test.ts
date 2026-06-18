@@ -404,22 +404,54 @@ describe('createEntityReducers', (): void => {
       expect(entity).toEqual({ value: 106 });
     });
 
-    test('`options.onReturn` should be called after return - entity mode', (): void => {
+    test('`options.onReturn` should be called by non-generator reducer - entity mode', (): void => {
       const onReturn = jest.fn();
-      const { add } = createEntityReducers({ value: 1 }, testUseCase, { onReturn });
-      const [, ret] = add(5);
+      const { getResult } = createEntityReducers({ value: 1 }, testUseCase, { onReturn });
+      const ret = getResult(5);
 
-      expect(onReturn).toHaveBeenCalledWith('[6]');
-      expect(ret).toBe('[6]');
+      expect(onReturn).toHaveBeenCalledWith(6);
+      expect(ret).toBe(6);
     });
 
-    test('`options.onReturn` should be called after return - non-entity mode', (): void => {
+    test('`options.onReturn` should be called by non-generator reducer - non-entity mode', (): void => {
+      const onReturn = jest.fn();
+      const { getResult } = createEntityReducers(testUseCase, { onReturn });
+      const ret = getResult({ value: 1 }, 5);
+
+      expect(onReturn).toHaveBeenCalledWith(6);
+      expect(ret).toBe(6);
+    });
+
+    test('`options.onReturn` should not be called by generator reducer - entity mode', (): void => {
+      const onReturn = jest.fn();
+      const { add } = createEntityReducers({ value: 1 }, testUseCase, { onReturn });
+
+      add(5);
+      expect(onReturn).toHaveBeenCalledTimes(0);
+    });
+
+    test('`options.onReturn` should not be called by generator reducer - non-entity mode', (): void => {
       const onReturn = jest.fn();
       const { add } = createEntityReducers(testUseCase, { onReturn });
-      const [, ret] = add({ value: 1 }, 5);
 
-      expect(onReturn).toHaveBeenCalledWith('[6]');
-      expect(ret).toBe('[6]');
+      add({ value: 1 }, 5);
+      expect(onReturn).toHaveBeenCalledTimes(0);
+    });
+
+    test('`options.onReturn` should not be called by async generator reducer - entity mode', async (): Promise<void> => {
+      const onReturn = jest.fn();
+      const { addAsync } = createEntityReducers({ value: 1 }, testUseCase, { onReturn });
+
+      await addAsync(5);
+      expect(onReturn).toHaveBeenCalledTimes(0);
+    });
+
+    test('`options.onReturn` should not be called by async generator reducer - non-entity mode', async (): Promise<void> => {
+      const onReturn = jest.fn();
+      const { addAsync } = createEntityReducers(testUseCase, { onReturn });
+
+      await addAsync({ value: 1 }, 5);
+      expect(onReturn).toHaveBeenCalledTimes(0);
     });
 
     test('`options.onGenerate` should be called after generator done - entity mode', async (): Promise<void> => {

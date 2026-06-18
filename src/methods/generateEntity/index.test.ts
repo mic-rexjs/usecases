@@ -194,34 +194,4 @@ describe('generateEntity', (): void => {
       expect(onYield).toHaveBeenNthCalledWith(3, 1121, 121);
     });
   });
-
-  describe('options.onReturn', (): void => {
-    test('`options.onReturn` should work with sync mode', (): void => {
-      const onReturn = jest.fn((result: string): string => {
-        return `hello ${result}`;
-      });
-
-      const gen = reducer();
-      const [entity, result] = generateEntity(gen, { onReturn });
-
-      expect(entity).toBe(2);
-      expect(result).toBe('hello xyz2');
-      expect(onReturn).toHaveBeenCalledTimes(1);
-      expect(onReturn).toHaveBeenCalledWith('xyz2');
-    });
-
-    test('`options.onReturn` should work with async mode', async (): Promise<void> => {
-      const onReturn = jest.fn((result: string): string => {
-        return `hello ${result}`;
-      });
-
-      const gen = reducerAsync();
-      const [entity, result] = await generateEntity(gen, { onReturn });
-
-      expect(entity).toBe(2);
-      expect(result).toBe('hello xyz2');
-      expect(onReturn).toHaveBeenCalledTimes(1);
-      expect(onReturn).toHaveBeenCalledWith('xyz2');
-    });
-  });
 });

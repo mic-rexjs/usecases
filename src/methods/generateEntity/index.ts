@@ -15,9 +15,6 @@ export const generateEntity = (<T, TResult, TReturn = EntityGeneratorValues<T, T
     onYield = (entity: T): T => {
       return entity;
     },
-    onReturn = (result: TResult): TResult => {
-      return result;
-    },
     onGenerate = (entity: T, result: TResult): EntityGeneratorValues<T, TResult> => {
       return [entity, result] as EntityGeneratorValues<T, TResult>;
     },
@@ -32,10 +29,8 @@ export const generateEntity = (<T, TResult, TReturn = EntityGeneratorValues<T, T
       const { value: currentEntity } = store;
 
       if (done) {
-        const result = onReturn(value as TResult);
-
-        results[0] = result;
-        return [currentEntity, result] as EntityGeneratorValues<T, TResult>;
+        results[0] = value;
+        return [currentEntity, value];
       }
 
       const newEntity = onYield(

@@ -71,10 +71,6 @@ export const createEntityReducers: EntityReducersCreator = <
 
           return onYield(entity);
         },
-        onReturn(result: TResult): TResult {
-          onReturn?.(result);
-          return result;
-        },
         onGenerate,
       }) as TResult;
     }) as TReturnedReducers[ReducerKeys<TReturnedReducers>];
