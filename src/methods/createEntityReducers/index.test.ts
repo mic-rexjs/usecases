@@ -398,40 +398,28 @@ describe('createEntityReducers', (): void => {
       });
 
       const { add } = createEntityReducers(testUseCase, { onYield });
-
       const [entity] = add({ value: 1 }, 5);
 
       expect(onYield).toHaveBeenCalledWith({ value: 6 });
-
       expect(entity).toEqual({ value: 106 });
     });
 
     test('`options.onReturn` should be called after return - entity mode', (): void => {
-      const onReturn = jest.fn((val: string, entity: Record<'value', number>): string => {
-        void entity;
-        return `hello ${val}`;
-      });
-
+      const onReturn = jest.fn();
       const { add } = createEntityReducers({ value: 1 }, testUseCase, { onReturn });
-
       const [, ret] = add(5);
 
-      expect(onReturn).toHaveBeenCalledWith('[6]', { value: 6 });
-      expect(ret).toBe('hello [6]');
+      expect(onReturn).toHaveBeenCalledWith('[6]');
+      expect(ret).toBe('[6]');
     });
 
     test('`options.onReturn` should be called after return - non-entity mode', (): void => {
-      const onReturn = jest.fn((val: string, entity: Record<'value', number>): string => {
-        void entity;
-        return `hello ${val}`;
-      });
-
+      const onReturn = jest.fn();
       const { add } = createEntityReducers(testUseCase, { onReturn });
-
       const [, ret] = add({ value: 1 }, 5);
 
-      expect(onReturn).toHaveBeenCalledWith('[6]', { value: 6 });
-      expect(ret).toBe('hello [6]');
+      expect(onReturn).toHaveBeenCalledWith('[6]');
+      expect(ret).toBe('[6]');
     });
 
     test('`options.onGenerate` should be called after generator done - entity mode', async (): Promise<void> => {

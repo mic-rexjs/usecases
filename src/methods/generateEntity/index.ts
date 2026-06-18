@@ -32,7 +32,7 @@ export const generateEntity = (<T, TResult, TReturn = EntityGeneratorValues<T, T
       const { value: currentEntity } = store;
 
       if (done) {
-        const result = onReturn(value as TResult, currentEntity);
+        const result = onReturn(value as TResult);
 
         results[0] = result;
         return [currentEntity, result] as EntityGeneratorValues<T, TResult>;

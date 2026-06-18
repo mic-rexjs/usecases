@@ -51,10 +51,11 @@ export const createEntityReducers: EntityReducersCreator = <
       const ret = reducer(...reducerArgs);
 
       if (!hasEntity) {
-        store.setValue(args[0], true);
+        store.value = args[0];
       }
 
       if (!isGenerator(ret)) {
+        onReturn?.(ret);
         return ret;
       }
 
@@ -70,7 +71,10 @@ export const createEntityReducers: EntityReducersCreator = <
 
           return onYield(entity);
         },
-        onReturn,
+        onReturn(result: TResult): TResult {
+          onReturn?.(result);
+          return result;
+        },
         onGenerate,
       }) as TResult;
     }) as TReturnedReducers[ReducerKeys<TReturnedReducers>];
