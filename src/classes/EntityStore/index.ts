@@ -5,6 +5,8 @@ export class EntityStore<T> {
 
   value: T;
 
+  watching = true;
+
   constructor(initialEntity: T, options: EntityStoreOptions<T> = {}) {
     const { onChange } = options;
 
@@ -17,8 +19,13 @@ export class EntityStore<T> {
     this.watch(onChange);
   }
 
+  setValue(value: T): void;
+  /**
+   * @deprecated 已废弃，使用 `store.value = newValue` 代替，将在下个主版本后删除
+   */
+  setValue(value: T, setOnly: boolean): void;
   setValue(value: T, setOnly?: boolean): void {
-    const { value: oldValue } = this;
+    const { value: oldValue, watching } = this;
 
     if (oldValue === value) {
       return;
@@ -26,7 +33,7 @@ export class EntityStore<T> {
 
     this.value = value;
 
-    if (setOnly) {
+    if (setOnly || !watching) {
       return;
     }
 

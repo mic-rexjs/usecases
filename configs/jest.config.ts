@@ -17,6 +17,7 @@ const initConfig = (): Config => {
     displayName: 'test',
     testRegex: '\\.test\\.tsx?',
     transform: { '^.+\\.[tj]sx?$': ['ts-jest', { tsconfig: './tsconfig.json' }] },
+    modulePathIgnorePatterns: ['<rootDir>/build/'],
     moduleNameMapper: pathsToModuleNameMapper(
       Object.fromEntries(
         Object.getOwnPropertyNames(paths).map((name: string): [string, string[]] => {
