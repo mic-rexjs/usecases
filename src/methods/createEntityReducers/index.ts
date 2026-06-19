@@ -61,7 +61,7 @@ export const createEntityReducers: EntityReducersCreator = <
 
       return generateEntity(ret as EntityGenerator<T, TResult>, {
         store,
-        onYield(newEntity: T, oldEntity: T): T {
+        onYield(newEntity: T, oldEntity?: T): T {
           let entity = newEntity;
 
           if (reducer !== setEntity) {
@@ -69,7 +69,7 @@ export const createEntityReducers: EntityReducersCreator = <
             [, entity] = generateEntity(setEntity(oldEntity, newEntity));
           }
 
-          return onYield(entity);
+          return onYield(entity, oldEntity);
         },
         onGenerate,
       }) as TResult;

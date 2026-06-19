@@ -8,6 +8,7 @@ export type {
   EntityUseCase,
   EntityGenerator,
   AsyncEntityGenerator,
+  AsyncEntityCallbackGenerator,
 } from './types';
 
 export type { ArrayReducers } from './usecases/arrayUseCase/types';

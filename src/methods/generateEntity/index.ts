@@ -33,11 +33,17 @@ export const generateEntity = (<T, TResult, TReturn = EntityGeneratorValues<T, T
         return [currentEntity, value];
       }
 
-      const newEntity = onYield(
-        typeof value === 'function' ? (value as YieldEntityCallback<T>)(currentEntity) : value,
-        currentEntity,
-      );
+      let newEntity = value as T;
 
+      if (typeof value === 'function') {
+        newEntity = (value as YieldEntityCallback<T>)(currentEntity);
+
+        if (newEntity instanceof Promise) {
+          newEntity = await newEntity;
+        }
+      }
+
+      newEntity = onYield(newEntity, currentEntity);
       store.setValue(newEntity);
     }
   };

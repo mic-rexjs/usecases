@@ -57,9 +57,31 @@ export type YieldEntityCallback<T> =
   | YieldEntityCallbackWithOptionalEntity<T>
   | YieldEntityCallbackWithRequiredEntity<T>;
 
+export interface AsyncYieldEntityCallbackWithOptionalEntity<T> {
+  (entity?: T): Promise<T>;
+}
+
+export interface AsyncYieldEntityCallbackWithRequiredEntity<T> {
+  (entity: T): Promise<T>;
+}
+
+export type AsyncYieldEntityCallback<T> =
+  | AsyncYieldEntityCallbackWithOptionalEntity<T>
+  | AsyncYieldEntityCallbackWithRequiredEntity<T>;
+
 export interface EntityGenerator<T, TResult> extends Generator<T | YieldEntityCallback<T>, TResult, T> {}
 
-export interface AsyncEntityGenerator<T, TResult> extends AsyncGenerator<T | YieldEntityCallback<T>, TResult, T> {}
+export interface AsyncEntityGenerator<T, TResult> extends AsyncGenerator<
+  T | YieldEntityCallback<T> | AsyncYieldEntityCallback<T>,
+  TResult,
+  T
+> {}
+
+export interface AsyncEntityCallbackGenerator<T, TResult> extends Generator<
+  T | AsyncYieldEntityCallback<T>,
+  TResult,
+  T
+> {}
 
 export type EntityGeneratorValues<T, TResult> = [entity: T, result: TResult];
 

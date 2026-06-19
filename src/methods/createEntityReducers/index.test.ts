@@ -1,7 +1,13 @@
 import { createEntityReducers } from '.';
 import { describe, expect, jest, test } from '@jest/globals';
 import { EntityStore } from '@/classes/EntityStore';
-import { AsyncEntityGenerator, EntityGenerator, EntityReducers, EntityUseCase } from '@/types';
+import {
+  AsyncEntityCallbackGenerator,
+  AsyncEntityGenerator,
+  EntityGenerator,
+  EntityReducers,
+  EntityUseCase,
+} from '@/types';
 import { entityUseCase } from '@/usecases/entityUseCase';
 
 interface Data {
@@ -19,6 +25,7 @@ type TestReducers<T extends Data> = EntityReducers<
     getResultAsync(entity: T, value: number): Promise<number>;
     add<S extends T>(entity: S, value: number): EntityGenerator<S, string>;
     addAsync<S extends T>(entity: S, value: number): AsyncEntityGenerator<S, string>;
+    addAsyncCallback<S extends T>(entity: S, value: number): AsyncEntityCallbackGenerator<S, string>;
     addListAsync<S extends T>(entity: S, values: number[]): AsyncEntityGenerator<S, string>;
   }
 >;
@@ -31,6 +38,8 @@ type TestGeneratedReducers<T extends Data, TResult> = EntityReducers<
     addAsync(entity: T, value: number): Promise<TResult>;
   }
 >;
+
+const resolvedPromise = Promise.resolve(null);
 
 const testUseCase = <T extends Data>(options: Options<T> = {}): TestReducers<T> => {
   const entityReducers = entityUseCase<T>();
@@ -57,13 +66,25 @@ const testUseCase = <T extends Data>(options: Options<T> = {}): TestReducers<T> 
   };
 
   const addAsync = async function* <S extends T>(entity: S, value: number): AsyncEntityGenerator<S, string> {
-    await Promise.resolve(null);
+    await resolvedPromise;
 
     const { value: newValue } = yield (currentEntity: S): S => {
       return { ...currentEntity, value: currentEntity.value + value };
     };
 
-    await Promise.resolve(null);
+    await resolvedPromise;
+    return `[${newValue}]`;
+  };
+
+  const addAsyncCallback = function* <S extends T>(entity: S, value: number): AsyncEntityCallbackGenerator<S, string> {
+    yield { ...entity, value: entity.value + value };
+
+    const { value: newValue } = yield async (currentEntity: S): Promise<S> => {
+      await resolvedPromise;
+
+      return { ...currentEntity, value: currentEntity.value + value };
+    };
+
     return `[${newValue}]`;
   };
 
@@ -79,7 +100,7 @@ const testUseCase = <T extends Data>(options: Options<T> = {}): TestReducers<T> 
     return `[${newEntity.value}]`;
   };
 
-  return { ...entityReducers, getResult, getResultAsync, add, addAsync, addListAsync };
+  return { ...entityReducers, getResult, getResultAsync, add, addAsync, addAsyncCallback, addListAsync };
 };
 
 let mockSetEntity: TestReducers<Data>['setEntity'] | null = null;
@@ -252,6 +273,56 @@ describe('createEntityReducers', (): void => {
     });
   });
 
+  describe('yield entity async callback mode', (): void => {
+    test('`yield entity` async callback mode should work - entity mode', async (): Promise<void> => {
+      const onYield = jest.fn((newEntity: Data, oldEntity: Data): Data => {
+        void oldEntity;
+        return newEntity;
+      });
+
+      const { addAsyncCallback } = createEntityReducers({ value: 1 }, testUseCase, { onYield });
+      const [entity1, result1] = await addAsyncCallback(2);
+
+      expect(onYield).toHaveBeenCalledTimes(2);
+      expect(onYield).toHaveBeenNthCalledWith(1, { value: 3 }, { value: 1 });
+      expect(onYield).toHaveBeenNthCalledWith(2, { value: 5 }, { value: 3 });
+      expect(entity1.value).toBe(5);
+      expect(result1).toBe('[5]');
+
+      const [entity2, result2] = await addAsyncCallback(3);
+
+      expect(onYield).toHaveBeenCalledTimes(4);
+      expect(onYield).toHaveBeenNthCalledWith(3, { value: 8 }, { value: 5 });
+      expect(onYield).toHaveBeenNthCalledWith(4, { value: 11 }, { value: 8 });
+      expect(entity2.value).toBe(11);
+      expect(result2).toBe('[11]');
+    });
+
+    test('`yield entity` async callback mode should work - non-entity mode', async (): Promise<void> => {
+      const onYield = jest.fn((newEntity: Data, oldEntity: Data): Data => {
+        void oldEntity;
+        return newEntity;
+      });
+
+      const { addAsyncCallback } = createEntityReducers(testUseCase, { onYield });
+      const [entity1, result1] = await addAsyncCallback({ value: 1 }, 2);
+
+      expect(onYield).toHaveBeenCalledTimes(2);
+      expect(onYield).toHaveBeenNthCalledWith(1, { value: 3 }, { value: 1 });
+      expect(onYield).toHaveBeenNthCalledWith(2, { value: 5 }, { value: 3 });
+      expect(entity1.value).toBe(5);
+      expect(result1).toBe('[5]');
+
+      const [entity2, result2] = await addAsyncCallback({ value: 3 }, 3);
+
+      expect(onYield).toHaveBeenCalledTimes(4);
+      expect(onYield).toHaveBeenNthCalledWith(3, { value: 6 }, { value: 3 });
+      expect(onYield).toHaveBeenNthCalledWith(4, { value: 9 }, { value: 6 });
+      expect(entity2.value).toBe(9);
+      expect(result2).toBe('[9]');
+    });
+  });
+
   describe('`setEntity` should be called', (): void => {
     test('`setEntity` should not be called after a normal method executed - entity mode', (): void => {
       const { getResult } = createEntityReducers({ value: 1 }, mockedTestUseCase);
@@ -375,32 +446,32 @@ describe('createEntityReducers', (): void => {
     });
 
     test('`options.onYield` should be called after yield - entity mode', (): void => {
-      const onYield = jest.fn((newEntity: Data): Data => {
+      const onYield = jest.fn((newEntity: Data, oldEntity?: Data): Data => {
         const { value } = newEntity;
 
+        void oldEntity;
         return { ...newEntity, value: value + 100 };
       });
 
       const { add } = createEntityReducers({ value: 1 }, testUseCase, { onYield });
-
       const [entity] = add(5);
 
-      expect(onYield).toHaveBeenCalledWith({ value: 6 });
-
+      expect(onYield).toHaveBeenCalledWith({ value: 6 }, { value: 1 });
       expect(entity).toEqual({ value: 106 });
     });
 
     test('`options.onYield` should be called after yield - non-entity mode', (): void => {
-      const onYield = jest.fn((newEntity: Data): Data => {
+      const onYield = jest.fn((newEntity: Data, oldEntity?: Data): Data => {
         const { value } = newEntity;
 
+        void oldEntity;
         return { ...newEntity, value: value + 100 };
       });
 
       const { add } = createEntityReducers(testUseCase, { onYield });
       const [entity] = add({ value: 1 }, 5);
 
-      expect(onYield).toHaveBeenCalledWith({ value: 6 });
+      expect(onYield).toHaveBeenCalledWith({ value: 6 }, { value: 1 });
       expect(entity).toEqual({ value: 106 });
     });
 
