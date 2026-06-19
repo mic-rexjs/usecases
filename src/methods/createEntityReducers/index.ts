@@ -31,7 +31,9 @@ export const createEntityReducers: EntityReducersCreator = <
     onYield = (entity: T): T => {
       return entity;
     },
-    onReturn,
+    onReturn = <TResult>(result: TResult): TResult => {
+      return result;
+    },
     onGenerate,
     ...usecaseOptions
   } = options || {};
@@ -55,8 +57,7 @@ export const createEntityReducers: EntityReducersCreator = <
       }
 
       if (!isGenerator(ret)) {
-        onReturn?.(ret);
-        return ret;
+        return onReturn(ret) as TResult;
       }
 
       return generateEntity(ret as EntityGenerator<T, TResult>, {

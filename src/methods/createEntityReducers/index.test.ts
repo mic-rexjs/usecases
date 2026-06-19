@@ -476,21 +476,27 @@ describe('createEntityReducers', (): void => {
     });
 
     test('`options.onReturn` should be called by non-generator reducer - entity mode', (): void => {
-      const onReturn = jest.fn();
+      const onReturn = jest.fn((result: number): number => {
+        return result + 10;
+      });
+
       const { getResult } = createEntityReducers({ value: 1 }, testUseCase, { onReturn });
       const ret = getResult(5);
 
       expect(onReturn).toHaveBeenCalledWith(6);
-      expect(ret).toBe(6);
+      expect(ret).toBe(16);
     });
 
     test('`options.onReturn` should be called by non-generator reducer - non-entity mode', (): void => {
-      const onReturn = jest.fn();
+      const onReturn = jest.fn((result: number): number => {
+        return result + 10;
+      });
+
       const { getResult } = createEntityReducers(testUseCase, { onReturn });
       const ret = getResult({ value: 1 }, 5);
 
       expect(onReturn).toHaveBeenCalledWith(6);
-      expect(ret).toBe(6);
+      expect(ret).toBe(16);
     });
 
     test('`options.onReturn` should not be called by generator reducer - entity mode', (): void => {

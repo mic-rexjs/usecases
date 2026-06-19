@@ -13,7 +13,7 @@ import {
 export interface CreateEntityReducersOwnOptions<T> {
   onYield?(newEntity: T, oldEntity?: T): T;
 
-  onReturn?(result: unknown): void;
+  onReturn?(result: unknown): unknown;
 
   onGenerate?(entity: T, result: unknown): unknown;
 }

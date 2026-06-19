@@ -6,8 +6,6 @@ export interface GenerateEntityOptions<T, TResult, TReturn = EntityGeneratorValu
 
   onYield?(newEntity: T, oldEntity?: T): T;
 
-  onReturn?(result: TResult): TResult;
-
   onGenerate?(entity: T, result: TResult): TReturn;
 }
 
