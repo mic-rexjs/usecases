@@ -137,4 +137,3 @@ See more about [@mic-rexjs/usecases-react](https://www.npmjs.com/package/@mic-re
 - [entityUseCase](https://github.com/mic-rexjs/usecases/blob/main/src/usecases/entityUseCase/index.test.ts)
 - [arrayUseCase](https://github.com/mic-rexjs/usecases/blob/main/src/usecases/arrayUseCase/index.test.ts)
 - [objectUseCase](https://github.com/mic-rexjs/usecases/blob/main/src/usecases/objectUseCase/index.test.ts)
-- [runtimeUseCase](https://github.com/mic-rexjs/usecases/blob/main/src/usecases/runtimeUseCase/index.test.ts)

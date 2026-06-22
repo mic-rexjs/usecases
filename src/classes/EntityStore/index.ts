@@ -19,12 +19,7 @@ export class EntityStore<T> {
     this.watch(onChange);
   }
 
-  setValue(value: T): void;
-  /**
-   * @deprecated 已废弃，使用 `store.value = newValue` 代替，将在下个主版本后删除
-   */
-  setValue(value: T, setOnly: boolean): void;
-  setValue(value: T, setOnly?: boolean): void {
+  setValue(value: T): void {
     const { value: oldValue, watching } = this;
 
     if (oldValue === value) {
@@ -33,7 +28,7 @@ export class EntityStore<T> {
 
     this.value = value;
 
-    if (setOnly || !watching) {
+    if (!watching) {
       return;
     }
 

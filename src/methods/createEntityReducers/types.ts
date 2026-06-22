@@ -25,10 +25,12 @@ export type SmoothedEntityReducer<T, TReducer extends EntityReducer<T>> = TReduc
   entity: infer TEntity,
   ...args: infer TArgs
 ) => infer TReturn
-  ? TReturn extends AsyncEntityGenerator<TEntity, infer TResult> | AsyncEntityCallbackGenerator<TEntity, infer TResult>
-    ? (entity: TEntity, ...args: TArgs) => Promise<EntityGeneratorValues<TEntity, TResult>>
-    : TReturn extends EntityGenerator<TEntity, infer TResult>
-      ? (entity: TEntity, ...args: TArgs) => EntityGeneratorValues<TEntity, TResult>
+  ? TReturn extends EntityGenerator<TEntity, infer TResult, infer _TYield>
+    ? (entity: TEntity, ...args: TArgs) => EntityGeneratorValues<TEntity, TResult>
+    : TReturn extends
+          | AsyncEntityGenerator<TEntity, infer TResult, infer _TYield>
+          | AsyncEntityCallbackGenerator<TEntity, infer TResult, infer _TYield>
+      ? (entity: TEntity, ...args: TArgs) => Promise<EntityGeneratorValues<TEntity, TResult>>
       : TReducer
   : never;
 
@@ -41,10 +43,12 @@ export type ScopedEntityReducer<T, TReducer extends EntityReducer<T>> = TReducer
   entity: infer TEntity,
   ...args: infer TArgs
 ) => infer TReturn
-  ? TReturn extends AsyncEntityGenerator<TEntity, infer TResult> | AsyncEntityCallbackGenerator<TEntity, infer TResult>
-    ? (...args: TArgs) => Promise<EntityGeneratorValues<TEntity, TResult>>
-    : TReturn extends EntityGenerator<TEntity, infer TResult>
-      ? (...args: TArgs) => EntityGeneratorValues<TEntity, TResult>
+  ? TReturn extends EntityGenerator<TEntity, infer TResult, infer _TYield>
+    ? (...args: TArgs) => EntityGeneratorValues<TEntity, TResult>
+    : TReturn extends
+          | AsyncEntityGenerator<TEntity, infer TResult, infer _TYield>
+          | AsyncEntityCallbackGenerator<TEntity, infer TResult, infer _TYield>
+      ? (...args: TArgs) => Promise<EntityGeneratorValues<TEntity, TResult>>
       : (...args: TArgs) => TReturn
   : never;
 

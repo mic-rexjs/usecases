@@ -6,6 +6,12 @@ export type RestArguments = IArguments[number][];
 
 export type ToType<T> = Omit<T, never>;
 
+export interface SetEntityCallback<T, TReturn = Partial<T>> {
+  (currentEntity: T): TReturn;
+}
+
+export type SettableEntity<T> = Partial<T> | SetEntityCallback<T>;
+
 export interface SymbolSet {
   readonly normal: unique symbol;
 }
@@ -15,6 +21,10 @@ export interface EntitySymbolSet extends SymbolSet {
 }
 
 export interface SymbolSetTarget<T = SymbolSet> {
+  /**
+   * 目的是让 `Reducers` 与 `EntityReducers` 能基于同一个 `key`，
+   * 不然 `key` 不一样，则 `EntityReducers extends Reducers` 就会不成立。
+   */
   readonly [symbolSetKey]?: T;
 }
 
@@ -45,51 +55,39 @@ export type InferableUseCase<
   TUseCase extends UseCase<T, TOptions> = UseCase<T, TOptions>,
 > = TUseCase & UseCase<T, TOptions>;
 
-export interface YieldEntityCallbackWithOptionalEntity<T> {
-  (entity?: T): T;
+export interface YieldEntityCallbackWithOptionalEntity<T, TReturn = Partial<T>> {
+  (entity?: T): TReturn;
 }
 
-export interface YieldEntityCallbackWithRequiredEntity<T> {
-  (entity: T): T;
+export interface YieldEntityCallbackWithRequiredEntity<T, TReturn = Partial<T>> {
+  (entity: T): TReturn;
 }
 
-export type YieldEntityCallback<T> =
-  | YieldEntityCallbackWithOptionalEntity<T>
-  | YieldEntityCallbackWithRequiredEntity<T>;
+export type YieldEntityCallback<T, TReturn = T> =
+  | YieldEntityCallbackWithOptionalEntity<T, TReturn>
+  | YieldEntityCallbackWithRequiredEntity<T, TReturn>;
 
-export interface AsyncYieldEntityCallbackWithOptionalEntity<T> {
-  (entity?: T): Promise<T>;
-}
+export type AsyncYieldEntityCallback<T> = YieldEntityCallback<T, Promise<T>>;
 
-export interface AsyncYieldEntityCallbackWithRequiredEntity<T> {
-  (entity: T): Promise<T>;
-}
-
-export type AsyncYieldEntityCallback<T> =
-  | AsyncYieldEntityCallbackWithOptionalEntity<T>
-  | AsyncYieldEntityCallbackWithRequiredEntity<T>;
-
-export interface EntityGenerator<T, TResult> extends Generator<T | YieldEntityCallback<T>, TResult, T> {}
-
-export interface AsyncEntityGenerator<T, TResult> extends AsyncGenerator<
-  T | YieldEntityCallback<T> | AsyncYieldEntityCallback<T>,
+export interface EntityGenerator<T, TResult, TYield = T> extends Generator<
+  TYield | YieldEntityCallback<TYield>,
   TResult,
   T
 > {}
 
-export interface AsyncEntityCallbackGenerator<T, TResult> extends Generator<
-  T | AsyncYieldEntityCallback<T>,
+export interface AsyncEntityGenerator<T, TResult, TYield = T> extends AsyncGenerator<
+  TYield | YieldEntityCallback<TYield> | AsyncYieldEntityCallback<TYield>,
+  TResult,
+  T
+> {}
+
+export interface AsyncEntityCallbackGenerator<T, TResult, TYield = T> extends Generator<
+  TYield | YieldEntityCallback<TYield> | AsyncYieldEntityCallback<TYield>,
   TResult,
   T
 > {}
 
 export type EntityGeneratorValues<T, TResult> = [entity: T, result: TResult];
-
-export interface SetEntityCallback<T> {
-  (currentEntity: T): T;
-}
-
-export type SettableEntity<T> = T | SetEntityCallback<T>;
 
 export interface EntityReducer<T, TReturn = unknown> {
   (entity: T, ...args: RestArguments): TReturn;
@@ -98,6 +96,7 @@ export interface EntityReducer<T, TReturn = unknown> {
 export interface EntityReducerMap<T> extends ReducerMap<EntityReducer<T>> {}
 
 export interface BaseEntityReducers<T> extends BaseReducers {
+  // `setEntity` 必须返回 `EntityGenerator<S, S>`
   setEntity<S extends T>(entity: S, settableEntity: SettableEntity<S>): EntityGenerator<S, S>;
 }
 

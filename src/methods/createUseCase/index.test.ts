@@ -1,7 +1,7 @@
 import { createUseCase } from '.';
 import { describe, expect, test } from '@jest/globals';
 import { EntityReducers, EntityUseCase, Reducers, UseCase } from '@/types';
-import { objectUseCase } from '@/usecases/objectUseCase';
+import { entityUseCase } from '@/usecases/entityUseCase';
 
 describe('createUseCase', (): void => {
   test('should return a normal usecase', (): void => {
@@ -20,17 +20,17 @@ describe('createUseCase', (): void => {
   });
 
   test('should return an entity usecase', (): void => {
-    const objectReducers = objectUseCase();
+    const entityReducers = entityUseCase();
 
     const usecase = createUseCase((): EntityUseCase<object, EntityReducers<object, Record<never, never>>> => {
       return (): EntityReducers<object, Record<never, never>> => {
-        return objectReducers;
+        return entityReducers;
       };
     });
 
     const reducers = usecase();
 
     expect(typeof usecase).toBe('function');
-    expect(reducers).toBe(objectReducers);
+    expect(reducers).toBe(entityReducers);
   });
 });

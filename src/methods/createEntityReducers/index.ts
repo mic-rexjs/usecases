@@ -66,7 +66,7 @@ export const createEntityReducers: EntityReducersCreator = <
           let entity = newEntity;
 
           if (reducer !== setEntity) {
-            // 不能使用第 `0` 项，不一定会有 `yeild`，但一定会有 `return`
+            // `setEntity` 不一定会有 `yeild`
             [, entity] = generateEntity(setEntity(oldEntity, newEntity));
           }
 
