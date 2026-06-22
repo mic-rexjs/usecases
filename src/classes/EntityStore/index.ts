@@ -19,6 +19,14 @@ export class EntityStore<T> {
     this.watch(onChange);
   }
 
+  enableWatchers(): void {
+    this.watching = true;
+  }
+
+  disableWatchers(): void {
+    this.watching = false;
+  }
+
   setValue(value: T): void {
     const { value: oldValue, watching } = this;
 
