@@ -47,12 +47,7 @@ subtraction(5, 3); // 2
 ## Usage with Entity Mode
 ```ts
 // a.ts
-import {
-	objectUseCase,
-	ObjectReducers,
-	EntityGenerator,
-	EntityReducers
-} from '@mic-rexjs/usecases';
+import { EntityGenerator, EntityReducers } from '@mic-rexjs/usecases';
 
 interface File {
   path: string;
@@ -75,12 +70,7 @@ type FileReducers<T extends File> = EntityReducers<
 >;
 
 const fileUseCase = <T extends File>({ maxContentLength = 2000 }: FileUseCaseOptions = {}): FileReducers<T> => {
-  /**
-   * if you have not extends an existed reducers,
-   * you should call `entityUseCase` at here,
-   * such as `const entityReducers = entityUseCase<T>()`.
-   */
-  const objectReducers = objectUseCase<T>();
+  const entityReducers = entityUseCase<T>();
 
   const writeFile = function* (entity: T, content: string): EntityGenerator<T, string> {
     const { content: oldContent } = entity;
@@ -106,7 +96,7 @@ const fileUseCase = <T extends File>({ maxContentLength = 2000 }: FileUseCaseOpt
     return path.endsWith('.txt');
   };
 
-  return { ...objectReducers, writeFile, isTxt };
+  return { ...entityReducers, writeFile, isTxt };
 };
 
 // b.ts
@@ -136,4 +126,3 @@ See more about [@mic-rexjs/usecases-react](https://www.npmjs.com/package/@mic-re
 - [generateEntity](https://github.com/mic-rexjs/usecases/blob/main/src/usecases/generateEntity/index.test.ts)
 - [entityUseCase](https://github.com/mic-rexjs/usecases/blob/main/src/usecases/entityUseCase/index.test.ts)
 - [arrayUseCase](https://github.com/mic-rexjs/usecases/blob/main/src/usecases/arrayUseCase/index.test.ts)
-- [objectUseCase](https://github.com/mic-rexjs/usecases/blob/main/src/usecases/objectUseCase/index.test.ts)
