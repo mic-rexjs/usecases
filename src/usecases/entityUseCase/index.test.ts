@@ -1,7 +1,7 @@
 import { entityUseCase } from '.';
 import { describe, expect, jest, test } from '@jest/globals';
 import { createEntityReducers } from '@/methods/createEntityReducers';
-import { EntityGenerator, EntityReducers } from '@/types';
+import { EntityGenerator, EntityReducers, SettableEntity } from '@/types';
 
 interface Data {
   key: string;
@@ -163,13 +163,13 @@ describe('entityUseCase', (): void => {
 
       expect(entity1).toBe(defaultEntity);
       expect(result1).toBe(defaultEntity);
-      expect(onYield).toHaveBeenCalledTimes(0);
+      expect(onYield).toHaveBeenCalledTimes(1);
 
       const [entity2, result2] = setEntity({ value: 2 });
 
       expect(entity2).toEqual({ key: '2_xyz', value: 2 });
       expect(result2).toEqual({ key: '2_xyz', value: 2 });
-      expect(onYield).toHaveBeenCalledTimes(1);
+      expect(onYield).toHaveBeenCalledTimes(2);
     });
 
     test('yield entity should work', (): void => {
@@ -189,6 +189,65 @@ describe('entityUseCase', (): void => {
 
       addValue(5);
       expect(onYield).toHaveBeenCalledWith({ key: 'x', value: 11 }, { key: 'x', value: 6 });
+    });
+  });
+
+  describe('sub usecase', (): void => {
+    const subDataUseCase = <T extends Data>(): DataReducers<T> => {
+      const dataReducers = dataUseCase<T>();
+      const { setEntity: setDataEntity, addValue } = dataReducers;
+
+      const setEntity = function* <S extends T>(entity: S, settableEntity: SettableEntity<S>): EntityGenerator<S, S> {
+        const newEntity = yield* setDataEntity(entity, settableEntity);
+
+        yield* addValue(newEntity, 10);
+
+        return yield (currentEntity: S): S => {
+          return currentEntity;
+        };
+      };
+
+      return {
+        ...dataReducers,
+        addValue,
+        setEntity,
+      };
+    };
+
+    test('`setEntity` should work after overrode', (): void => {
+      const onYield = jest.fn(<T extends Data>(newEntity: T, oldEntity: T): T => {
+        void oldEntity;
+
+        return newEntity;
+      });
+
+      const { setEntity } = createEntityReducers(
+        {
+          get key(): string {
+            return `${this.value}_xyz`;
+          },
+          value: 1,
+        },
+        subDataUseCase,
+        { onYield },
+      );
+
+      const [newEntity, newResult] = setEntity({ value: 100 });
+      const { get } = Object.getOwnPropertyDescriptor(newEntity, 'key') as PropertyDescriptor;
+
+      expect(onYield).toHaveBeenCalledTimes(5);
+
+      expect(newEntity).toEqual({
+        key: `120_xyz`,
+        value: 120,
+      });
+
+      expect(newResult).toEqual({
+        key: `120_xyz`,
+        value: 120,
+      });
+
+      expect(typeof get).toEqual('function');
     });
   });
 });

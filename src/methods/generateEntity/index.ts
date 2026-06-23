@@ -1,3 +1,4 @@
+import { createEntity } from '../createEntity';
 import { isGenerator } from '../isGenerator';
 import { EntityGeneratorHandler, GenerateEntityOptions } from './types';
 import { EntityStore } from '@/classes/EntityStore';
@@ -43,7 +44,9 @@ export const generateEntity = (<T, TResult, TReturn = EntityGeneratorValues<T, T
         }
       }
 
+      newEntity = createEntity(currentEntity, newEntity);
       newEntity = onYield(newEntity, currentEntity);
+
       store.setValue(newEntity);
     }
   };

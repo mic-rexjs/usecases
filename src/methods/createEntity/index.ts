@@ -8,6 +8,20 @@ export const createEntity: CreateEntity = <T>(
     return entity();
   }
 
+  const isObject = typeof entity === 'object';
+  const isNull = entity === null;
+  const isArray = Array.isArray(entity);
+
+  if (!isObject || isNull || isArray) {
+    const { length } = restEntities;
+
+    if (length > 0) {
+      return restEntities[length - 1] as T;
+    }
+
+    return entity as T;
+  }
+
   let isChanged = false;
   const baseDescriptors = Object.getOwnPropertyDescriptors(entity);
   const newEntity: Partial<T> = Object.defineProperties({}, baseDescriptors);

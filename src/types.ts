@@ -6,6 +6,13 @@ export type RestArguments = IArguments[number][];
 
 export type ToType<T> = Omit<T, never>;
 
+// 不直接使用 `Partial`，为了在外面看起来意思更明确
+// 比如   `EntityGenerator<S, number, Yeild<S>>`，
+// 而不是 `EntityGenerator<S, number, Partial<S>>`
+export type Yeild<T> = {
+  [K in keyof T]?: T[K];
+};
+
 export interface SetEntityCallback<T, TReturn = Partial<T>> {
   (currentEntity: T): TReturn;
 }
@@ -55,11 +62,11 @@ export type InferableUseCase<
   TUseCase extends UseCase<T, TOptions> = UseCase<T, TOptions>,
 > = TUseCase & UseCase<T, TOptions>;
 
-export interface YieldEntityCallbackWithOptionalEntity<T, TReturn = Partial<T>> {
+export interface YieldEntityCallbackWithOptionalEntity<T, TReturn = T> {
   (entity?: T): TReturn;
 }
 
-export interface YieldEntityCallbackWithRequiredEntity<T, TReturn = Partial<T>> {
+export interface YieldEntityCallbackWithRequiredEntity<T, TReturn = T> {
   (entity: T): TReturn;
 }
 
@@ -67,22 +74,22 @@ export type YieldEntityCallback<T, TReturn = T> =
   | YieldEntityCallbackWithOptionalEntity<T, TReturn>
   | YieldEntityCallbackWithRequiredEntity<T, TReturn>;
 
-export type AsyncYieldEntityCallback<T> = YieldEntityCallback<T, Promise<T>>;
+export type AsyncYieldEntityCallback<T, TReturn = T> = YieldEntityCallback<T, Promise<TReturn>>;
 
-export interface EntityGenerator<T, TResult, TYield = T> extends Generator<
-  TYield | YieldEntityCallback<TYield>,
+export interface EntityGenerator<T, TResult, TYield = Yeild<T>> extends Generator<
+  TYield | YieldEntityCallback<T, TYield>,
   TResult,
   T
 > {}
 
-export interface AsyncEntityGenerator<T, TResult, TYield = T> extends AsyncGenerator<
-  TYield | YieldEntityCallback<TYield> | AsyncYieldEntityCallback<TYield>,
+export interface AsyncEntityGenerator<T, TResult, TYield = Yeild<T>> extends AsyncGenerator<
+  TYield | YieldEntityCallback<T, TYield> | AsyncYieldEntityCallback<T, TYield>,
   TResult,
   T
 > {}
 
-export interface AsyncEntityCallbackGenerator<T, TResult, TYield = T> extends Generator<
-  TYield | YieldEntityCallback<TYield> | AsyncYieldEntityCallback<TYield>,
+export interface AsyncEntityCallbackGenerator<T, TResult, TYield = Yeild<T>> extends Generator<
+  TYield | YieldEntityCallback<T, TYield> | AsyncYieldEntityCallback<T, TYield>,
   TResult,
   T
 > {}
