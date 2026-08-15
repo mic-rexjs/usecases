@@ -24,14 +24,9 @@ const dataUseCase = <T extends Data>(): DataReducers<T> => {
       value: entity.value + value,
     } as S;
 
-    const newEntity2 = yield {
-      ...newEntity1,
-      value: void 0,
-    };
-
     const newEntity3 = yield {
-      ...newEntity2,
-      value: newEntity2.value + value,
+      ...newEntity1,
+      value: newEntity1.value + value,
     };
 
     return newEntity3.value + 10;
@@ -185,9 +180,6 @@ describe('entityUseCase', (): void => {
       expect(onYield).toHaveBeenCalledWith({ key: 'x', value: 6 }, { key: 'x', value: 1 });
 
       addValue(5);
-      expect(onYield).toHaveBeenCalledWith({ key: 'x', value: 6 }, { key: 'x', value: 6 });
-
-      addValue(5);
       expect(onYield).toHaveBeenCalledWith({ key: 'x', value: 11 }, { key: 'x', value: 6 });
     });
   });
@@ -235,7 +227,7 @@ describe('entityUseCase', (): void => {
       const [newEntity, newResult] = setEntity({ value: 100 });
       const { get } = Object.getOwnPropertyDescriptor(newEntity, 'key') as PropertyDescriptor;
 
-      expect(onYield).toHaveBeenCalledTimes(5);
+      expect(onYield).toHaveBeenCalledTimes(4);
 
       expect(newEntity).toEqual({
         key: `120_xyz`,

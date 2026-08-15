@@ -37,45 +37,24 @@ export const createEntity: CreateEntity = <T>(
         continue;
       }
 
-      const newDescriptor = Object.getOwnPropertyDescriptor(entityItem, key) as PropertyDescriptor;
-      const { value: newValue, get: newGetter, set: newSetter } = newDescriptor;
-      const isUndefinedValue = typeof newValue === 'undefined';
-      const hasGet = typeof newGetter === 'function';
-      const hasSet = typeof newSetter === 'function';
-      const isAccessor = hasGet || hasSet;
-      const isUndefined = isUndefinedValue && !isAccessor;
+      const itemDescriptor = Object.getOwnPropertyDescriptor(entityItem, key) as PropertyDescriptor;
 
-      // 如果是 `undefined`
-      if (isUndefined) {
-        continue;
-      }
+      if (descriptor !== null) {
+        const { value } = descriptor;
+        const { value: itemValue, set: itemSetter, get: itemGetter } = itemDescriptor;
 
-      if (descriptor === null) {
-        isChanged = true;
-        descriptors[key as keyof T] = newDescriptor;
-        continue;
-      }
+        if (itemSetter || itemGetter) {
+          continue;
+        }
 
-      const { value } = descriptor;
-
-      /**
-       * 这里不能直接使用 `newValue`，
-       * 如果是访问器， 那么 `newValue` 一定是 `undefined`，
-       * 而且访问器属性也不能覆盖普通值属性。
-       */
-      const targetValue = entityItem[key as keyof T];
-
-      // 如果和原属性值一样
-      if (value === targetValue) {
-        continue;
+        // 如果和原属性值一样
+        if (value === itemValue) {
+          continue;
+        }
       }
 
       isChanged = true;
-
-      descriptors[key as keyof T] = {
-        ...descriptor,
-        value: targetValue,
-      };
+      descriptors[key as keyof T] = itemDescriptor;
     }
   }
 
