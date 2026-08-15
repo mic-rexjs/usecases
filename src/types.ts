@@ -76,19 +76,19 @@ export type YieldEntityCallback<T, TReturn = T> =
 
 export type AsyncYieldEntityCallback<T, TReturn = T> = YieldEntityCallback<T, Promise<TReturn>>;
 
-export interface EntityGenerator<T, TResult, TYield = Yeild<T>> extends Generator<
+export interface EntityGenerator<T, TResult = Yeild<T> | void, TYield = Yeild<T>> extends Generator<
   TYield | YieldEntityCallback<T, TYield>,
   TResult,
   T
 > {}
 
-export interface AsyncEntityGenerator<T, TResult, TYield = Yeild<T>> extends AsyncGenerator<
+export interface AsyncEntityGenerator<T, TResult = Yeild<T> | void, TYield = Yeild<T>> extends AsyncGenerator<
   TYield | YieldEntityCallback<T, TYield> | AsyncYieldEntityCallback<T, TYield>,
   TResult,
   T
 > {}
 
-export interface AsyncEntityCallbackGenerator<T, TResult, TYield = Yeild<T>> extends Generator<
+export interface AsyncEntityCallbackGenerator<T, TResult = Yeild<T> | void, TYield = Yeild<T>> extends Generator<
   TYield | YieldEntityCallback<T, TYield> | AsyncYieldEntityCallback<T, TYield>,
   TResult,
   T
