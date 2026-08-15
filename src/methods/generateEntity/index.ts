@@ -13,6 +13,9 @@ export const generateEntity = (<T, TResult, TReturn = EntityGeneratorValues<T, T
 
   const {
     store = new EntityStore(void 0 as T),
+    onCreate = (newEntity: T, oldEntity: T): T => {
+      return createEntity(oldEntity, newEntity);
+    },
     onYield = (entity: T): T => {
       return entity;
     },
@@ -44,7 +47,7 @@ export const generateEntity = (<T, TResult, TReturn = EntityGeneratorValues<T, T
         }
       }
 
-      newEntity = createEntity(currentEntity, newEntity);
+      newEntity = onCreate(newEntity, currentEntity);
       newEntity = onYield(newEntity, currentEntity);
 
       store.setValue(newEntity);

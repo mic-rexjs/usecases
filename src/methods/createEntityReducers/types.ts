@@ -11,6 +11,8 @@ import {
 } from '@/types';
 
 export interface CreateEntityReducersOwnOptions<T> {
+  onCreate?(newEntity: T, oldEntity?: T): T;
+
   onYield?(newEntity: T, oldEntity?: T): T;
 
   onReturn?(result: unknown): unknown;

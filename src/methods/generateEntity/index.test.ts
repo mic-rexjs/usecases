@@ -159,6 +159,42 @@ describe('generateEntity', (): void => {
     });
   });
 
+  describe('options.onCreate', (): void => {
+    test('`options.onCreate` should work with sync mode', (): void => {
+      const onCreate = jest.fn((currentEntity: number, oldEntity?: number): number => {
+        void oldEntity;
+        return currentEntity + 5;
+      });
+
+      const gen = reducerWithYieldFn(1);
+      const [entity, result] = generateEntity(gen, { onCreate });
+
+      expect(entity).toBe(1126);
+      expect(entity).toBe(result);
+      expect(onCreate).toHaveBeenCalledTimes(3);
+      expect(onCreate).toHaveBeenNthCalledWith(1, 11, void 0);
+      expect(onCreate).toHaveBeenNthCalledWith(2, 116, 16);
+      expect(onCreate).toHaveBeenNthCalledWith(3, 1121, 121);
+    });
+
+    test('`options.onCreate` should work with async mode', async (): Promise<void> => {
+      const onCreate = jest.fn((currentEntity: number, oldEntity?: number): number => {
+        void oldEntity;
+        return currentEntity + 5;
+      });
+
+      const gen = reducerWithYieldFnAsync(1);
+      const [entity, result] = await generateEntity(gen, { onCreate });
+
+      expect(entity).toBe(1126);
+      expect(entity).toBe(result);
+      expect(onCreate).toHaveBeenCalledTimes(3);
+      expect(onCreate).toHaveBeenNthCalledWith(1, 11, void 0);
+      expect(onCreate).toHaveBeenNthCalledWith(2, 116, 16);
+      expect(onCreate).toHaveBeenNthCalledWith(3, 1121, 121);
+    });
+  });
+
   describe('options.onYield', (): void => {
     test('`options.onYield` should work with sync mode', (): void => {
       const onYield = jest.fn((currentEntity: number, oldEntity?: number): number => {

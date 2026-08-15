@@ -28,6 +28,7 @@ export const createEntityReducers: EntityReducersCreator = <
   const options = (hasEntity ? arg3 : arg2) as CreateEntityReducersOptions<T, TUseCaseOptions> | undefined;
 
   const {
+    onCreate,
     onYield = (entity: T): T => {
       return entity;
     },
@@ -62,6 +63,7 @@ export const createEntityReducers: EntityReducersCreator = <
 
       return generateEntity(ret as EntityGenerator<T, TResult>, {
         store,
+        onCreate,
         onYield(newEntity: T, oldEntity?: T): T {
           let entity = newEntity;
 
