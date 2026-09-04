@@ -10,8 +10,6 @@ export interface StatefulPromiseWithResolvers<T> extends PromiseWithResolvers<T>
   rejected: boolean;
 
   pending: boolean;
-
-  release(): void;
 }
 
 export interface PromiseFulfilledEventHandler<T> {
@@ -30,12 +28,20 @@ export interface PromiseWithResolversOptions {
   key?: PropertyKey;
 
   /**
-   * 当提供了 `key` 字段后，是否在 `Promise` 结束后自动释放该 `key` 所标记的实例。
+   * 是否在 `Promise` 结束后自动释放该 `key` 所标记的实例。
    */
   autoRelease?: boolean;
 }
 
+export interface PromiseCacheResolversOptions<T = unknown> extends Omit<PromiseWithResolversOptions, 'key'> {
+  resolvers?: StatefulPromiseWithResolvers<T>;
+}
+
 export type PromiseReducers = Reducers<{
+  cacheResolvers<T>(key: PropertyKey, options?: PromiseCacheResolversOptions<T>): StatefulPromiseWithResolvers<T>;
+
+  uncacheResolvers(key: PropertyKey): void;
+
   initRejectedError<T>(options: PromiseInitRejectedErrorOptions<T>): void;
 
   reject<T>(code: RejectedCode, msg: string, data: T): Promise<never>;

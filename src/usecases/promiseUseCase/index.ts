@@ -1,4 +1,5 @@
 import {
+  PromiseCacheResolversOptions,
   PromiseFulfilledEventHandler,
   PromiseInitRejectedErrorOptions,
   PromiseReducers,
@@ -134,17 +135,12 @@ export const promiseUseCase = createUseCase((): UseCase<PromiseReducers> => {
         return resolvers as StatefulPromiseWithResolvers<T>;
       }
 
-      const release = (): void => {
-        resolversMap.delete(key);
-      };
-
       const newResolvers: StatefulPromiseWithResolvers<T> = {
         ...Promise.withResolvers<T>(),
         key: key,
         fulfilled: false,
         rejected: false,
         pending: true,
-        release,
       };
 
       const { promise } = newResolvers;
@@ -160,7 +156,7 @@ export const promiseUseCase = createUseCase((): UseCase<PromiseReducers> => {
         })
         .finally((): void => {
           if (autoRelease) {
-            release();
+            uncacheResolvers(key);
           }
 
           newResolvers.pending = false;
@@ -173,7 +169,24 @@ export const promiseUseCase = createUseCase((): UseCase<PromiseReducers> => {
       return newResolvers;
     };
 
+    const cacheResolvers = <T>(
+      key: PropertyKey,
+      options: PromiseCacheResolversOptions<T> = {},
+    ): StatefulPromiseWithResolvers<T> => {
+      const { resolvers, ...restOptions } = options;
+      const newResolvers = resolvers || withResolvers<T>({ key, ...restOptions });
+
+      resolversMap.set(key, newResolvers as StatefulPromiseWithResolvers<unknown>);
+      return newResolvers;
+    };
+
+    const uncacheResolvers = (key: PropertyKey): void => {
+      resolversMap.delete(key);
+    };
+
     return {
+      cacheResolvers,
+      uncacheResolvers,
       initRejectedError,
       reject,
       rejectCode,
