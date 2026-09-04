@@ -189,9 +189,14 @@ export const promiseUseCase = createUseCase((): UseCase<PromiseReducers> => {
       resolversMap.delete(key);
     };
 
+    const isCachedResolvers = (key: PropertyKey): boolean => {
+      return resolversMap.has(key);
+    };
+
     return {
       cacheResolvers,
       uncacheResolvers,
+      isCachedResolvers,
       initRejectedError,
       reject,
       rejectCode,

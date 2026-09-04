@@ -38,9 +38,14 @@ export interface PromiseCacheResolversOptions<T = unknown> extends Omit<PromiseW
 }
 
 export type PromiseReducers = Reducers<{
+  withResolvers<T>(key: PropertyKey, options?: PromiseCacheResolversOptions): StatefulPromiseWithResolvers<T>;
+  withResolvers<T>(options?: PromiseWithResolversOptions): StatefulPromiseWithResolvers<T>;
+
   cacheResolvers<T>(key: PropertyKey, options?: PromiseCacheResolversOptions<T>): StatefulPromiseWithResolvers<T>;
 
   uncacheResolvers(key: PropertyKey): void;
+
+  isCachedResolvers(key: PropertyKey): boolean;
 
   initRejectedError<T>(options: PromiseInitRejectedErrorOptions<T>): void;
 
@@ -74,7 +79,4 @@ export type PromiseReducers = Reducers<{
     rejectedCode: RejectedCode,
     rejectedMsg?: string,
   ): Promise<T>;
-
-  withResolvers<T>(key: PropertyKey, options?: PromiseCacheResolversOptions): StatefulPromiseWithResolvers<T>;
-  withResolvers<T>(options?: PromiseWithResolversOptions): StatefulPromiseWithResolvers<T>;
 }>;
