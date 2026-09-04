@@ -2,16 +2,41 @@ import { PromiseResult } from '@/entities/promiseResult/types';
 import { RejectedCode, RejectedError } from '@/entities/rejectedError/types';
 import { Reducers } from '@/types';
 
-export interface FulfilledEventHandler<T> {
+export interface StatefulPromiseWithResolvers<T> extends PromiseWithResolvers<T> {
+  key: PropertyKey;
+
+  fulfilled: boolean;
+
+  rejected: boolean;
+
+  pending: boolean;
+
+  release(): void;
+}
+
+export interface PromiseFulfilledEventHandler<T> {
   (res: T): T | PromiseLike<T>;
 }
 
-export interface InitRejectedErrorOptions<T> {
+export interface PromiseInitRejectedErrorOptions<T> {
   onReject?(error: RejectedError<T>): void;
 }
 
+export interface PromiseWithResolversOptions {
+  /**
+   * 多次使用同样的 `key`，则会返回同一个 `PromiseWithResolvers` 实例，
+   * 直到调用 `release` 释放该 `key` 所标记的实例。
+   */
+  key?: PropertyKey;
+
+  /**
+   * 当提供了 `key` 字段后，是否在 `Promise` 结束后自动释放该 `key` 所标记的实例。
+   */
+  autoRelease?: boolean;
+}
+
 export type PromiseReducers = Reducers<{
-  initRejectedError<T>(options: InitRejectedErrorOptions<T>): void;
+  initRejectedError<T>(options: PromiseInitRejectedErrorOptions<T>): void;
 
   reject<T>(code: RejectedCode, msg: string, data: T): Promise<never>;
 
@@ -39,8 +64,10 @@ export type PromiseReducers = Reducers<{
 
   resolveWith<T>(
     promise: T | PromiseLike<T>,
-    onFulfilled: FulfilledEventHandler<T>,
+    onFulfilled: PromiseFulfilledEventHandler<T>,
     rejectedCode: RejectedCode,
     rejectedMsg?: string,
   ): Promise<T>;
+
+  withResolvers<T>(options?: PromiseWithResolversOptions): StatefulPromiseWithResolvers<T>;
 }>;

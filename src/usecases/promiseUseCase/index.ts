@@ -1,4 +1,10 @@
-import { FulfilledEventHandler, InitRejectedErrorOptions, PromiseReducers } from './types';
+import {
+  PromiseFulfilledEventHandler,
+  PromiseInitRejectedErrorOptions,
+  PromiseReducers,
+  PromiseWithResolversOptions,
+  StatefulPromiseWithResolvers,
+} from './types';
 import { defaultPromiseResult } from '@/entities/promiseResult';
 import { PromiseResult } from '@/entities/promiseResult/types';
 import { RejectedCode, RejectedError } from '@/entities/rejectedError/types';
@@ -6,10 +12,11 @@ import { createUseCase } from '@/methods/createUseCase';
 import { UseCase } from '@/types';
 
 export const promiseUseCase = createUseCase((): UseCase<PromiseReducers> => {
-  let initOptions: InitRejectedErrorOptions<unknown> = {};
+  let initOptions: PromiseInitRejectedErrorOptions<unknown> = {};
+  const resolversMap = new Map<PropertyKey, StatefulPromiseWithResolvers<unknown>>();
 
   return (): PromiseReducers => {
-    const initRejectedError = <T>(options: InitRejectedErrorOptions<T>): void => {
+    const initRejectedError = <T>(options: PromiseInitRejectedErrorOptions<T>): void => {
       initOptions = options;
     };
 
@@ -107,7 +114,7 @@ export const promiseUseCase = createUseCase((): UseCase<PromiseReducers> => {
 
     const resolveWith = <T>(
       promise: T | PromiseLike<T>,
-      onFulfilled: FulfilledEventHandler<T>,
+      onFulfilled: PromiseFulfilledEventHandler<T>,
       rejectedCode: RejectedCode,
       rejectedMsg = '',
     ): Promise<T> => {
@@ -116,6 +123,54 @@ export const promiseUseCase = createUseCase((): UseCase<PromiseReducers> => {
         .catch(<TError>(error: TError): Promise<never> => {
           return reject(rejectedCode, rejectedMsg, error);
         });
+    };
+
+    const withResolvers = <T>(options: PromiseWithResolversOptions = {}): StatefulPromiseWithResolvers<T> => {
+      const { key = '', autoRelease = false } = options;
+      const hasKey = key !== '';
+      const resolvers = hasKey ? resolversMap.get(key) : null;
+
+      if (resolvers) {
+        return resolvers as StatefulPromiseWithResolvers<T>;
+      }
+
+      const release = (): void => {
+        resolversMap.delete(key);
+      };
+
+      const newResolvers: StatefulPromiseWithResolvers<T> = {
+        ...Promise.withResolvers<T>(),
+        key: key,
+        fulfilled: false,
+        rejected: false,
+        pending: true,
+        release,
+      };
+
+      const { promise } = newResolvers;
+
+      promise
+        .then((): void => {
+          newResolvers.fulfilled = true;
+          newResolvers.rejected = false;
+        })
+        .catch((): void => {
+          newResolvers.fulfilled = false;
+          newResolvers.rejected = true;
+        })
+        .finally((): void => {
+          if (autoRelease) {
+            release();
+          }
+
+          newResolvers.pending = false;
+        });
+
+      if (hasKey) {
+        resolversMap.set(key, newResolvers as StatefulPromiseWithResolvers<unknown>);
+      }
+
+      return newResolvers;
     };
 
     return {
@@ -129,6 +184,7 @@ export const promiseUseCase = createUseCase((): UseCase<PromiseReducers> => {
       resolveNonNullable,
       resolveResult,
       resolveWith,
+      withResolvers,
     };
   };
 });
