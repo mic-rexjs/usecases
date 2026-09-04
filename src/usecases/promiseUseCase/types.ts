@@ -75,5 +75,6 @@ export type PromiseReducers = Reducers<{
     rejectedMsg?: string,
   ): Promise<T>;
 
+  withResolvers<T>(key: PropertyKey, options?: PromiseCacheResolversOptions): StatefulPromiseWithResolvers<T>;
   withResolvers<T>(options?: PromiseWithResolversOptions): StatefulPromiseWithResolvers<T>;
 }>;

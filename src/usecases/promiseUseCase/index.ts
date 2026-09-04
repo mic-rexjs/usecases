@@ -126,8 +126,13 @@ export const promiseUseCase = createUseCase((): UseCase<PromiseReducers> => {
         });
     };
 
-    const withResolvers = <T>(options: PromiseWithResolversOptions = {}): StatefulPromiseWithResolvers<T> => {
-      const { key = '', autoRelease = false } = options;
+    const withResolvers = <T>(
+      arg1: PropertyKey | PromiseWithResolversOptions = {},
+      arg2: PromiseCacheResolversOptions<T> = {},
+    ): StatefulPromiseWithResolvers<T> => {
+      const onlyOneArg = typeof arg1 === 'object';
+      const options = onlyOneArg ? arg1 : arg2 || {};
+      const { key = onlyOneArg ? '' : arg1, autoRelease = false } = options as PromiseWithResolversOptions;
       const hasKey = key !== '';
       const resolvers = hasKey ? resolversMap.get(key) : null;
 
