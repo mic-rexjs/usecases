@@ -1,4 +1,5 @@
 import { EntityStoreOptions, EntityWatcher } from './types';
+import { resolveEntitySetters } from '@/methods/resolveEntitySetters';
 
 export class EntityStore<T> {
   readonly #watchers: EntityWatcher<T>[] = [];
@@ -10,7 +11,7 @@ export class EntityStore<T> {
   constructor(initialEntity: T, options: EntityStoreOptions<T> = {}) {
     const { onChange } = options;
 
-    this.value = initialEntity;
+    this.value = resolveEntitySetters(initialEntity);
 
     if (!onChange) {
       return;

@@ -134,6 +134,68 @@ describe('createEntityReducers', (): void => {
       expect(oldValue).toBe(1);
     });
 
+    test('Should support entity setter', (): void => {
+      const { getResult, add } = createEntityReducers(
+        {
+          set value(v: number) {
+            this.value = 100;
+          },
+        },
+        testUseCase,
+      );
+
+      const result1 = getResult(45);
+
+      expect(result1).toBe(145);
+
+      const [data2, result2] = add(5);
+      const { get, set, value } = Object.getOwnPropertyDescriptor(data2, 'value') as PropertyDescriptor;
+
+      expect(data2).toEqual({ value: 105 });
+      expect(result2).toEqual('[105]');
+      expect(typeof get).toBe('undefined');
+      expect(typeof set).toBe('undefined');
+      expect(typeof value).toBe('number');
+
+      const [data3, result3] = add(5);
+
+      expect(data3).toEqual({ value: 110 });
+      expect(result3).toEqual('[110]');
+    });
+
+    test('Should support entity getter', (): void => {
+      const { getResult, add } = createEntityReducers(
+        {
+          // 无效的 `set` - 因为有 `get` 会被忽略
+          set value(v: number) {
+            this.value = 200;
+          },
+          get value(): number {
+            return 100;
+          },
+        },
+        testUseCase,
+      );
+
+      const result1 = getResult(45);
+
+      expect(result1).toBe(145);
+
+      const [data2, result2] = add(5);
+      const { get, set, value } = Object.getOwnPropertyDescriptor(data2, 'value') as PropertyDescriptor;
+
+      expect(data2).toEqual({ value: 100 });
+      expect(result2).toEqual('[105]');
+      expect(typeof get).toBe('function');
+      expect(typeof set).toBe('undefined');
+      expect(typeof value).toBe('undefined');
+
+      const [data3, result3] = add(5);
+
+      expect(data3).toEqual({ value: 100 });
+      expect(result3).toEqual('[105]');
+    });
+
     test('check `entity.value` on set entity callback - non-entity mode', async (): Promise<void> => {
       let oldValue = 0;
       const { setEntity } = createEntityReducers(testUseCase);

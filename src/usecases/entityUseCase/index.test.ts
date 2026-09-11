@@ -156,8 +156,8 @@ describe('entityUseCase', (): void => {
 
       const [entity1, result1] = setEntity({ value: 1 });
 
-      expect(entity1).toBe(defaultEntity);
-      expect(result1).toBe(defaultEntity);
+      expect(entity1).toEqual(defaultEntity);
+      expect(result1).toEqual(defaultEntity);
       expect(onYield).toHaveBeenCalledTimes(1);
 
       const [entity2, result2] = setEntity({ value: 2 });
