@@ -8,10 +8,10 @@ export class EntityStore<T> {
 
   watching = true;
 
-  constructor(initialEntity: T, options: EntityStoreOptions<T> = {}) {
+  constructor(value: T, options: EntityStoreOptions<T> = {}) {
     const { onChange } = options;
 
-    this.value = resolveEntitySetters(initialEntity);
+    this.value = this.initValue(value);
 
     if (!onChange) {
       return;
@@ -26,6 +26,13 @@ export class EntityStore<T> {
 
   disableWatchers(): void {
     this.watching = false;
+  }
+
+  initValue(value: T): T {
+    const newValue = resolveEntitySetters(value);
+
+    this.value = newValue;
+    return newValue;
   }
 
   setValue(value: T): void {
