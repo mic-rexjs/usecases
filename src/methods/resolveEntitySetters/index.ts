@@ -9,20 +9,20 @@ export const resolveEntitySetters = <T>(entity: T): T => {
     return entity;
   }
 
+  let hasSetter = false;
   const descriptors = Object.getOwnPropertyDescriptors(entity) as Record<keyof T, PropertyDescriptor>;
 
   for (const key of Reflect.ownKeys(descriptors)) {
     const descriptor = descriptors[key as keyof T];
     const { get: getter, set: setter, ...restDescriptor } = descriptor;
-    const hasGetter = typeof getter === 'function';
-    const hasSetter = typeof setter === 'function';
-    const hasAccessor = hasGetter || hasSetter;
 
-    if (!hasAccessor) {
+    if (typeof setter !== 'function') {
       continue;
     }
 
-    if (hasGetter) {
+    hasSetter = true;
+
+    if (typeof getter === 'function') {
       // 如果有 `getter`， 那么就忽略 `setter`，因为 `setter` 是用来初始化属性用的
       descriptors[key as keyof T] = {
         ...restDescriptor,
@@ -42,5 +42,9 @@ export const resolveEntitySetters = <T>(entity: T): T => {
     };
   }
 
-  return Object.defineProperties({}, descriptors) as T;
+  if (hasSetter) {
+    return Object.defineProperties({}, descriptors) as T;
+  }
+
+  return entity;
 };
