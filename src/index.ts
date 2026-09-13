@@ -26,5 +26,6 @@ export { createEntityReducers } from './methods/createEntityReducers';
 export { entityUseCase } from './usecases/entityUseCase';
 export { arrayUseCase } from './usecases/arrayUseCase';
 export { dataListUseCase } from './usecases/dataListUseCase';
+export { globalDataUseCase } from './usecases/globalDataUseCase';
 export { promiseUseCase } from './usecases/promiseUseCase';
 export { utilsUseCase } from './usecases/utilsUseCase';
