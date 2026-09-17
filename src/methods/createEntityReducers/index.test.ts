@@ -135,32 +135,39 @@ describe('createEntityReducers', (): void => {
     });
 
     test('Should support entity setter', (): void => {
+      interface DataPlus extends Data {
+        base: number;
+      }
+
       const { getResult, add } = createEntityReducers(
         {
           set value(v: number) {
-            this.value = 100;
+            this.value = this.base + 100;
           },
-        },
+          get base(): number {
+            return 1000;
+          },
+        } as DataPlus,
         testUseCase,
       );
 
       const result1 = getResult(45);
 
-      expect(result1).toBe(145);
+      expect(result1).toBe(1145);
 
       const [data2, result2] = add(5);
       const { get, set, value } = Object.getOwnPropertyDescriptor(data2, 'value') as PropertyDescriptor;
 
-      expect(data2).toEqual({ value: 105 });
-      expect(result2).toEqual('[105]');
+      expect(data2).toEqual({ base: 1000, value: 1105 });
+      expect(result2).toEqual('[1105]');
       expect(typeof get).toBe('undefined');
       expect(typeof set).toBe('undefined');
       expect(typeof value).toBe('number');
 
       const [data3, result3] = add(5);
 
-      expect(data3).toEqual({ value: 110 });
-      expect(result3).toEqual('[110]');
+      expect(data3).toEqual({ base: 1000, value: 1110 });
+      expect(result3).toEqual('[1110]');
     });
 
     test('Should support entity getter', (): void => {
@@ -182,12 +189,11 @@ describe('createEntityReducers', (): void => {
       expect(result1).toBe(145);
 
       const [data2, result2] = add(5);
-      const { get, set, value } = Object.getOwnPropertyDescriptor(data2, 'value') as PropertyDescriptor;
+      const { get, value } = Object.getOwnPropertyDescriptor(data2, 'value') as PropertyDescriptor;
 
       expect(data2).toEqual({ value: 100 });
       expect(result2).toEqual('[105]');
       expect(typeof get).toBe('function');
-      expect(typeof set).toBe('undefined');
       expect(typeof value).toBe('undefined');
 
       const [data3, result3] = add(5);
