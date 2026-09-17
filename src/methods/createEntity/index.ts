@@ -43,13 +43,12 @@ export const createEntity: CreateEntity = <T>(
         const { value } = descriptor;
         const { value: itemValue, set: itemSetter, get: itemGetter } = itemDescriptor;
 
-        if (itemSetter || itemGetter) {
-          continue;
-        }
-
-        // 如果和原属性值一样
-        if (value === itemValue) {
-          continue;
+        switch (true) {
+          case typeof itemSetter === 'function':
+          case typeof itemGetter === 'function':
+          case typeof itemValue === 'undefined':
+          case value === itemValue:
+            continue;
         }
       }
 
