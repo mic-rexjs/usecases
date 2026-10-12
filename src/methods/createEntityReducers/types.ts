@@ -1,3 +1,4 @@
+import { GenerateEntityOptions } from '../generateEntity/types';
 import { EntityStore } from '@/classes/EntityStore';
 import {
   AsyncEntityCallbackGenerator,
@@ -10,17 +11,17 @@ import {
   ReducerKeys,
 } from '@/types';
 
-export interface CreateEntityReducersOwnOptions<T> {
-  onCreate?(newEntity: T, oldEntity?: T): T;
-
-  onYield?(newEntity: T, oldEntity?: T): T;
+export interface CreateEntityReducersOwnOptions<T, TOptions extends object> extends Omit<
+  GenerateEntityOptions<T, unknown, unknown>,
+  'store'
+> {
+  usecaseOptions?: TOptions;
 
   onReturn?(result: unknown): unknown;
-
-  onGenerate?(entity: T, result: unknown): unknown;
 }
 
-export type CreateEntityReducersOptions<T, TOptions extends object> = TOptions & CreateEntityReducersOwnOptions<T>;
+export type CreateEntityReducersOptions<T, TOptions extends object> = TOptions &
+  CreateEntityReducersOwnOptions<T, TOptions>;
 
 export type SmoothedEntityReducer<T, TReducer extends EntityReducer<T>> = TReducer extends (
   // 不能使用 `entity: T`， 因为 `TEntity` 不完全等于 `T`

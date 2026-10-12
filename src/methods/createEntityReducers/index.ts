@@ -36,12 +36,13 @@ export const createEntityReducers: EntityReducersCreator = <
       return result;
     },
     onGenerate,
-    ...usecaseOptions
+    usecaseOptions,
+    ...restOptions
   } = options || {};
 
   const smoothedReducers: Partial<TReturnedReducers> = {};
   const entityReducers = entityUseCase();
-  const usecaseReducers = usecase(usecaseOptions as TUseCaseOptions);
+  const usecaseReducers = usecase(usecaseOptions || (restOptions as TUseCaseOptions));
   const sourceReducers = { ...entityReducers, ...usecaseReducers };
   const keys = Object.keys(sourceReducers);
   const { setEntity } = sourceReducers;
@@ -64,7 +65,7 @@ export const createEntityReducers: EntityReducersCreator = <
       return generateEntity(ret as EntityGenerator<T, TResult>, {
         store,
         onCreate,
-        onYield(newEntity: T, oldEntity?: T): T {
+        onYield(newEntity: T, oldEntity: T): T {
           let entity = newEntity;
 
           if (reducer !== setEntity) {
