@@ -15,7 +15,7 @@ export interface CreateEntityReducersOwnOptions<T, TOptions extends object> exte
   GenerateEntityOptions<T, unknown, unknown>,
   'store'
 > {
-  usecaseOptions?: TOptions;
+  options?: TOptions;
 
   onReturn?(result: unknown): unknown;
 }
